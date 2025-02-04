@@ -58,3 +58,15 @@ export type TChildrenStrings = { children: string[] };
 
 export type TCity = typeof СITIES[number];
 export type TCities = typeof СITIES;
+
+export type TComment = {
+  id: string;
+  date: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+    isPro: boolean;
+  };
+  comment: string;
+  rating: number;
+};
