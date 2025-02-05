@@ -7,6 +7,7 @@ import Header from '../../components/header/header';
 import { useOffersByCity } from '../../store/selectors';
 import Cards from '../../components/cards/cards';
 import { TOffer } from '../../types/types';
+import { TComment } from '../../types/types';
 
 export default function Offer(): JSX.Element {
 
@@ -15,17 +16,38 @@ export default function Offer(): JSX.Element {
   const offers: TOffer[] = useOffersByCity();
   offers.length = 3;
   const offerGalleryParams = [
-    { src: 'img/room.jpg', alt: 'Photo studio',id:'1' },
-    {src: 'img/apartment-01.jpg', alt:'Photo studio', id:'2'},
-    {src: 'img/apartment-02.jpg', alt: 'Photo studio', id: '3'},
-    {src: 'img/apartment-03.jpg', alt: 'Photo studio', id:'4'},
-    {src: 'img/studio-01.jpg', alt: 'Photo studio', id:'5'},
-    {src: 'img/apartment-01.jpg', alt: 'Photo studio',id:'6'},
+    { src: 'img/room.jpg', alt: 'Photo studio', id: '1' },
+    { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '2' },
+    { src: 'img/apartment-02.jpg', alt: 'Photo studio', id: '3' },
+    { src: 'img/apartment-03.jpg', alt: 'Photo studio', id: '4' },
+    { src: 'img/studio-01.jpg', alt: 'Photo studio', id: '5' },
+    { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '6' },
   ];
 
   const onCommontFormSubmit = (text: string) => {
   };
-  const comments = [{ comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.', id: '1' }, { comment: 'wefw', id: '2' }];
+  const comments: TComment[] = [{
+    id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b62a',
+    date: '2019-05-08T14:13:56.569Z',
+    user: {
+      name: 'Oliver Conner',
+      avatarUrl: 'https://url-to-image/image.png',
+      isPro: false
+    },
+    comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+    rating: 4
+  },
+  {
+    id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b62a',
+    date: '2019-05-08T14:13:56.569Z',
+    user: {
+      name: 'Oliver Conner',
+      avatarUrl: 'https://url-to-image/image.png',
+      isPro: false
+    },
+    comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
+    rating: 4
+  }];
   return (
     <div className="page" data-t={cardHover}>
       <Header isAuthorized />
@@ -191,7 +213,7 @@ export default function Offer(): JSX.Element {
                     </div>
                   </li>
                 </ul> */}
-                <ReviewsList data={comments}/>
+                <ReviewsList data={comments} />
                 <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />
               </section>
             </div>
