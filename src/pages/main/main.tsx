@@ -5,22 +5,16 @@ import { useEffect, useState } from 'react';
 import Map from '../../components/map/map';
 import Locations from '../../components/locations/locations';
 import { setCity } from '../../store/action';
-import useAppDispatch from '../../store/reducer';
 import Header from '../../components/header/header';
 import { useOffersByCity } from '../../store/selectors';
+import { useDispatch } from 'react-redux';
 
 let offer: TOffer[];
 
 export default function Main() {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [cardHover, setCardHover] = useState<string | null>(null);
   offer = useOffersByCity();
-
-  useEffect(()=> {
-    setTimeout(() => {
-      dispatch(setCity(СITIES[0]));
-    }, 500);
-  }, []);
   if(! offer) {
     return 'loading';
   }
