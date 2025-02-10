@@ -2,17 +2,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Cards from '../../components/cards/cards';
 import Header from '../../components/header/header';
-import { useOffersByCity } from '../../store/selectors';
+import { useOffersСities } from '../../store/selectors';
 
 
-export default function Favorites():JSX.Element {
+export default function Favorites(): JSX.Element {
   const [cardHover, setCardHover] = useState<string | null>(null);
-  const offers = useOffersByCity();
-  console.log('offers=', offers);
-
+  const offers = useOffersСities();
   return (
     <div className="page">
-      <Header/>
+      <Header />
 
       <main className="page__main page__main--favorites">
         <div className="page__favorites-container container">
@@ -153,7 +151,7 @@ export default function Favorites():JSX.Element {
       </main>
       <footer className="footer container">
         <Link className="footer__logo-link" to="main.html">
-          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33"/>
+          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
         </Link>
       </footer>
     </div>

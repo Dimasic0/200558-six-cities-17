@@ -1,10 +1,11 @@
-import { TChildrenStrings } from '../../types/types';
-export default function OfferInsideList({ children }: TChildrenStrings) {
+type TOfferInsideList = { list:string[]};
+
+export default function OfferInsideList({ list }: TOfferInsideList) {
   return (
     <ul className="offer__inside-list">
       {
-        children.map((el) => (
-          <li className="offer__inside-item">
+        list.map((el) => (
+          <li className="offer__inside-item" key={el}>
             {el}
           </li>
         ))

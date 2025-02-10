@@ -1,6 +1,6 @@
 import { TChildrenString, TComment } from '../../types/types';
 export default function ReviewsItem({ comment, rating, user }: TComment) {
-  const widthRating = `${rating / 5 * 100} + %`;
+  const widthRating = `${rating / 5 * 100}%`;
   return (
     <li className="reviews__item">
       <div className="reviews__user user">

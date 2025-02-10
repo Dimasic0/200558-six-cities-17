@@ -1,7 +1,7 @@
 import { TOffer } from '../../types/types';
 import { СITIES } from '../../data/constant';
 import Cards from '../../components/cards/cards';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Map from '../../components/map/map';
 import Locations from '../../components/locations/locations';
 import { setCity } from '../../store/action';
@@ -15,10 +15,6 @@ export default function Main() {
   const dispatch = useDispatch();
   const [cardHover, setCardHover] = useState<string | null>(null);
   offer = useOffersByCity();
-  if(! offer) {
-    return 'loading';
-  }
-
   return (
     <div className="page page--gray page--main">
       <Header/>

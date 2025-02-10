@@ -1,10 +1,6 @@
 import {СITIES} from '../data/constant';
 
-export enum HousingRange {
-  apartment = 'apartment',
-  room = 'room',
-  house = 'house',
-}
+export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 
 export type TOffer = {
   id: string;
@@ -46,8 +42,6 @@ export type TReducer = { offers: TOffer[] };
 
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
-export type TChildrenStrings = { children: string[] };
-
 // export type TCity =
 //   | 'Paris'
 //   | 'Cologne'

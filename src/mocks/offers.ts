@@ -2773,7 +2773,8 @@ offers.forEach((el) => {
   offersCities[cityName].push({ ...el });
 });
 
-type TofferPage = TOffer & {
+type ToffersPage = (Omit<TOffer, "previewImage"> & {
+  description:string;
   goods: string[];
   host: {
     name: string;
@@ -2782,15 +2783,14 @@ type TofferPage = TOffer & {
   };
   bedrooms: number;
   maxAdults: number;
-};
-
-type ToffersPage = TofferPage[];
+  images: string[];
+})[];
 
 const offerPages: ToffersPage = [
   {
     id: '94d4b6ac-ab80-44af-8ab9-9f116338a6a6',
     title: 'The house among olive ',
-    description: "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
+    description: 'This is a place for dreamers to reset, reflect, and create. Designed with a \'slow\' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.',
     type: 'apartment',
     price: 484,
     images: [

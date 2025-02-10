@@ -13,8 +13,8 @@ export default function Offer(): JSX.Element {
 
   const [cardHover, setCardHover] = useState<string | null>(null);
 
-  const offers: TOffer[] = useOffersByCity();
-  offers.length = 3;
+  const offers: TOffer[] = useOffersByCity().slice(0, 3);
+
   const offerGalleryParams = [
     { src: 'img/room.jpg', alt: 'Photo studio', id: '1' },
     { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '2' },
@@ -38,15 +38,15 @@ export default function Offer(): JSX.Element {
     rating: 4
   },
   {
-    id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b62a',
+    id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b63a',
     date: '2019-05-08T14:13:56.569Z',
     user: {
-      name: 'Oliver Conner',
+      name: 'IVan budco',
       avatarUrl: 'https://url-to-image/image.png',
       isPro: false
     },
     comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
-    rating: 4
+    rating: 3
   }];
   return (
     <div className="page" data-t={cardHover}>
@@ -149,21 +149,20 @@ export default function Offer(): JSX.Element {
                         Fridge
                   </li>
                 </ul> */}
-                <OfferInsideList>
-                  {[
-                    'Wi-Fi',
-                    'Washing machine',
-                    'Towels',
-                    'Heating',
-                    'Coffee machine',
-                    'Baby seat',
-                    'Kitchen',
-                    'Kitchen',
-                    'Dishwasher',
-                    'Cabel TV',
-                    'Fridge'
-                  ]}
-                </OfferInsideList>
+                <OfferInsideList list={[
+                  'Wi-Fi',
+                  'Washing machine',
+                  'Towels',
+                  'Heating',
+                  'Coffee machine',
+                  'Baby seat',
+                  'Kitchen',
+                  'Kitchen',
+                  'Dishwasher',
+                  'Cabel TV',
+                  'Fridge'
+                ]}
+                />
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
