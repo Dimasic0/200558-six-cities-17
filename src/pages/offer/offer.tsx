@@ -8,6 +8,7 @@ import { useOffersByCity } from '../../store/selectors';
 import Cards from '../../components/cards/cards';
 import { TOffer } from '../../types/types';
 import { TComment } from '../../types/types';
+import Map from '../../components/map/map';
 
 export default function Offer(): JSX.Element {
 
@@ -217,7 +218,12 @@ export default function Offer(): JSX.Element {
               </section>
             </div>
           </div>
-          <section className="offer__map map"></section>
+          <section className="offer__map map">
+            <Map points={offers}
+              selectedPoint={cardHover}
+              city={offers?.[0].city.location}
+            />
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
