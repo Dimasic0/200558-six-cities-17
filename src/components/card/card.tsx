@@ -22,7 +22,7 @@ export function Card({ offer, variant, onHover = ()=>{} }: TCardProps): JSX.Elem
     },
   } as const;
   const config = configs[variant];
-  const RARING_WIDTH = `${offer?.rating / 5 * 100}%`;
+  const RARING_WIDTH = `${offer?.rating / 5 * 100} %`;
   return (
     <article
       className={`${config.class}__card place-card`}
