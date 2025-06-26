@@ -19,10 +19,13 @@ export type TOffersProp = {
   offers: TOffer[];
 };
 
+export type obj = Record<string,any>;
+
+
 export type TOffersCities = Record<string, TOffer[]>;
 
 export type City = {
-  name: string;
+  name: TCity;
   location: Location;
 };
 
@@ -32,10 +35,13 @@ export type Location = {
   zoom: number;
 };
 
-export type TInitialState = {
+export type TData= {
   offers: TOffer[];
-  city: TCity; // Add a type for city
-  offersСities: TOffersCities; // Add a type for
+  city: TCity;
+};
+
+export type TInitialState = TData & {
+  offersCities: TOffersCities | null;
 };
 
 export type TReducer = { offers: TOffer[] };
@@ -50,7 +56,7 @@ export type TChildrenString = { children: string };
 //   | 'Hamburg'
 //   | 'Dusseldorf';
 
-export type TCity = typeof СITIES[number];
+export type TCity = typeof СITIES[number] | '';
 export type TCities = typeof СITIES;
 
 export type TComment = {

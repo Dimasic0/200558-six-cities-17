@@ -1,6 +1,7 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TCity } from '../types/types';
+import { TCity, TData } from '../types/types';
 
-const setCity = createAction<TCity>('city');
+const setCity = createAction<TCity>('catalog/setCity');
+const setOffers = createAction<TData>('catalog/setOffers');
 
-export {setCity};
+export { setCity, setOffers };

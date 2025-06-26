@@ -32,15 +32,15 @@ function Map(props: MapProps): JSX.Element {
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      points.forEach((point:TOffer):void => {
+      points.forEach(({ location, id }:TOffer):void => {
         const marker = new Marker({
-          lat: point.location.latitude,
-          lng: point.location.longitude
+          lat: location.latitude,
+          lng: location.longitude
         });
 
         marker
           .setIcon(
-            selectedPoint !== undefined && point.id === selectedPoint
+            selectedPoint !== undefined && id === selectedPoint
               ? currentCustomIcon
               : defaultCustomIcon
           )

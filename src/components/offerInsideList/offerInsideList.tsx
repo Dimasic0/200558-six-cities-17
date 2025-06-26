@@ -1,6 +1,8 @@
+import { memoize } from "../../data/constant";
+
 type TOfferInsideList = { list:string[]};
 
-export default function OfferInsideList({ list }: TOfferInsideList) {
+function OfferInsideListFun({ list }: TOfferInsideList):JSX.Element {
   return (
     <ul className="offer__inside-list">
       {
@@ -13,3 +15,7 @@ export default function OfferInsideList({ list }: TOfferInsideList) {
     </ul>
   );
 }
+
+const OfferInsideList = memoize(OfferInsideListFun, (oldProps, newProps) => JSON.stringify(oldProps) === JSON.stringify(newProps));
+
+export default OfferInsideList;

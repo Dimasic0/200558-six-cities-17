@@ -1,4 +1,4 @@
-import { TChildrenString, TComment } from '../../types/types';
+import {TComment } from '../../types/types';
 export default function ReviewsItem({ comment, rating, user }: TComment) {
   const widthRating = `${rating / 5 * 100}%`;
   return (

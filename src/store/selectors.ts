@@ -1,9 +1,9 @@
+import { TOffer } from '../types/types';
 import { useAppSelector } from './reducer';
 
-export const useOffersByCity = () =>
-  useAppSelector((state) =>
-    state.offersСities[state.city]
-  ) || {};
+const arrayNull: TOffer[] = [];
 
-export const useOffersСities = () =>
-  useAppSelector((state) => state.offersСities);
+export const useOffers = () => useAppSelector((state) => state?.offersCities?.[state?.city] || arrayNull);
+export const useCity = () => useAppSelector(({ city }) => city);
+
+export const useOffersСities = () => useAppSelector((state) => state.offersCities);

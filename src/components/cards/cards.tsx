@@ -1,30 +1,35 @@
+import { memoize } from '../../data/constant';
 import { TOffer } from '../../types/types';
-import {Card} from '../card/card';
+import Card from '../card/card';
 
 type TCardsProps = {
-  offers: TOffer[] & {point?:object};
+  offers: TOffer[];
   onHover?: (id:string | null)=>void;
   variant: 'vertical' | 'horizontal';
+  classTextBlock?:string;
 };
 
-export default function Cards({ offers, onHover, variant }: TCardsProps):JSX.Element {
-  const config = {
-    vertical:  'cities__places-list',
-    horizontal: 'favorites',
-  };
+function CardsFunc({ offers,...props}: TCardsProps):JSX.Element {
+  // const config = {
+  //   vertical:  'cities__places-list',
+  //   horizontal: 'favorites',
+  // } as const;
 
   return (
-    <div className={`${config[variant]} places__list`}>
+    <>
       {
         offers.map((el: TOffer): JSX.Element => (
           <Card
             offer={el}
-            onHover={onHover}
             key={el.id}
-            variant={variant}
+            {...props}
           />
         ))
       }
-    </div>
+    </>
   );
 }
+
+const Cards = memoize(CardsFunc);
+
+export default Cards;
