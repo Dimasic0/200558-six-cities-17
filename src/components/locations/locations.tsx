@@ -19,10 +19,10 @@ export default function Locations({ cities, onClick, city, defaultActive}: TLoca
   return (
     <ul className="locations__list tabs__list">
       {
-        cities.map((citie): JSX.Element => (
+        cities.map((citie:TCity): JSX.Element => (
 
           <li className="locations__item" key={citie}>
-            <div className={`locations__item-link tabs__item   ${active === citie && 'tabs__item--active'}`} onClick={() => {
+            <div className={`locations__item-link tabs__item   ${active === citie ? 'tabs__item--active' : ''}`} onClick={() => {
               setActive(citie); onClick(citie);
             }}
             >

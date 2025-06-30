@@ -1,4 +1,4 @@
-import { TOffer,TOffersCities } from '../types/types';
+import { TOffer, TOffersByCities } from '../types/types';
 const offers: TOffer[] = [
   {
     id: '82fc8d67-a851-4637-964f-88fe508e833c',
@@ -2762,15 +2762,4 @@ const offers: TOffer[] = [
   },
 ];
 
-const offersCities:TOffersCities = {};
-
-offers.forEach((el) => {
-  const city = el.city;
-  const cityName: string = city.name;
-  if (offersCities[cityName] === undefined) {
-    offersCities[cityName] = [];
-  }
-  offersCities[cityName].push({ ...el });
-});
-
-export { offers, offersCities };
+export { offers };

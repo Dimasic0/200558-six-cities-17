@@ -9,7 +9,7 @@ type TCardsProps = {
   classTextBlock?:string;
 };
 
-function CardsFunc({ offers,...props}: TCardsProps):JSX.Element {
+function Cards({ offers,...props}: TCardsProps):JSX.Element {
   // const config = {
   //   vertical:  'cities__places-list',
   //   horizontal: 'favorites',
@@ -30,6 +30,4 @@ function CardsFunc({ offers,...props}: TCardsProps):JSX.Element {
   );
 }
 
-const Cards = memoize(CardsFunc);
-
-export default Cards;
+export default memoize(Cards);

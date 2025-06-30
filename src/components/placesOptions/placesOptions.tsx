@@ -3,7 +3,7 @@ import { memoize } from "../../data/constant";
 
 type TPlacesOptions = { params: ((ComponentProps<'li'> & {key?: string}) | string)[]};
 
-const PlacesOptionsFun = ({ params }: TPlacesOptions) =>(
+const PlacesOptions = ({ params }: TPlacesOptions) => (
   <ul className="places__options places__options--custom places__options--opened">
     {
       params.map((el) => (
@@ -13,6 +13,4 @@ const PlacesOptionsFun = ({ params }: TPlacesOptions) =>(
   </ul>
 );
 
-const PlacesOptions = memoize(PlacesOptionsFun);
-
-export default PlacesOptions;
+export default memoize(PlacesOptions);

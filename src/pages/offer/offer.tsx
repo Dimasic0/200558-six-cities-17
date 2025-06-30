@@ -10,6 +10,19 @@ import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 
+const offerInsideListArr = [
+  'Wi-Fi',
+  'Washing machine',
+  'Towels',
+  'Heating',
+  'Coffee machine',
+  'Baby seat',
+  'Kitchen',
+  'Dishwasher',
+  'Cabel TV',
+  'Fridge'
+] as const;
+
 export default function Offer(): JSX.Element {
 
   const [cardHover, setCardHover] = useState<string | null>(null);
@@ -28,8 +41,7 @@ export default function Offer(): JSX.Element {
   ];
 
 
-  type TOfferGalleryParams = {src:string; alt:string; id: string}[];
-  const offerGalleryParams: TOfferGalleryParams = offerGalleryParamsArr.map((el,i)=>({src:el[0],alt:el[1], id: `${i}`}));
+  const offerGalleryParams = offerGalleryParamsArr.map((el,i)=>({src:el[0],alt:el[1], id: `${i}`}));
 
   // const offerGalleryParams = [
   //   { src: 'img/room.jpg', alt: 'Photo studio', id: '1' },
@@ -139,51 +151,7 @@ export default function Offer(): JSX.Element {
                   </div>
                   <div className="offer__inside">
                     <h2 className="offer__inside-title">What&apos;s inside</h2>
-                    {/* <ul className="offer__inside-list">
-                  <li className="offer__inside-item">
-                        Wi-Fi
-                  </li>
-                  <li className="offer__inside-item">
-                        Washing machine
-                  </li>
-                  <li className="offer__inside-item">
-                        Towels
-                  </li>
-                  <li className="offer__inside-item">
-                        Heating
-                  </li>
-                  <li className="offer__inside-item">
-                        Coffee machine
-                  </li>
-                  <li className="offer__inside-item">
-                        Baby seat
-                  </li>
-                  <li className="offer__inside-item">
-                        Kitchen
-                  </li>
-                  <li className="offer__inside-item">
-                        Dishwasher
-                  </li>
-                  <li className="offer__inside-item">
-                        Cabel TV
-                  </li>
-                  <li className="offer__inside-item">
-                        Fridge
-                  </li>
-                </ul> */}
-                    <OfferInsideList list={[
-                      'Wi-Fi',
-                      'Washing machine',
-                      'Towels',
-                      'Heating',
-                      'Coffee machine',
-                      'Baby seat',
-                      'Kitchen',
-                      'Dishwasher',
-                      'Cabel TV',
-                      'Fridge'
-                    ]}
-                    />
+                    <OfferInsideList list={offerInsideListArr}/>
                   </div>
                   <div className="offer__host">
                     <h2 className="offer__host-title">Meet the host</h2>
@@ -209,30 +177,6 @@ export default function Offer(): JSX.Element {
                   </div>
                   <section className="offer__reviews reviews">
                     <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                    {/* <ul className="reviews__list">
-                  <li className="reviews__item">
-                    <div className="reviews__user user">
-                      <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                        <img className="reviews__avatar user__avatar" src="img/avatar-max.jpg" width="54" height="54" alt="Reviews avatar" />
-                      </div>
-                      <span className="reviews__user-name">
-                            Max
-                      </span>
-                    </div>
-                    <div className="reviews__info">
-                      <div className="reviews__rating rating">
-                        <div className="reviews__stars rating__stars">
-                          <span style={{ width: '80%' }}></span>
-                          <span className="visually-hidden">Rating</span>
-                        </div>
-                      </div>
-                      <p className="reviews__text">
-                            A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
-                      </p>
-                      <time className="reviews__time" dateTime="2019-04-24">April 2019</time>
-                    </div>
-                  </li>
-                </ul> */}
                     <ReviewsList data={comments} />
                     <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />
                   </section>

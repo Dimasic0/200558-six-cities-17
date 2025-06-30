@@ -19,10 +19,7 @@ export type TOffersProp = {
   offers: TOffer[];
 };
 
-export type obj = Record<string,any>;
-
-
-export type TOffersCities = Record<string, TOffer[]>;
+export type TOffersByCities = Record<string, TOffer[]>;
 
 export type City = {
   name: TCity;
@@ -36,12 +33,11 @@ export type Location = {
 };
 
 export type TData= {
-  offers: TOffer[];
   city: TCity;
 };
 
 export type TInitialState = TData & {
-  offersCities: TOffersCities | null;
+  offersByCities: TOffersByCities | null;
 };
 
 export type TReducer = { offers: TOffer[] };

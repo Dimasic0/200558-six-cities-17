@@ -5,6 +5,11 @@ import Header from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
 import PlacesOptions from '../../components/placesOptions/placesOptions';
 import Loading from '../../components/loading/loading';
+import Locations from '../../components/locations/locations';
+import { СITIES } from '../../data/constant';
+import { setCity } from '../../store/action';
+import { TCity } from '../../types/types';
+import { useDispatch } from 'react-redux';
 
 const PlacesOptionsParams = [
   'Popular',
@@ -18,6 +23,12 @@ export default function Main() {
   const offers = useOffers();
 
   const offersLength = offers.length;
+   const dispatch = useDispatch();
+
+
+  function onLocationsClick(city:TCity) {
+    dispatch(setCity(city));
+  }
 
   return (
     <div className="page page--gray page--main">
@@ -30,11 +41,11 @@ export default function Main() {
             <h1 className="visually-hidden">Cities</h1>
             <div className="tabs">
               <section className="locations container">
-                <Loading />
+                <Locations cities={СITIES} onClick={onLocationsClick} defaultActive={'Paris'} />
               </section>
             </div>
             <div className="cities">
-              { offersLength > 0 ?
+              {offersLength > 0 ?
                 <div className="cities__places-container container">
                   <section className="cities__places places">
                     <h2 className="visually-hidden">Places</h2>
@@ -42,7 +53,7 @@ export default function Main() {
                     <form className="places__sorting" action="#" method="get">
                       <span className="places__sorting-caption">Sort by</span>
                       <span className="places__sorting-type" tabIndex={0}>
-                    Popular
+                        Popular
                         <svg className="places__sorting-arrow" width="7" height="4">
                           <use xlinkHref="#icon-arrow-select"></use>
                         </svg>
@@ -53,26 +64,26 @@ export default function Main() {
                         <li className="places__option" tabIndex={0}>Price: high to low</li>
                         <li className="places__option" tabIndex={0}>Top rated first</li>
                       </ul> */}
-                      <PlacesOptions params={PlacesOptionsParams}/>
+                      <PlacesOptions params={PlacesOptionsParams} />
                     </form>
                     <div className="cities__places-list places__list tabs__content">
-                      { offersLength > 0 &&
-              <Cards offers={offers}
-                onHover={(id)=>{
-                  setCardHover(id);
-                }}
-                variant="vertical"
-                classTextBlock="favorites__card-info"
-              />}
+                      {offersLength > 0 &&
+                        <Cards offers={offers}
+                          onHover={(id) => {
+                            setCardHover(id);
+                          }}
+                          variant="vertical"
+                          classTextBlock="favorites__card-info"
+                        />}
                     </div>
                   </section>
                   <div className="cities__right-section">
                     <section className="cities__map map">
                       {offersLength > 0 &&
-                <Map points={offers}
-                  selectedPoint={cardHover}
-                  city={offers?.[0]?.city.location}
-                />}
+                        <Map points={offers}
+                          selectedPoint={cardHover}
+                          city={offers?.[0]?.city.location}
+                        />}
                     </section>
                   </div>
                 </div>
@@ -92,3 +103,4 @@ export default function Main() {
     </div>
   );
 }
+

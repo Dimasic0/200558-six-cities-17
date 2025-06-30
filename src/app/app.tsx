@@ -19,18 +19,19 @@ const data: TData = {
 
 export default function App(): JSX.Element {
   const dispath = useDispatch();
-  const server = setTimeout(() => {
-    dispath(setOffers(data));
-  },1000);
-
   useEffect(() => {
-    clearTimeout(server);
+    const server = setTimeout(() => {
+      dispath(setOffers(data));
+      console.log('server=');
+    }, 1000);
+    console.log('app useEffect');
+    return ()=> clearTimeout(server);
   });
   return (
     <BrowserRouter>
       <Routes>
         {/* <Route index element={<Favorites />} /> */}
-        <Route index element={<Main/>} />
+        <Route index element={<Main dispath={dispath}/>} />
         {/* <Route index element={<Offer offers={offers} />} /> */}
         <Route path={Address.login} element={<Login />} />
         <Route path={Address.favorites} element={
