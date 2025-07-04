@@ -7,6 +7,7 @@ import Loading from '../../components/loading/loading';
 
 export default function Favorites(): JSX.Element {
   const offers = useOffersСities();
+  const CARDS_CLASSTEXTBLOCK = 'favorites__card-info';
   return (
     <div className="page">
       <Header />
@@ -31,6 +32,7 @@ export default function Favorites(): JSX.Element {
                     <Cards
                       offers={offers.Amsterdam}
                       variant='horizontal'
+                      classTextBlock={CARDS_CLASSTEXTBLOCK}
                     />
                     {/* <article className="favorites__card place-card">
                     <div className="place-card__mark">
@@ -113,6 +115,7 @@ export default function Favorites(): JSX.Element {
                     <Cards
                       offers={offers.Cologne}
                       variant='horizontal'
+                      classTextBlock={CARDS_CLASSTEXTBLOCK}
                     />
                     {/* <article className="favorites__card place-card">
                     <div className="favorites__image-wrapper place-card__image-wrapper">

@@ -1,5 +1,5 @@
-import { ComponentProps } from "react";
-import { memoize } from "../../data/constant";
+import { ComponentProps } from 'react';
+import { memoize } from '../../data/constant';
 
 type TPlacesOptions = { params: ((ComponentProps<'li'> & {key?: string}) | string)[]};
 

@@ -2,7 +2,6 @@ import { createReducer, configureStore } from '@reduxjs/toolkit';
 import { setCity, setOffers } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
-import { TCity, TData } from '../types/types';
 import { TInitialState, TOffer } from '../types/types';
 
 export const initialState: TInitialState = {

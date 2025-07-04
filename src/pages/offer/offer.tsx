@@ -10,7 +10,7 @@ import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 
-const offerInsideListArr = [
+const offerGoods = [
   'Wi-Fi',
   'Washing machine',
   'Towels',
@@ -21,7 +21,7 @@ const offerInsideListArr = [
   'Dishwasher',
   'Cabel TV',
   'Fridge'
-] as const;
+];
 
 export default function Offer(): JSX.Element {
 
@@ -36,12 +36,12 @@ export default function Offer(): JSX.Element {
     [ 'img/apartment-01.jpg', 'Photo studio'],
     [ 'img/apartment-02.jpg', 'Photo studio'],
     [ 'img/apartment-03.jpg', 'Photo studio'],
-    [ 'img/studio-01.jpg', 'Photo studio' ],
+    [ 'img/studio-01.jpg', 'Photo studio'],
     [ 'img/apartment-01.jpg', 'Photo studio'],
   ];
 
 
-  const offerGalleryParams = offerGalleryParamsArr.map((el,i)=>({src:el[0],alt:el[1], id: `${i}`}));
+  const offerGalleryParams = offerGalleryParamsArr.map((el,i) => ({src:el[0],alt:el[1], id: `${i}`}));
 
   // const offerGalleryParams = [
   //   { src: 'img/room.jpg', alt: 'Photo studio', id: '1' },
@@ -151,7 +151,7 @@ export default function Offer(): JSX.Element {
                   </div>
                   <div className="offer__inside">
                     <h2 className="offer__inside-title">What&apos;s inside</h2>
-                    <OfferInsideList list={offerInsideListArr}/>
+                    <OfferInsideList list={offerGoods}/>
                   </div>
                   <div className="offer__host">
                     <h2 className="offer__host-title">Meet the host</h2>

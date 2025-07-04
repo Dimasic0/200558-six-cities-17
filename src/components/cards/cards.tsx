@@ -9,25 +9,18 @@ type TCardsProps = {
   classTextBlock?:string;
 };
 
-function Cards({ offers,...props}: TCardsProps):JSX.Element {
-  // const config = {
-  //   vertical:  'cities__places-list',
-  //   horizontal: 'favorites',
-  // } as const;
-
-  return (
-    <>
-      {
-        offers.map((el: TOffer): JSX.Element => (
-          <Card
-            offer={el}
-            key={el.id}
-            {...props}
-          />
-        ))
-      }
-    </>
-  );
-}
+const Cards = ({ offers, ...props }: TCardsProps): JSX.Element => (
+  <>
+    {
+      offers.map((el: TOffer): JSX.Element => (
+        <Card
+          offer={el}
+          key={el.id}
+          {...props}
+        />
+      ))
+    }
+  </>
+);
 
 export default memoize(Cards);

@@ -1,4 +1,4 @@
-import { TOffer, TOffersByCities } from '../types/types';
+import { TOffer } from '../types/types';
 const offers: TOffer[] = [
   {
     id: '82fc8d67-a851-4637-964f-88fe508e833c',
@@ -2761,5 +2761,9 @@ const offers: TOffer[] = [
     rating: 4.8,
   },
 ];
+
+offers.forEach((el,i,arr)=>{
+  el.rating = (++i) * (5 / arr.length);
+});
 
 export { offers };

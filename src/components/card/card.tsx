@@ -19,12 +19,12 @@ const setConfig = (className: string, width: number, height: number): TSetConfig
 
 const configs = {
   vertical: setConfig('cities', 260, 200),
-  horizontal: setConfig('cities', 150, 110)
+  horizontal: setConfig('favorites', 150, 110)
 } as const;
 
-function CardFun({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCardProps): JSX.Element {
+function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCardProps): JSX.Element {
   const config = configs[variant];
-  const raringWidth = `${offer?.rating * 20} %`;
+  const raringWidth = `${offer?.rating * 20}%`;
   return (
     <article
       className={`${config.className}__card place-card`}
@@ -73,5 +73,4 @@ function CardFun({ offer, variant, onHover = () => { }, classTextBlock = ''}: TC
   );
 }
 
-const Card = memoize(CardFun);
-export default Card;
+export default memoize(Card);

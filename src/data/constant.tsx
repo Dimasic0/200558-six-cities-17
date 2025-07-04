@@ -13,6 +13,13 @@ export enum PrivateStatus {
   Unknown = 'UNKNOWN'
 }
 
+export enum sortingName {
+  popular='Popular',
+  low ='Price: low to high',
+  high= 'Price: high to low',
+  rated = 'Top rated first'
+}
+export type TSortingName = `${sortingName}`;
 const СITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
 
 export { СITIES };

@@ -3,7 +3,7 @@ import { memoize } from '../../data/constant';
 
 type THeaderProps = { isAuthorized?: boolean };
 
-function HeaderFun({ isAuthorized }: THeaderProps) {
+function Header({ isAuthorized }: THeaderProps) {
   return (
     <header className="header">
       <div className="container">
@@ -59,6 +59,4 @@ function HeaderFun({ isAuthorized }: THeaderProps) {
   );
 }
 
-const Header = memoize(HeaderFun);
-
-export default Header;
+export default memoize(Header);

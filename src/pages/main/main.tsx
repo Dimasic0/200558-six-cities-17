@@ -1,33 +1,44 @@
 import Cards from '../../components/cards/cards';
-import { useState } from 'react';
+import {useState } from 'react';
 import Map from '../../components/map/map';
 import Header from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
-import PlacesOptions from '../../components/placesOptions/placesOptions';
 import Loading from '../../components/loading/loading';
 import Locations from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
 import { setCity } from '../../store/action';
 import { TCity } from '../../types/types';
 import { useDispatch } from 'react-redux';
+import { FormSorting } from '../../components/sorting/sorting';
+import { sortingName } from '../../data/constant';
+import { TSortingName } from '../../data/constant';
 
-const PlacesOptionsParams = [
-  'Popular',
-  'Price: low to high',
-  { children: 'Price: high to low', style: { backgroundColor: 'blue' }, key: 'blue' },
-  'Top rated first'
-];
 
 export default function Main() {
   const [cardHover, setCardHover] = useState<string | null>(null);
-  const offers = useOffers();
+  const [sorting, setSorting] = useState<TSortingName>(sortingName.popular);
+
+  const offers = [...useOffers()];
 
   const offersLength = offers.length;
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
 
   function onLocationsClick(city:TCity) {
     dispatch(setCity(city));
+  }
+
+
+  switch (sorting) {
+    case sortingName.low:
+      offers.sort((a,b) => a.price - b.price);
+      break;
+    case sortingName.high:
+      offers.sort((a,b) => b.price - a.price);
+      break;
+    case sortingName.rated:
+      offers.sort((a,b) => a.rating - b.rating);
+      break;
   }
 
   return (
@@ -51,20 +62,14 @@ export default function Main() {
                     <h2 className="visually-hidden">Places</h2>
                     <b className="places__found">{offers?.length} places to stay in Amsterdam</b>
                     <form className="places__sorting" action="#" method="get">
-                      <span className="places__sorting-caption">Sort by</span>
-                      <span className="places__sorting-type" tabIndex={0}>
-                        Popular
-                        <svg className="places__sorting-arrow" width="7" height="4">
-                          <use xlinkHref="#icon-arrow-select"></use>
-                        </svg>
-                      </span>
+                      <span className="places__sorting-caption">Sort by </span>
                       {/* <ul className="places__options places__options--custom places__options--opened">
                         <li className="places__option places__option--active" tabIndex={0}>Popular</li>
                         <li className="places__option" tabIndex={0}>Price: low to high</li>
                         <li className="places__option" tabIndex={0}>Price: high to low</li>
                         <li className="places__option" tabIndex={0}>Top rated first</li>
                       </ul> */}
-                      <PlacesOptions params={PlacesOptionsParams} />
+                      <FormSorting onClick={setSorting}/>
                     </form>
                     <div className="cities__places-list places__list tabs__content">
                       {offersLength > 0 &&

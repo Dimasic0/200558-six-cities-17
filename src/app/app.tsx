@@ -22,20 +22,18 @@ export default function App(): JSX.Element {
   useEffect(() => {
     const server = setTimeout(() => {
       dispath(setOffers(data));
-      console.log('server=');
     }, 1000);
-    console.log('app useEffect');
-    return ()=> clearTimeout(server);
+    return () => clearTimeout(server);
   });
   return (
     <BrowserRouter>
       <Routes>
         {/* <Route index element={<Favorites />} /> */}
-        <Route index element={<Main dispath={dispath}/>} />
+        <Route index element={<Main/>} />
         {/* <Route index element={<Offer offers={offers} />} /> */}
         <Route path={Address.login} element={<Login />} />
         <Route path={Address.favorites} element={
-          <PrivateRoute status={PrivateStatus.Guest}>
+          <PrivateRoute status={PrivateStatus.Auth}>
             <Favorites />
           </PrivateRoute>
         }

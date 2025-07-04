@@ -1,4 +1,4 @@
-import { memoize } from "../../data/constant";
+import { memoize } from '../../data/constant';
 
 interface PropsLoadingFun {
     text?:string;
