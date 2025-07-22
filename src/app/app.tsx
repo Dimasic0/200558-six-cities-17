@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { offers } from '../mocks/offers';
 import { TData } from '../types/types';
 import Main from '../pages/main/main';
+import axios from 'axios';
 
 const data: TData = {
   offers: offers,
@@ -19,11 +20,16 @@ const data: TData = {
 
 export default function App(): JSX.Element {
   const dispath = useDispatch();
+  
   useEffect(() => {
-    const server = setTimeout(() => {
-      dispath(setOffers(data));
-    }, 1000);
-    return () => clearTimeout(server);
+    const controller = new AbortController();
+    axios.get('https://16.design.htmlacademy.pro/six-cities/offers', { signal: controller.signal }).then(({ data }) => {
+      console.log('data=',data);
+      dispath(setOffers({ offers: data}));
+    });
+    return () => {
+      controller.abort();
+    };
   });
   return (
     <BrowserRouter>

@@ -18,7 +18,7 @@ export type TOffer = {
 export type TOffersProp = {
   offers: TOffer[];
 };
-export type objec = Record<string, objec | null | string | number>;
+export type object = Record<string, object | null | string | number>;
 export type TOffersByCities = Record<string, TOffer[]>;
 
 export type City = {

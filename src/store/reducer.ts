@@ -9,12 +9,12 @@ export const initialState: TInitialState = {
   offersByCities: null,
 };
 
-const reducer = createReducer(initialState, (builder) => {
+export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setCity, (state, { payload }) => {
     state.city = payload;
   });
   builder.addCase(setOffers, (state: TInitialState, { payload }) => {
-    state.city = payload.city;
+    state.city = payload.city || state.city;
     state.offersByCities = Object.groupBy(
       payload.offers,
       (el: TOffer) => el.city.name

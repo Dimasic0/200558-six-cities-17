@@ -3,7 +3,6 @@ import {useState } from 'react';
 import Map from '../../components/map/map';
 import Header from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
-import Loading from '../../components/loading/loading';
 import Locations from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
 import { setCity } from '../../store/action';
@@ -12,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
-
+import Spinner from '../../components/spinner/spinner';
 
 export default function Main() {
   const [cardHover, setCardHover] = useState<string | null>(null);
@@ -43,8 +42,8 @@ export default function Main() {
 
   return (
     <div className="page page--gray page--main">
-      {offersLength < 0 ?
-        <Loading />
+      {offersLength < 1 ?
+        <Spinner />
         :
         <>
           <Header />
