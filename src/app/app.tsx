@@ -8,28 +8,18 @@ import PrivateRoute from '../privateRoute';
 import { useDispatch } from 'react-redux';
 import { setOffers } from '../store/action';
 import { useEffect } from 'react';
-import { offers } from '../mocks/offers';
-import { TData } from '../types/types';
 import Main from '../pages/main/main';
 import axios from 'axios';
 
-const data: TData = {
-  offers: offers,
-  city:'Paris',
-};
-
 export default function App(): JSX.Element {
   const dispath = useDispatch();
-  
+
   useEffect(() => {
     const controller = new AbortController();
     axios.get('https://16.design.htmlacademy.pro/six-cities/offers', { signal: controller.signal }).then(({ data }) => {
-      console.log('data=',data);
-      dispath(setOffers({ offers: data}));
+      dispath(setOffers({offers: data}));
     });
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
   });
   return (
     <BrowserRouter>

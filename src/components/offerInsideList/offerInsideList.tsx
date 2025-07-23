@@ -16,4 +16,4 @@ function OfferInsideList({ list }: TOfferInsideList):JSX.Element {
   );
 }
 
-export default memoize(OfferInsideList, (oldProps, newProps) => JSON.stringify(oldProps) === JSON.stringify(newProps));
+export default memoize(OfferInsideList);

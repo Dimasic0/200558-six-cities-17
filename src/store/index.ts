@@ -3,7 +3,6 @@ import { reducer } from './reducer';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, State } from '../types/state.ts';
 import { createAPI } from '../api.ts';
-import { redirect } from './middlewares/redirect';
 
 // export const store = configureStore({reducer});
 export const useAppDispatch = () => useDispatch<AppDispatch>();
