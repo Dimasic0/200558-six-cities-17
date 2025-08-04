@@ -44,13 +44,6 @@ export type TReducer = { offers: TOffer[] };
 
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
-// export type TCity =
-//   | 'Paris'
-//   | 'Cologne'
-//   | 'Brussels'
-//   | 'Amsterdam'
-//   | 'Hamburg'
-//   | 'Dusseldorf';
 
 export type TCity = typeof СITIES[number] | '';
 export type TCities = typeof СITIES;

@@ -5,20 +5,17 @@ import Offer from '../pages/offer/offer';
 import { PrivateStatus, Address } from '../data/constant';
 import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
-import { useDispatch } from 'react-redux';
-import { setOffers } from '../store/action';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
-import axios from 'axios';
+import { setAxiosAction } from '../store/action';
+import { useAppDispatch } from '../store';
 
 export default function App(): JSX.Element {
-  const dispath = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const controller = new AbortController();
-    axios.get('https://16.design.htmlacademy.pro/six-cities/offers', { signal: controller.signal }).then(({ data }) => {
-      dispath(setOffers({offers: data}));
-    });
+    dispatch(setAxiosAction({url:'https://16.design.htmlacademy.pro/six-cities/offers', signal:controller.signal}));
     return () => controller.abort();
   });
   return (
