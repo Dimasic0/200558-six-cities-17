@@ -4,16 +4,18 @@ import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const setCity = createAction<TCity>('catalog/setCity');
-const setOffers = createAction<TOffer[]>('catalog/setOffer[]');
-const setAxiosAction = createAsyncThunk<TOffer[], { signal: AbortSignal; url:string }>(
+const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
   'axios',
-  async ({url, signal }) => {
-    const { data } = await axios.get<TOffer[]>(url, {
-      signal,
-    });
+  async (signal) => {
+    const { data } = await axios.get<TOffer[]>(
+      'https://16.design.htmlacademy.pro/six-cities/offers',
+      {
+        signal,
+      }
+    );
     console.log('data=', data);
     return data;
   }
 );
 
-export { setCity, setAxiosAction };
+export { setCity, setAsyncOffers };

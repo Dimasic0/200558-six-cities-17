@@ -7,7 +7,7 @@ import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
-import { setAxiosAction } from '../store/action';
+import { setAsyncOffers } from '../store/action';
 import { useAppDispatch } from '../store';
 
 export default function App(): JSX.Element {
@@ -15,7 +15,7 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     const controller = new AbortController();
-    dispatch(setAxiosAction({url:'https://16.design.htmlacademy.pro/six-cities/offers', signal:controller.signal}));
+    dispatch(setAsyncOffers(controller.signal));
     return () => controller.abort();
   });
   return (

@@ -1,5 +1,5 @@
 import { createReducer, configureStore } from '@reduxjs/toolkit';
-import { setAxiosAction, setCity } from './action';
+import { setAsyncOffers, setCity } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 import { TInitialState, TOffer } from '../types/types';
@@ -14,7 +14,7 @@ export const reducer = createReducer(initialState, (builder) => {
     state.city = payload;
   });
   builder.addCase(
-    setAxiosAction.fulfilled,
+    setAsyncOffers.fulfilled,
     (state: TInitialState, { payload }: TPayloadOffer) => {
       state.offersByCities = Object.groupBy(
         payload,
