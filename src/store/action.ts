@@ -13,7 +13,6 @@ const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
         signal,
       }
     );
-    console.log('data=', data);
     return data;
   }
 );
