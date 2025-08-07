@@ -4,11 +4,27 @@ import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const setCity = createAction<TCity>('catalog/setCity');
+
+axios.defaults.baseURL = 'https://16.design.htmlacademy.pro/six-cities/';
+
 const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
-  'axios',
+  'offers',
   async (signal) => {
     const { data } = await axios.get<TOffer[]>(
-      'https://16.design.htmlacademy.pro/six-cities/offers',
+      'offers',
+      {
+        signal,
+      }
+    );
+    console.log('data=', data);
+    return data;
+  }
+);
+const setAsyncLogin = createAsyncThunk<TOffer[], AbortSignal>(
+  'login',
+  async (signal) => {
+    const { data } = await axios.get<TOffer[]>(
+      'login',
       {
         signal,
       }
@@ -17,4 +33,4 @@ const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
   }
 );
 
-export { setCity, setAsyncOffers };
+export { setCity, setAsyncOffers, setAsyncLogin };

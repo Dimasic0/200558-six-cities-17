@@ -38,6 +38,7 @@ export type TData= {
 
 export type TInitialState = TData & {
   offersByCities: TOffersByCities | null;
+  authorizationStatus: boolean;
 };
 
 export type TReducer = { offers: TOffer[] };

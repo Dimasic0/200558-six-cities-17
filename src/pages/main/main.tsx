@@ -45,7 +45,7 @@ export default function Main() {
         <Spinner />
         :
         <>
-          <Header />
+          <Header isAuthorized />
           <main className="page__main page__main--index">
             <h1 className="visually-hidden">Cities</h1>
             <div className="tabs">
