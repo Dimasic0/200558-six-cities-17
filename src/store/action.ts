@@ -4,7 +4,7 @@ import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
 const setCity = createAction<TCity>('catalog/setCity');
-const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
+const getOffers = createAsyncThunk<TOffer[], AbortSignal>(
   'axios',
   async (signal) => {
     const { data } = await axios.get<TOffer[]>(
@@ -17,4 +17,5 @@ const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
   }
 );
 
-export { setCity, setAsyncOffers };
+export { setCity, getOffers };
+//export { setCity, setAsyncOffers };

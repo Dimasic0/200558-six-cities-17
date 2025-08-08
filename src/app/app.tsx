@@ -7,7 +7,7 @@ import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
-import { setAsyncOffers } from '../store/action';
+import { getOffers } from '../store/action';
 import { useAppDispatch } from '../store';
 
 export default function App(): JSX.Element {
@@ -15,7 +15,7 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     const controller = new AbortController();
-    dispatch(setAsyncOffers(controller.signal));
+    dispatch(getOffers(controller.signal));
     return () => controller.abort();
   });
   return (
