@@ -18,4 +18,3 @@ const getOffers = createAsyncThunk<TOffer[], AbortSignal>(
 );
 
 export { setCity, getOffers };
-//export { setCity, setAsyncOffers };
