@@ -18,7 +18,8 @@ export type TOffer = {
 export type TOffersProp = {
   offers: TOffer[];
 };
-export type object = Record<string, object | null | string | number>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TObject = Record<string, any>;
 export type TOffersByCities = Record<string, TOffer[]>;
 
 export type City = {

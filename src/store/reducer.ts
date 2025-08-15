@@ -16,6 +16,8 @@ export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(
     getOffers.fulfilled,
     (state: TInitialState, { payload }: TPayloadOffer) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignoreЫ
       state.offersByCities = Object.groupBy(
         payload,
         (el: TOffer) => el.city.name
