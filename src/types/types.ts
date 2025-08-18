@@ -2,31 +2,55 @@ import {СITIES} from '../data/constant';
 
 export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 
-export type TOffer = {
+export type TOffers = {
   id: string;
   price: number;
   title: string;
   type: HousingRange;
   city: City;
-  location: Location;
+  location: TLocation;
   isFavorite: boolean;
   isPremium: boolean;
   rating: number;
   previewImage: string;
   favorites?: boolean;
 };
-export type TOffersProp = {
-  offers: TOffer[];
+
+export type TOffer = {
+  bedrooms: number;
+  city: {
+    name: string;
+    location: TLocation;
+  };
+  description: string;
+  goods: string[];
+  host: { isPro: boolean; name: string; avatarUrl: string };
+  id: string;
+  images: string[];
+  isFavorite: boolean;
+  isPremium: boolean;
+  location: { latitude: number; longitude: number; zoom: number };
+  maxAdults: number;
+  price: number;
+  rating: number;
+  title: string;
+  type: string;
 };
-export type object = Record<string, object | null | string | number>;
-export type TOffersByCities = Record<string, TOffer[]>;
+
+export type TDataOfferProps = { data: TOffer };
+
+export type TOffersProp = {
+  offers: TOffers[];
+};
+export type TObject = Record<string, object | null | undefined | string | number>;
+export type TOffersByCities = Record<string, TOffers[]>;
 
 export type City = {
   name: TCity;
-  location: Location;
+  location: TLocation;
 };
 
-export type Location = {
+export type TLocation = {
   latitude: number;
   longitude: number;
   zoom: number;
@@ -36,9 +60,17 @@ export type TData= {
   city: TCity;
 };
 
+export type TAuthorizationPost = {
+  avatarUrl: string;
+  email: string;
+  isPro: boolean;
+  name: string;
+  token: string;
+};
+
 export type TInitialState = TData & {
   offersByCities: TOffersByCities | null;
-  authorizationStatus: boolean;
+  authorizationStatus: string;
 };
 
 export type TReducer = { offers: TOffer[] };

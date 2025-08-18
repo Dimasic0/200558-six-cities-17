@@ -37,3 +37,13 @@ const {stringify} = JSON;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoize = <t extends Record<string, any>>(com: FC<t>) => memo<t>(com, (prop1, prop2) => stringify(prop1) === stringify(prop2));
 export {memoize};
+
+export const tokenSet = (token:string):void => {
+  window.localStorage.setItem('token',token);
+};
+
+export const tokenGet = () => localStorage.getItem('token');
+
+export const tokenDelete = (token:string):void => {
+  window.localStorage.removeItem('token');
+};

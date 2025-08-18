@@ -9,7 +9,6 @@ export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<State> = useSelector;
 
 export const api = createAPI();
-
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>

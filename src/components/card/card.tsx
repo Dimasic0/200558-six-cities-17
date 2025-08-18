@@ -1,10 +1,10 @@
-import { TOffer } from '../../types/types';
+import { TOffers } from '../../types/types';
 import { Link } from 'react-router-dom';
 import cls from 'classnames';
 import { memoize } from '../../data/constant';
 
 type TCardProps = {
-  offer: TOffer & { point?: object };
+  offer: TOffers & { point?: object };
   onHover?: (id: string | null) => void;
   variant: 'vertical' | 'horizontal';
   classTextBlock?: string;

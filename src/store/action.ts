@@ -1,36 +1,35 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TCity, TOffer } from '../types/types';
+import { TAuthorizationPost, TCity, TOffer } from '../types/types';
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { tokenSet } from '../data/constant';
 
 const setCity = createAction<TCity>('catalog/setCity');
 
 axios.defaults.baseURL = 'https://16.design.htmlacademy.pro/six-cities/';
 
-const setAsyncOffers = createAsyncThunk<TOffer[], AbortSignal>(
-  'offers',
-  async (signal) => {
-    const { data } = await axios.get<TOffer[]>(
-      'offers',
-      {
-        signal,
-      }
-    );
-    console.log('data=', data);
-    return data;
-  }
+const getOffers = createAsyncThunk<TOffer[], AbortSignal>('offers', async (signal) => {
+  const { data } = await axios.get<TOffer[]>('offers',{signal});
+  return data;
+}
 );
-const setAsyncLogin = createAsyncThunk<TOffer[], AbortSignal>(
-  'login',
-  async (signal) => {
-    const { data } = await axios.get<TOffer[]>(
-      'login',
-      {
-        signal,
-      }
-    );
-    return data;
-  }
+const getLoginGet = createAsyncThunk<TOffer[], AbortSignal>('login', async (signal) => {
+  const { data } = await axios.get<TOffer[]>('login',{signal});
+  return data;
+}
 );
+const getLoginPost = createAsyncThunk<TAuthorizationPost,{ signal?: AbortSignal; email: string; password: string }>('loginPost', async ({ signal, email, password },api) => {
+  console.log('getLoginPost api=', api);
+  const { data } = await axios.post<TAuthorizationPost>(
+    'login',
+    { email, password },
+    { signal }
+  );
+ 
+  console.log('data=', data);
+  tokenSet(data.token);
+  return data;
+});
 
-export { setCity, setAsyncOffers, setAsyncLogin };
+export { setCity, getOffers, getLoginGet, getLoginPost };
+//export { setCity, setAsyncOffers, setAsyncLoginGet, setAsyncLoginPost };
