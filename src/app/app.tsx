@@ -18,7 +18,7 @@ export default function App(): JSX.Element {
     const controller = new AbortController();
     dispatch(getOffers(controller.signal));
     window.addEventListener('storage', (evt) => {
-      console.log('newValue=', evt);
+      console.log('storage evt=', evt);
       axios.defaults.headers['x-token'] = 'erf';
     }, false);
     return () => controller.abort();
