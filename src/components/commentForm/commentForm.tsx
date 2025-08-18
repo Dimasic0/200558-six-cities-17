@@ -1,6 +1,6 @@
 import react, { Fragment, useState } from 'react';
 
-type TCommentForm = { onSubmit: (evt: string) => void };
+type TCommentForm = { onSubmit: (evt:{text:string; rating:number}) => void };
 
 function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
   const [text, setText] = useState<string>('');
@@ -10,8 +10,8 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
     setText(evt.target.value);
   };
   function onFormSubmit(evt: react.FormEvent<HTMLFormElement>) {
-    onSubmit(text);
     evt.preventDefault();
+    onSubmit({ text:text, rating:rating });
   }
   function onInputChange(rat: number) {
     setRating(rat);

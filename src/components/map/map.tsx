@@ -1,16 +1,19 @@
 import {useRef, useEffect} from 'react';
 import {Icon, Marker, layerGroup} from 'leaflet';
 import useMap from '../../hooks/use-map';
-import { TOffer } from '../../types/types';
+import { TOffer, TLocation } from '../../types/types';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../data/constant';
-import { Location } from '../../types/types';
 import 'leaflet/dist/leaflet.css';
 
-type MapProps = {
-  city: Location;
-  points: TOffer[];
+interface MapProps {
+  city: TLocation;
+  points: {
+    [K: string]: any;
+    id: string;
+    location: TLocation;
+  }[];
   selectedPoint: string | null;
-};
+}
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,

@@ -1,6 +1,7 @@
-type TOfferGallery = { children: Array<{ id: string; src: string; alt: string }> };
+export type TOfferGalleryChildren = { id: string; src: string; alt: string };
+type TOfferGalleryProps = { children: TOfferGalleryChildren[] };
 
-export default function OfferGallery({ children }: TOfferGallery) {
+export default function OfferGallery({ children }: TOfferGalleryProps) {
   return (
     <div className="offer__gallery">
       {

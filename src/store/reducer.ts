@@ -1,5 +1,5 @@
 import { createReducer, configureStore } from '@reduxjs/toolkit';
-import { setAsyncOffers,setAsyncLogin, setCity } from './action';
+import { getOffers, getLoginGet, getLoginPost, setCity } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 import { TInitialState, TOffer } from '../types/types';
@@ -7,29 +7,28 @@ import { TInitialState, TOffer } from '../types/types';
 export const initialState: TInitialState = {
   city: 'Paris',
   offersByCities: null,
-  authorizationStatus: false
+  authorizationStatus: '',
 };
 type TPayloadOffer = { payload : TOffer[]};
 export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setCity, (state, { payload }) => {
     state.city = payload;
   });
-  builder.addCase(
-    setAsyncOffers.fulfilled,
-    (state: TInitialState, { payload }: TPayloadOffer) => {
-      state.offersByCities = Object.groupBy(
-        payload,
-        (el: TOffer) => el.city.name
-      ) as Record<string, TOffer[]>;
-    }
-  );
-  builder.addCase(
-    setAsyncLogin.fulfilled,
-    (state: TInitialState) => {
-      state.authorizationStatus = true;
-      console.log('authorization');
-    }
-  );
+  builder.addCase(getOffers.fulfilled, (state, { payload }: TPayloadOffer) => {
+    console.log('offers=', payload);
+    state.offersByCities = Object.groupBy(
+      payload,
+      (el: TOffer) => el.city.name
+    ) as Record<string, TOffer[]>;
+  });
+  builder.addCase(getLoginGet.fulfilled, (state) => {
+    //state.authorizationStatus = true;
+    console.log('authorization');
+  });
+  builder.addCase(getLoginPost.fulfilled, (state, { payload }) => {
+    console.log('payload=', payload);
+    state.authorizationStatus = payload.token;
+  });
 });
 
 export const store = configureStore({ reducer });

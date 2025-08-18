@@ -6,5 +6,7 @@ const emptyArray: TOffer[] = [];
 export const useOffers = () =>[...
 useAppSelector((state) => state?.offersByCities?.[state?.city] || emptyArray)];
 export const useCity = () => useAppSelector(({ city }) => city);
-
+export const useAuthorizationStatus = () =>
+  useAppSelector((state) => state.authorizationStatus);
 export const useOffersСities = () => useAppSelector((state) => state.offersByCities);
+
