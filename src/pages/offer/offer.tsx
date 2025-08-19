@@ -40,7 +40,7 @@ export default function Offer() {
   // ];
 
   const onCommontFormSubmit = (evt) => {
-    console.log('onCommontFormSubmit evt=',{"text":evt.text, "rating":evt.rating});
+    console.log('onCommontFormSubmit evt=', { "text": evt.text, "rating": evt.rating }, 'axios=', axios.defaults);
     axios.post(`comments/${id}`, evt).then((response)=>{
       console.log('response=', response);
     });

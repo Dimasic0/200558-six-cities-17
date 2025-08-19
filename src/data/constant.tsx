@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {memo,FC} from 'react';
 
 export enum Address {
@@ -40,6 +41,7 @@ export {memoize};
 
 export const tokenSet = (token:string):void => {
   window.localStorage.setItem('token',token);
+  axios.defaults.headers['x-tokem']=token;
 };
 
 export const tokenGet = () => localStorage.getItem('token');
