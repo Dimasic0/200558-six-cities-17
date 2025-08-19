@@ -4,7 +4,6 @@ import { getLoginPost } from '../../store/action';
 import { useRef } from 'react';
 import { useAppDispatch } from '../../store';
 import { useAuthorizationStatus } from '../../store/selectors';
-import { tokenSet } from '../../data/constant';
 export default function Login():JSX.Element {
   const dispatch = useAppDispatch();
   const AuthorizationStatus = useAuthorizationStatus();

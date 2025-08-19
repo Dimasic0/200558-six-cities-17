@@ -25,7 +25,6 @@ const getLoginPost = createAsyncThunk<TAuthorizationPost,{ signal?: AbortSignal;
     { email, password },
     { signal }
   );
- 
   console.log('data=', data);
   tokenSet(data.token);
   return data;
