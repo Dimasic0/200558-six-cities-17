@@ -7,7 +7,7 @@ import { TInitialState, TOffer } from '../types/types';
 export const initialState: TInitialState = {
   city: 'Paris',
   offersByCities: null,
-  authorizationStatus: '',
+  email: '',
 };
 type TPayloadOffer = { payload : TOffer[]};
 export const reducer = createReducer(initialState, (builder) => {
@@ -27,7 +27,7 @@ export const reducer = createReducer(initialState, (builder) => {
   });
   builder.addCase(getLoginPost.fulfilled, (state, { payload }) => {
     console.log('payload=', payload);
-    state.authorizationStatus = payload.token;
+    state.email = payload.email;
   });
 });
 

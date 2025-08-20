@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 import { memoize } from '../../data/constant';
+import { useEmail } from '../../store/selectors';
 
-type THeaderProps = { isAuthorized?: boolean};
-
-function Header({ isAuthorized}: THeaderProps) {
+function Header() {
+  const email = useEmail();
   return (
     <header className="header">
       <div className="container">
@@ -16,25 +16,12 @@ function Header({ isAuthorized}: THeaderProps) {
           <nav className="header__nav">
             <ul className="header__nav-list">
               <li className="header__nav-item user">
-                {/* <Link className="header__nav-link header__nav-link--profile" to="/favorites">
-                  <div className="header__avatar-wrapper user__avatar-wrapper">
-                  </div>
-                  {
-                    isAuthorized ?
-                      <>
-                        <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                        <span className="header__favorite-count">3</span>
-                      </>
-                      :
-                      <span className="header__login">Sign in</span>
-                  }
-                </Link> */}
                 <Link className="header__nav-link header__nav-link--profile" to="/favorites">
                   <div className="header__avatar-wrapper user__avatar-wrapper">
                   </div>
-                  {isAuthorized ?
+                  {email ?
                     <>
-                      <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
+                      <span className="header__user-name user__name">{email}</span>
                       <span className="header__favorite-count">3</span>
                     </>
                     :
@@ -42,7 +29,7 @@ function Header({ isAuthorized}: THeaderProps) {
                 </Link>
               </li>
               {
-                isAuthorized &&
+                email &&
                 <li className="header__nav-item">
                   <div className="header__nav-link">
                     <span className="header__signout">Sign out</span>

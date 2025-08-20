@@ -1,6 +1,5 @@
 import react, { Fragment, useState } from 'react';
-
-type TCommentForm = { onSubmit: (evt:{text:string; rating:number}) => void };
+import { TCommentForm } from '../../types/types';
 
 function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
   const [text, setText] = useState<string>('');

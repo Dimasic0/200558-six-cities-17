@@ -70,7 +70,7 @@ export type TAuthorizationPost = {
 
 export type TInitialState = TData & {
   offersByCities: TOffersByCities | null;
-  authorizationStatus: string;
+  email: string;
 };
 
 export type TReducer = { offers: TOffer[] };
@@ -91,4 +91,7 @@ export type TComment = {
   };
   comment: string;
   rating: number;
+};
+export type TCommentForm = {
+  onSubmit: (evt: { comment: string; rating: number }) => void;
 };

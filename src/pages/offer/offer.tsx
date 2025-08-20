@@ -5,7 +5,7 @@ import OfferGallery from '../../components/offerGallery/offerGallery';
 import Comments from '../../components/comments/comments.tsx';
 import Header from '../../components/header/header';
 import Cards from '../../components/cards/cards';
-import { TComment, TOffer, TDataOfferProps, TOffers } from '../../types/types';
+import { TComment, TOffer, TDataOfferProps, TOffers, TCommentForm } from '../../types/types';
 import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
 import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
@@ -39,8 +39,8 @@ export default function Offer() {
   //   { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '6' },
   // ];
 
-  const onCommontFormSubmit = (evt) => {
-    console.log('onCommontFormSubmit evt=', { "comment": evt.text, "rating": evt.rating }, 'axios=', axios.defaults);
+  const onCommontFormSubmit = (evt: TCommentForm) => {
+    console.log('onCommontFormSubmit evt=',evt, 'axios=', axios.defaults);
     axios.post(`comments/${id}`, evt).then((response)=>{
       console.log('response=', response);
     });
@@ -67,22 +67,27 @@ export default function Offer() {
   //   comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
   //   rating: 3
   // }];
-  useEffect(()=>{
+  useEffect(() => {
     const controllerOffer = new AbortController();
     const controllerNearOffer = new AbortController();
     const controllerComments = new AbortController();
-    axios.get(`offers/${id}`, { signal: controllerOffer.signal }).then(({ data }: TDataOfferProps) => {
-      console.log('offer=', data);
-      setOffer(data);
-    });
-    axios.get(`offers/${id}/nearby`, { signal: controllerNearOffer.signal }).then(({ data }: TDataOfferProps) => {
-      console.log('offer rad=', data);
-      setNearOffer(data);
-    });
-    axios.get(`comments/${id}`, { signal: controllerComments.signal }).then(({ data }: TDataOfferProps) => {
-      console.log('comment=', data);
-      setComments(data);
-    });
+
+    try {
+      axios.get(`offers/${id}`, { signal: controllerOffer.signal }).then(({ data }: TDataOfferProps) => {
+        console.log('offer=', data);
+        setOffer(data);
+        return axios.get(`offers/${id}/nearby`, { signal: controllerNearOffer.signal });
+      }).then(({ data }: TDataOfferProps) => {
+        console.log('offer rad=', data);
+        setNearOffer(data);
+        return axios.get(`comments/${id}`, { signal: controllerComments.signal });
+      }).then(({ data }: TDataOfferProps) => {
+        console.log('comment=', data);
+        setComments(data);
+      });
+    } catch (err) {
+      console.log('err=',err);
+    }
     return () => {
       controllerOffer.abort();
       controllerNearOffer.abort();
@@ -209,7 +214,8 @@ export default function Offer() {
                     variant='vertical'
                     onHover={(id) => {
                       setCardHover(id);
-                    }}/>}
+                    }}
+                  />}
                 </div>
               </section>
             </div>

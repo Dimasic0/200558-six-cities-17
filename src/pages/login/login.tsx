@@ -3,10 +3,10 @@ import HeaderLogo from '../../components/headerLogo/HeaderLogo';
 import { getLoginPost } from '../../store/action';
 import { useRef } from 'react';
 import { useAppDispatch } from '../../store';
-import { useAuthorizationStatus } from '../../store/selectors';
+import { useEmail } from '../../store/selectors';
 export default function Login():JSX.Element {
   const dispatch = useAppDispatch();
-  const AuthorizationStatus = useAuthorizationStatus();
+  const email = useEmail();
   const emailTagRef = useRef<HTMLInputElement>(null);
   const passwordTagRef = useRef<HTMLInputElement>(null);
   function onSubmit(evt) {
@@ -17,8 +17,8 @@ export default function Login():JSX.Element {
     const password = passwordTagRef.current?.value || '';
     dispatch(getLoginPost({ email:email, password:password}));
   }
-  if (AuthorizationStatus !== '') {
-    console.log('AuthorizationStatus=', AuthorizationStatus);
+  if (email !== '') {
+    console.log('email=', email);
     return <Navigate to='/' />;
   }
 
