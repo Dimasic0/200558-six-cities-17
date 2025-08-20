@@ -40,7 +40,7 @@ export default function Offer() {
   // ];
 
   const onCommontFormSubmit = (evt) => {
-    console.log('onCommontFormSubmit evt=', { "text": evt.text, "rating": evt.rating }, 'axios=', axios.defaults);
+    console.log('onCommontFormSubmit evt=', { "comment": evt.text, "rating": evt.rating }, 'axios=', axios.defaults);
     axios.post(`comments/${id}`, evt).then((response)=>{
       console.log('response=', response);
     });
@@ -68,20 +68,26 @@ export default function Offer() {
   //   rating: 3
   // }];
   useEffect(()=>{
-    const controller = new AbortController();
-    axios.get(`offers/${id}`, { signal: controller.signal }).then(({ data }: TDataOfferProps) => {
+    const controllerOffer = new AbortController();
+    const controllerNearOffer = new AbortController();
+    const controllerComments = new AbortController();
+    axios.get(`offers/${id}`, { signal: controllerOffer.signal }).then(({ data }: TDataOfferProps) => {
       console.log('offer=', data);
       setOffer(data);
     });
-    axios.get(`offers/${id}/nearby`).then(({ data }: TDataOfferProps) => {
+    axios.get(`offers/${id}/nearby`, { signal: controllerNearOffer.signal }).then(({ data }: TDataOfferProps) => {
       console.log('offer rad=', data);
       setNearOffer(data);
     });
-    axios.get(`comments/${id}`).then(({ data }: TDataOfferProps) => {
+    axios.get(`comments/${id}`, { signal: controllerComments.signal }).then(({ data }: TDataOfferProps) => {
       console.log('comment=', data);
       setComments(data);
     });
-    return () => controller.abort();
+    return () => {
+      controllerOffer.abort();
+      controllerNearOffer.abort();
+      controllerComments.abort();
+    };
   },[]);
   return (
     <div className="page" data-t={cardHover}>

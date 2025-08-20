@@ -41,7 +41,7 @@ export {memoize};
 
 export const tokenSet = (token:string):void => {
   window.localStorage.setItem('token',token);
-  axios.defaults.headers['x-tokem']=token;
+  axios.defaults.headers['x-token']=token;
 };
 
 export const tokenGet = () => localStorage.getItem('token');

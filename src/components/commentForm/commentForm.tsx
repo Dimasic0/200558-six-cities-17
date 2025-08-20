@@ -11,7 +11,7 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
   };
   function onFormSubmit(evt: react.FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    onSubmit({ text:text, rating:rating });
+    onSubmit({ comment:text, rating:rating });
   }
   function onInputChange(rat: number) {
     setRating(rat);
