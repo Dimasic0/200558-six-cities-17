@@ -1,5 +1,5 @@
 import { createReducer, configureStore } from '@reduxjs/toolkit';
-import { getOffers, getLoginGet, getLoginPost, setCity } from './action';
+import { getOffers, getLoginPost, setCity } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 import { TInitialState, TOffer } from '../types/types';
@@ -15,18 +15,12 @@ export const reducer = createReducer(initialState, (builder) => {
     state.city = payload;
   });
   builder.addCase(getOffers.fulfilled, (state, { payload }: TPayloadOffer) => {
-    console.log('offers=', payload);
     state.offersByCities = Object.groupBy(
       payload,
       (el: TOffer) => el.city.name
     ) as Record<string, TOffer[]>;
   });
-  builder.addCase(getLoginGet.fulfilled, (state) => {
-    //state.authorizationStatus = true;
-    console.log('authorization');
-  });
   builder.addCase(getLoginPost.fulfilled, (state, { payload }) => {
-    console.log('payload=', payload);
     state.email = payload.email;
   });
 });

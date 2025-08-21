@@ -13,22 +13,15 @@ const getOffers = createAsyncThunk<TOffer[], AbortSignal>('offers', async (signa
   return data;
 }
 );
-const getLoginGet = createAsyncThunk<TOffer[], AbortSignal>('login', async (signal) => {
-  const { data } = await axios.get<TOffer[]>('login',{signal});
-  return data;
-}
-);
 const getLoginPost = createAsyncThunk<TAuthorizationPost,{ signal?: AbortSignal; email: string; password: string }>('loginPost', async ({ signal, email, password },api) => {
-  console.log('getLoginPost api=', api);
   const { data } = await axios.post<TAuthorizationPost>(
     'login',
     { email, password },
     { signal }
   );
-  console.log('data=', data);
   tokenSet(data.token);
   return data;
 });
 
-export { setCity, getOffers, getLoginGet, getLoginPost };
+export { setCity, getOffers, getLoginPost };
 //export { setCity, setAsyncOffers, setAsyncLoginGet, setAsyncLoginPost };

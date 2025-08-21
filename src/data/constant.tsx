@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {memo,FC} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export enum Address {
   main= '/',
@@ -41,7 +42,7 @@ export {memoize};
 
 export const tokenSet = (token:string):void => {
   window.localStorage.setItem('token',token);
-  axios.defaults.headers['x-token']=token;
+  axios.defaults.headers['x-token'] = token;
 };
 
 export const tokenGet = () => localStorage.getItem('token');

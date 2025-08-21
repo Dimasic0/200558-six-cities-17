@@ -12,13 +12,12 @@ import { useAppDispatch } from '../store';
 import axios from 'axios';
 
 export default function App(): JSX.Element {
+  axios.defaults.headers['x-token'] = tokenGet();
   const dispatch = useAppDispatch();
-  console.log('tokenGet=', tokenGet());
   useEffect(() => {
     const controller = new AbortController();
     dispatch(getOffers(controller.signal));
     window.addEventListener('storage', (evt) => {
-      console.log('storage evt=', evt);
       axios.defaults.headers['x-token'] = 'erf';
     }, false);
     return () => controller.abort();

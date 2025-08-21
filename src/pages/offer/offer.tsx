@@ -10,15 +10,19 @@ import { TOfferGalleryChildren } from '../../components/offerGallery/offerGaller
 import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Offer() {
+  const navigate = useNavigate();
   const [offer, setOffer] = useState<TOffer | null>(null);
-  const [nearOffer, setNearOffer] = useState<TOffers[]>(null);
+  const [nearOffer, setNearOffer] = useState<TOffers[] | null>(null);
 
   const [comments, setComments] = useState<TComment[] | null>(null);
-  console.log('use comments=', comments);
+  console.log('offer=', offer);
+  console.log('nearOffer=', nearOffer);
+  console.log('comments=', comments);
+  console.log('----------------------------------------');
   const [cardHover, setCardHover] = useState<string | null>(null);
 
   const offers = useOffers();
@@ -30,69 +34,30 @@ export default function Offer() {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }
 
-  // const offerGalleryParams = [
-  //   { src: 'img/room.jpg', alt: 'Photo studio', id: '1' },
-  //   { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '2' },
-  //   { src: 'img/apartment-02.jpg', alt: 'Photo studio', id: '3' },
-  //   { src: 'img/apartment-03.jpg', alt: 'Photo studio', id: '4' },
-  //   { src: 'img/studio-01.jpg', alt: 'Photo studio', id: '5' },
-  //   { src: 'img/apartment-01.jpg', alt: 'Photo studio', id: '6' },
-  // ];
+  const requests = () => {
+    const controller = new AbortController();
+    (async () => {
+      let res = await axios.get<TOffer>(`offers/${id}`, { signal: controller.signal }).catch(() => navigate('*'));
+      setOffer(res.data);
+      res = await axios.get<TOffers[]>(`offers/${id}/nearby`, { signal: controller.signal });
+      setNearOffer(res.data);
+      res = await axios.get(`comments/${id}`, { signal: controller.signal });
+      setComments(res.data);
+    })();
+    return controller;
+  };
 
   const onCommontFormSubmit = (evt: TCommentForm) => {
     console.log('onCommontFormSubmit evt=',evt, 'axios=', axios.defaults);
     axios.post(`comments/${id}`, evt).then((response)=>{
       console.log('response=', response);
+      requests();
     });
   };
-  // const comments: TComment[] = [{
-  //   id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b62a',
-  //   date: '2019-05-08T14:13:56.569Z',
-  //   user: {
-  //     name: 'Oliver Conner',
-  //     avatarUrl: 'https://url-to-image/image.png',
-  //     isPro: false
-  //   },
-  //   comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
-  //   rating: 4
-  // },
-  // {
-  //   id: 'b67ddfd5-b953-4a30-8c8d-bd083cd6b63a',
-  //   date: '2019-05-08T14:13:56.569Z',
-  //   user: {
-  //     name: 'IVan budco',
-  //     avatarUrl: 'https://url-to-image/image.png',
-  //     isPro: false
-  //   },
-  //   comment: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
-  //   rating: 3
-  // }];
-  useEffect(() => {
-    const controllerOffer = new AbortController();
-    const controllerNearOffer = new AbortController();
-    const controllerComments = new AbortController();
 
-    try {
-      axios.get(`offers/${id}`, { signal: controllerOffer.signal }).then(({ data }: TDataOfferProps) => {
-        console.log('offer=', data);
-        setOffer(data);
-        return axios.get(`offers/${id}/nearby`, { signal: controllerNearOffer.signal });
-      }).then(({ data }: TDataOfferProps) => {
-        console.log('offer rad=', data);
-        setNearOffer(data);
-        return axios.get(`comments/${id}`, { signal: controllerComments.signal });
-      }).then(({ data }: TDataOfferProps) => {
-        console.log('comment=', data);
-        setComments(data);
-      });
-    } catch (err) {
-      console.log('err=',err);
-    }
-    return () => {
-      controllerOffer.abort();
-      controllerNearOffer.abort();
-      controllerComments.abort();
-    };
+  useEffect(() => {
+    const requestsController = requests();
+    return () => requestsController.abort();
   },[]);
   return (
     <div className="page" data-t={cardHover}>
