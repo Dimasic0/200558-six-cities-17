@@ -41,12 +41,12 @@ const memoize = <t extends Record<string, any>>(com: FC<t>) => memo<t>(com, (pro
 export {memoize};
 
 export const tokenSet = (token:string):void => {
-  window.localStorage.setItem('token',token);
+  localStorage.setItem('token',token);
   axios.defaults.headers['x-token'] = token;
 };
 
 export const tokenGet = () => localStorage.getItem('token');
 
 export const tokenDelete = (token:string):void => {
-  window.localStorage.removeItem('token');
+  localStorage.removeItem('token');
 };

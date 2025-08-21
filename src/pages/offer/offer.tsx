@@ -34,15 +34,30 @@ export default function Offer() {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }
 
+  // const requests = () => {
+  //   const controller = new AbortController();
+  //   (async () => {
+  //     let res = await axios.get<TOffer>(`offers/${id}`, { signal: controller.signal }).catch(() => navigate('*'));
+  //     setOffer(res.data);
+  //     res = await axios.get<TOffers[]>(`offers/${id}/nearby`, { signal: controller.signal });
+  //     setNearOffer(res.data);
+  //     res = await axios.get(`comments/${id}`, { signal: controller.signal });
+  //     setComments(res.data);
+  //   })();
+  //   return controller;
+  // };
   const requests = () => {
     const controller = new AbortController();
     (async () => {
-      let res = await axios.get<TOffer>(`offers/${id}`, { signal: controller.signal }).catch(() => navigate('*'));
-      setOffer(res.data);
-      res = await axios.get<TOffers[]>(`offers/${id}/nearby`, { signal: controller.signal });
-      setNearOffer(res.data);
-      res = await axios.get(`comments/${id}`, { signal: controller.signal });
-      setComments(res.data);
+      const configRequests = [`offers/${id}`, setOffer, `offers/${id}/nearby`, setNearOffer, `comments/${id}`, setComments];
+      const res = await axios.get<TOffer>(configRequests[0], { signal: controller.signal }).catch(() => navigate('*'));
+      console.log('res=',res);
+      configRequests[1](res.data);
+      for(let i = 2; i < configRequests.length - 1; i+=2) {
+        console.log('i=',i);
+        let res = await axios.get<TOffer>(configRequests[i], { signal: controller.signal });
+        configRequests[i + 1](res.data);
+      };
     })();
     return controller;
   };
