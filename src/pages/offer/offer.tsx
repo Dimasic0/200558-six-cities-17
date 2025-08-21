@@ -5,7 +5,7 @@ import OfferGallery from '../../components/offerGallery/offerGallery';
 import Comments from '../../components/comments/comments.tsx';
 import Header from '../../components/header/header';
 import Cards from '../../components/cards/cards';
-import { TComment, TOffer, TDataOfferProps, TOffers, TCommentForm } from '../../types/types';
+import { TComment, TOffer, TOffers, TCommentForm } from '../../types/types';
 import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
 import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
