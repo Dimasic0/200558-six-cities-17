@@ -39,6 +39,7 @@ export type TData= {
 
 export type TInitialState = TData & {
   offersByCities: TOffersByCities | null;
+  email:string;
 };
 
 export type TReducer = { offers: TOffer[] };

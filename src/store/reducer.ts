@@ -1,5 +1,5 @@
 import { createReducer, configureStore } from '@reduxjs/toolkit';
-import { getOffers, setCity } from './action';
+import { setEmail, getOffers, setCity, getLogin } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 import { TInitialState, TOffer } from '../types/types';
@@ -7,8 +7,11 @@ import { TInitialState, TOffer } from '../types/types';
 export const initialState: TInitialState = {
   city: 'Paris',
   offersByCities: null,
+  email:'',
 };
 type TPayloadOffer = { payload : TOffer[]};
+type TPayloadString = {payload: string};
+
 export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setCity, (state, { payload }) => {
     state.city = payload;
@@ -24,6 +27,9 @@ export const reducer = createReducer(initialState, (builder) => {
       ) as Record<string, TOffer[]>;
     }
   );
+  builder.addCase(setEmail,(state: TInitialState, { payload }: TPayloadString) => {
+    state.email = payload;
+  });
 });
 
 export const store = configureStore({ reducer });

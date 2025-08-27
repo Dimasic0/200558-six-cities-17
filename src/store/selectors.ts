@@ -8,3 +8,5 @@ useAppSelector((state) => state?.offersByCities?.[state?.city] || emptyArray)];
 export const useCity = () => useAppSelector(({ city }) => city);
 
 export const useOffersСities = () => useAppSelector((state) => state.offersByCities);
+
+export const useEmail = () => useAppSelector((state) => state.email);
