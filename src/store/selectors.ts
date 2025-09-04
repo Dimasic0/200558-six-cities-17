@@ -9,4 +9,4 @@ export const useCity = () => useAppSelector(({ city }) => city);
 
 export const useOffersСities = () => useAppSelector((state) => state.offersByCities);
 
-export const useEmail = () => useAppSelector((state) => state.email);
+export const useEmail = ():string => useAppSelector((state) => state.email);

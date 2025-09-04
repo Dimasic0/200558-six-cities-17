@@ -29,7 +29,7 @@ function Header() {
                       <span className="header__login">Sign in</span>
                   }
                 </Link> */}
-                <Link className="header__nav-link header__nav-link--profile" to="/favorites">
+                <Link className="header__nav-link header__nav-link--profile" to="/login">
                   <div className="header__avatar-wrapper user__avatar-wrapper">
                   </div>
                   {email ?
@@ -38,15 +38,15 @@ function Header() {
                       <span className="header__favorite-count">3</span>
                     </>
                     :
-                    <Link className="header__login" to={Address.login}>Sign in</Link>}
+                    <span className="header__login">Sign in</span>}
                 </Link>
               </li>
               {
                 email &&
                 <li className="header__nav-item">
-                  <div className="header__nav-link">
+                  <a className="header__nav-link" href="#">
                     <span className="header__signout">Sign out</span>
-                  </div>
+                  </a>
                 </li>
               }
             </ul>

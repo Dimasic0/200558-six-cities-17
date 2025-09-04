@@ -30,6 +30,9 @@ export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setEmail,(state: TInitialState, { payload }: TPayloadString) => {
     state.email = payload;
   });
+  builder.addCase(getLogin.fulfilled, (state: TInitialState, {payload}) => {
+    state.email = payload;
+  });
 });
 
 export const store = configureStore({ reducer });
