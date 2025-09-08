@@ -1,4 +1,3 @@
-import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/app.tsx';
 import { Provider } from 'react-redux';
@@ -10,8 +9,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <Provider store={store}>
-    <React.StrictMode>
-      <App/>
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <App/>
+    {/* </React.StrictMode> */}
   </Provider>
 );

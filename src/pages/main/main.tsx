@@ -3,7 +3,6 @@ import {useState } from 'react';
 import Map from '../../components/map/map';
 import Header from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
-import Loading from '../../components/loading/loading';
 import Locations from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
 import { setCity } from '../../store/action';
@@ -12,13 +11,13 @@ import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
-
+import Spinner from '../../components/spinner/spinner';
 
 export default function Main() {
   const [cardHover, setCardHover] = useState<string | null>(null);
   const [sorting, setSorting] = useState<TSortingName>(sortingName.popular);
 
-  const offers = [...useOffers()];
+  const offers = useOffers();
 
   const offersLength = offers.length;
   const dispatch = useDispatch();
@@ -27,7 +26,6 @@ export default function Main() {
   function onLocationsClick(city:TCity) {
     dispatch(setCity(city));
   }
-
 
   switch (sorting) {
     case sortingName.low:
@@ -43,8 +41,8 @@ export default function Main() {
 
   return (
     <div className="page page--gray page--main">
-      {offersLength < 0 ?
-        <Loading />
+      {offersLength < 1 ?
+        <Spinner />
         :
         <>
           <Header />
@@ -63,12 +61,6 @@ export default function Main() {
                     <b className="places__found">{offers?.length} places to stay in Amsterdam</b>
                     <form className="places__sorting" action="#" method="get">
                       <span className="places__sorting-caption">Sort by </span>
-                      {/* <ul className="places__options places__options--custom places__options--opened">
-                        <li className="places__option places__option--active" tabIndex={0}>Popular</li>
-                        <li className="places__option" tabIndex={0}>Price: low to high</li>
-                        <li className="places__option" tabIndex={0}>Price: high to low</li>
-                        <li className="places__option" tabIndex={0}>Top rated first</li>
-                      </ul> */}
                       <FormSorting onClick={setSorting}/>
                     </form>
                     <div className="cities__places-list places__list tabs__content">

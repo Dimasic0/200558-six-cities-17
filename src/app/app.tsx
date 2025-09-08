@@ -5,25 +5,18 @@ import Offer from '../pages/offer/offer';
 import { PrivateStatus, Address } from '../data/constant';
 import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
-import { useDispatch } from 'react-redux';
-import { setOffers } from '../store/action';
 import { useEffect } from 'react';
-import { offers } from '../mocks/offers';
-import { TData } from '../types/types';
 import Main from '../pages/main/main';
-
-const data: TData = {
-  offers: offers,
-  city:'Paris',
-};
+import { getOffers, getLogin } from '../store/action';
+import { useAppDispatch } from '../store';
 
 export default function App(): JSX.Element {
-  const dispath = useDispatch();
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    const server = setTimeout(() => {
-      dispath(setOffers(data));
-    }, 1000);
-    return () => clearTimeout(server);
+    const controller = new AbortController();
+    dispatch(getOffers(controller.signal));
+    dispatch(getLogin(controller.signal));
+    return () => controller.abort();
   });
   return (
     <BrowserRouter>

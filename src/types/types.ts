@@ -18,7 +18,8 @@ export type TOffer = {
 export type TOffersProp = {
   offers: TOffer[];
 };
-export type objec = Record<string, objec | null | string | number>;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type TObject = Record<string, any>;
 export type TOffersByCities = Record<string, TOffer[]>;
 
 export type City = {
@@ -38,19 +39,13 @@ export type TData= {
 
 export type TInitialState = TData & {
   offersByCities: TOffersByCities | null;
+  email:string;
 };
 
 export type TReducer = { offers: TOffer[] };
 
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
-// export type TCity =
-//   | 'Paris'
-//   | 'Cologne'
-//   | 'Brussels'
-//   | 'Amsterdam'
-//   | 'Hamburg'
-//   | 'Dusseldorf';
 
 export type TCity = typeof СITIES[number] | '';
 export type TCities = typeof СITIES;
