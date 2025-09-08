@@ -1,61 +1,40 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Cards from '../../components/cards/cards';
-import { TOffersCities } from '../../types/types';
+import Header from '../../components/header/header';
+import { useOffersСities } from '../../store/selectors';
+import Loading from '../../components/loading/loading';
 
-export default function Favorites({ offers }: TOffersCities):JSX.Element {
-  const [cardHover, setCardHover] = useState<string | null>(null);
 
+export default function Favorites(): JSX.Element {
+  const offers = useOffersСities();
+  const CARDS_CLASSTEXTBLOCK = 'favorites__card-info';
   return (
     <div className="page">
-      <header className="header">
-        <div className="container">
-          <div className="header__wrapper">
-            <div className="header__left">
-              <Link className="header__logo-link" to="main.html">
-                <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41"/>
-              </Link>
-            </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <Link className="header__nav-link header__nav-link--profile" to="#">
-                    <div className="header__avatar-wrapper user__avatar-wrapper">
-                    </div>
-                    <span className="header__user-name user__name">Oliver.conner@gmail.com</span>
-                    <span className="header__favorite-count">3</span>
-                  </Link>
-                </li>
-                <li className="header__nav-item">
-                  <Link className="header__nav-link" to="#">
-                    <span className="header__signout">Sign out</span>
-                  </Link>
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header />
 
-      <main className="page__main page__main--favorites">
-        <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <Link className="locations__item-link" to="#">
-                      <span>Amsterdam</span>
-                    </Link>
+      {offers === null ?
+        <Loading/>
+        :
+        <main className="page__main page__main--favorites">
+          <div className="page__favorites-container container">
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                <li className="favorites__locations-items">
+                  <div className="favorites__locations locations locations--current">
+                    <div className="locations__item">
+                      <Link className="locations__item-link" to="#">
+                        <span>Amsterdam</span>
+                      </Link>
+                    </div>
                   </div>
-                </div>
-                <div className="favorites__places">
-                  <Cards
-                    offers={offers.Amsterdam}
-                    variant='horizontal'
-                  />
-                  {/* <article className="favorites__card place-card">
+                  <div className="favorites__places">
+                    <Cards
+                      offers={offers.Amsterdam}
+                      variant='horizontal'
+                      classTextBlock={CARDS_CLASSTEXTBLOCK}
+                    />
+                    {/* <article className="favorites__card place-card">
                     <div className="place-card__mark">
                       <span>Premium</span>
                     </div>
@@ -121,23 +100,24 @@ export default function Favorites({ offers }: TOffersCities):JSX.Element {
                       <p className="place-card__type">Room</p>
                     </div>
                   </article> */}
-                </div>
-              </li>
-
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <Link className="locations__item-link" to="#">
-                      <span>Cologne</span>
-                    </Link>
                   </div>
-                </div>
-                <div className="favorites__places">
-                  <Cards
-                    offers={offers.Cologne}
-                    variant='horizontal'
-                  />
-                  {/* <article className="favorites__card place-card">
+                </li>
+
+                <li className="favorites__locations-items">
+                  <div className="favorites__locations locations locations--current">
+                    <div className="locations__item">
+                      <Link className="locations__item-link" to="#">
+                        <span>Cologne</span>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="favorites__places">
+                    <Cards
+                      offers={offers.Cologne}
+                      variant='horizontal'
+                      classTextBlock={CARDS_CLASSTEXTBLOCK}
+                    />
+                    {/* <article className="favorites__card place-card">
                     <div className="favorites__image-wrapper place-card__image-wrapper">
                       <Link to="#">
                         <img className="place-card__image" src="img/apartment-small-04.jpg" width="150" height="110" alt="Place image"/>
@@ -168,15 +148,15 @@ export default function Favorites({ offers }: TOffersCities):JSX.Element {
                       <p className="place-card__type">Apartment</p>
                     </div>
                   </article> */}
-                </div>
-              </li>
-            </ul>
-          </section>
-        </div>
-      </main>
+                  </div>
+                </li>
+              </ul>
+            </section>
+          </div>
+        </main>}
       <footer className="footer container">
         <Link className="footer__logo-link" to="main.html">
-          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33"/>
+          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
         </Link>
       </footer>
     </div>

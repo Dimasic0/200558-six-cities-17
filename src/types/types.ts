@@ -1,39 +1,68 @@
+import {СITIES} from '../data/constant';
 
-export enum HousingRange {
-    apartment = 'Apartment',
-    room = 'Room'
-}
+export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 
 export type TOffer = {
-    id: string;
-    price: number;
-    title: string;
-    type: HousingRange;
-    city: City;
-    location: Location;
-    isFavorite: boolean;
-    isPremium: boolean;
-    rating: number;
-    previewImage: string;
-    favorites?: boolean;
-
+  id: string;
+  price: number;
+  title: string;
+  type: HousingRange;
+  city: City;
+  location: Location;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
+  previewImage: string;
+  favorites?: boolean;
 };
 export type TOffersProp = {
-    offers: TOffer[];
+  offers: TOffer[];
 };
+export type objec = Record<string, objec | null | string | number>;
+export type TOffersByCities = Record<string, TOffer[]>;
 
 export type City = {
-    name: string;
-    location: Location;
-}
+  name: TCity;
+  location: Location;
+};
 
 export type Location = {
-    latitude: number;
-    longitude: number;
-    zoom: number;
+  latitude: number;
+  longitude: number;
+  zoom: number;
 };
+
+export type TData= {
+  city: TCity;
+};
+
+export type TInitialState = TData & {
+  offersByCities: TOffersByCities | null;
+};
+
+export type TReducer = { offers: TOffer[] };
+
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
-export type TChildrenStrings = { children: string[] };
+// export type TCity =
+//   | 'Paris'
+//   | 'Cologne'
+//   | 'Brussels'
+//   | 'Amsterdam'
+//   | 'Hamburg'
+//   | 'Dusseldorf';
 
-export type TOffersCities = Record<string, TOffer[]>;
+export type TCity = typeof СITIES[number] | '';
+export type TCities = typeof СITIES;
+
+export type TComment = {
+  id: string;
+  date: string;
+  user: {
+    name: string;
+    avatarUrl: string;
+    isPro: boolean;
+  };
+  comment: string;
+  rating: number;
+};

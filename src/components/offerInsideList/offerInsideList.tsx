@@ -1,11 +1,13 @@
-import { JSX } from 'react';
-import { TChildrenStrings } from '../../types/types';
-export default function OfferInsideList({ children }: TChildrenStrings) {
+import { memoize } from '../../data/constant';
+
+type TOfferInsideList = { list:string[]};
+
+function OfferInsideList({ list }: TOfferInsideList):JSX.Element {
   return (
     <ul className="offer__inside-list">
       {
-        children.map((el) => (
-          <li className="offer__inside-item">
+        list.map((el) => (
+          <li className="offer__inside-item" key={el}>
             {el}
           </li>
         ))
@@ -13,3 +15,5 @@ export default function OfferInsideList({ children }: TChildrenStrings) {
     </ul>
   );
 }
+
+export default memoize(OfferInsideList, (oldProps, newProps) => JSON.stringify(oldProps) === JSON.stringify(newProps));

@@ -9,7 +9,7 @@ import 'leaflet/dist/leaflet.css';
 type MapProps = {
   city: Location;
   points: TOffer[];
-  selectedPoint: string;
+  selectedPoint: string | null;
 };
 
 const defaultCustomIcon = new Icon({
@@ -32,15 +32,15 @@ function Map(props: MapProps): JSX.Element {
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      points.forEach((point:TOffer):void => {
+      points.forEach(({ location, id }:TOffer):void => {
         const marker = new Marker({
-          lat: point.location.latitude,
-          lng: point.location.longitude
+          lat: location.latitude,
+          lng: location.longitude
         });
 
         marker
           .setIcon(
-            selectedPoint !== undefined && point.id === selectedPoint
+            selectedPoint !== undefined && id === selectedPoint
               ? currentCustomIcon
               : defaultCustomIcon
           )
@@ -53,7 +53,7 @@ function Map(props: MapProps): JSX.Element {
     }
   }, [map, points, selectedPoint]);
 
-  return <div style={{height: '500px'}} ref={mapRef}></div>;
+  return <div style={{height: '100%'}} ref={mapRef}></div>;
 }
 
 export default Map;

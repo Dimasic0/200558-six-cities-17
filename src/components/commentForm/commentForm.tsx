@@ -45,7 +45,7 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        {inputRatings} 0
+        {inputRatings}
       </div>
       <textarea
         className="reviews__textarea form__textarea"

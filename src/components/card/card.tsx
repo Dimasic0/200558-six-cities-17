@@ -1,39 +1,41 @@
 import { TOffer } from '../../types/types';
 import { Link } from 'react-router-dom';
 import cls from 'classnames';
+import { memoize } from '../../data/constant';
 
- type TCardProps = {
-   offer: TOffer & { point?:object};
+type TCardProps = {
+  offer: TOffer & { point?: object };
   onHover?: (id: string | null) => void;
   variant: 'vertical' | 'horizontal';
+  classTextBlock?: string;
 };
 
-export function Card({ offer, variant, onHover = ()=>{} }: TCardProps): JSX.Element {
+type TSetConfig = {className:string; width: number; height: number};
+const setConfig = (className: string, width: number, height: number): TSetConfig => ({
+  className,
+  width,
+  height,
+});
 
-  const configs = {
-    vertical: {
-      class: 'cities',
-      width: 260,
-      height: 200
-    },
-    horizontal: {
-      class: 'favorites',
-      width: 150,
-      height: 110
-    },
-  } as const;
+const configs = {
+  vertical: setConfig('cities', 260, 200),
+  horizontal: setConfig('favorites', 150, 110)
+} as const;
+
+function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCardProps): JSX.Element {
   const config = configs[variant];
-
+  const raringWidth = `${offer?.rating * 20}%`;
   return (
     <article
-      className={`${config.class}__card place-card`}
+      className={`${config.className}__card place-card`}
       onMouseEnter={() => onHover(offer.id)}
       onMouseLeave={() => onHover(null)}
     >
-      <div className="place-card__mark" style={{ display: offer.isPremium || 'none'}}>
-        <span>Premium</span>
-      </div>
-      <div className={`${config.class}__image-wrapper place-card__image-wrapper`}>
+      {offer.isPremium &&
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>}
+      <div className={`${config.className}__image-wrapper place-card__image-wrapper`}>
         <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
@@ -44,13 +46,13 @@ export function Card({ offer, variant, onHover = ()=>{} }: TCardProps): JSX.Elem
           />
         </Link>
       </div>
-      <div className="place-card__info">
+      <div className={`${classTextBlock} place-card__info`}>
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">{offer.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button className={cls('place-card__bookmark-button',{'place-card__bookmark-button--active':offer.isFavorite}, 'button')} type="button">
+          <button className={cls('place-card__bookmark-button', { 'place-card__bookmark-button--active': offer.isFavorite }, 'button')} type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg><span className="visually-hidden">In bookmarks</span>
@@ -58,15 +60,17 @@ export function Card({ offer, variant, onHover = ()=>{} }: TCardProps): JSX.Elem
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }}></span>
+            <span style={{ width: raringWidth }}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{offer.title}</a>
+          <Link to={`offer/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>
     </article>
   );
 }
+
+export default memoize(Card);

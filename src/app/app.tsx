@@ -1,40 +1,45 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Main from '../pages/main/main';
 import Login from '../pages/login/login';
 import Favorites from '../pages/favorites/favorites';
 import Offer from '../pages/offer/offer';
 import { PrivateStatus, Address } from '../data/constant';
 import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
-import { TOffer } from '../types/types';
+import { useDispatch } from 'react-redux';
+import { setOffers } from '../store/action';
+import { useEffect } from 'react';
+import { offers } from '../mocks/offers';
+import { TData } from '../types/types';
+import Main from '../pages/main/main';
 
-export default function App({ offers }: { offers:TOffer[]}):JSX.Element {
-  const offersCities: Record<string, TOffer[]> = {};
+const data: TData = {
+  offers: offers,
+  city:'Paris',
+};
 
-  offers.forEach((el) => {
-    const city = el.city;
-    const cityName: string = city.name;
-    if (offersCities[cityName] === undefined) {
-      offersCities[cityName] = [];
-    }
-    offersCities[cityName].push({ ...el });
+export default function App(): JSX.Element {
+  const dispath = useDispatch();
+  useEffect(() => {
+    const server = setTimeout(() => {
+      dispath(setOffers(data));
+    }, 1000);
+    return () => clearTimeout(server);
   });
-
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route index element={<Favorites offers={offersCities} />}/> */}
-        <Route index element={<Main offersCount={4} offers={offersCities} />} />
+        {/* <Route index element={<Favorites />} /> */}
+        <Route index element={<Main/>} />
         {/* <Route index element={<Offer offers={offers} />} /> */}
         <Route path={Address.login} element={<Login />} />
         <Route path={Address.favorites} element={
-          <PrivateRoute status={PrivateStatus.Guest}>
-            <Favorites offers={offersCities}/>
+          <PrivateRoute status={PrivateStatus.Auth}>
+            <Favorites />
           </PrivateRoute>
         }
         />
-        <Route path={Address.offer} element={<Offer offers={offers} />} />
-        <Route path="*" element={<ErrorAddressing/>}/>
+        <Route path={Address.offer} element={<Offer />} />
+        <Route path="*" element={<ErrorAddressing />} />
       </Routes>
     </BrowserRouter>
   );
