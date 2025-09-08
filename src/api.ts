@@ -1,5 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios';
-import { token } from './data/constant';
+import axios from 'axios';
+import { Token } from './data/constant';
 
 export const createAPI = () =>
   axios.create({
@@ -7,11 +7,11 @@ export const createAPI = () =>
     timeout: 5000,
   });
 export const api = createAPI();
+
+const token = 'x-token';
 api.interceptors.request.use((config) => {
-   console.log('use=');
-   console.log("config.headers['x-token']=", config.headers['x-token']);
-  console.time();
-  if (config.headers['x-token'] === undefined) { console.log('zax'); config.headers['x-token'] = token.read();}
-  console.timeEnd();
+  if (config.headers[token] === undefined) {
+    config.headers[token] = Token.read();
+  }
   return config;
 });

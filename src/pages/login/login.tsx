@@ -4,11 +4,11 @@ import { useRef, FormEvent, MutableRefObject, RefObject } from 'react';
 import axios from 'axios';
 import { token } from '../../data/constant';
 import { setEmail } from '../../store/action';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../../store';
 
 
 export default function Login():JSX.Element {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passworInputdRef = useRef<HTMLInputElement>(null);

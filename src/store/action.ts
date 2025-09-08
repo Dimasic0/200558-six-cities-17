@@ -2,16 +2,22 @@ import { createAction } from '@reduxjs/toolkit';
 import { TAuthorizationPost, TCity, TOffer } from '../types/types';
 import axios from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { tokenSet } from '../data/constant';
 import { api } from '../api';
-axios.defaults.baseURL = 'https://16.design.htmlacademy.pro/six-cities/';
 
-const getOffers = createAsyncThunk<TOffer[], AbortSignal>('offers', async (signal) => {
-  const { data } = await axios.get<TOffer[]>('offers',{signal});
+export const setCity = createAction<TCity>('catalog/setCity');
+export const setEmail = createAction<string>('email');
+export const getOffers = createAsyncThunk<TOffer[], AbortSignal>('axios', async (signal) => {
+  const { data } = await axios.get<TOffer[]>('https://16.design.htmlacademy.pro/six-cities/offers',{signal});
   return data;
-});
-const setCity = createAction<TCity>('catalog/setCity');
-const setEmail = createAction<string>('email');
+}
+);
+    interface TResLogin {
+      avatarUrl: string;
+      email: string;
+      isPro: boolean;
+      name: string;
+      token: string;
+    }
 type TLoginRequest = { email: string };
 const getLogin = createAsyncThunk<string, AbortSignal | undefined>(
   'login',
@@ -22,13 +28,11 @@ const getLogin = createAsyncThunk<string, AbortSignal | undefined>(
     return data.email;
   }
 );
-const getLoginPost = createAsyncThunk<TAuthorizationPost,{ signal?: AbortSignal; email: string; password: string }>('loginPost', async ({ signal, email, password },api) => {
-  const { data } = await axios.post<TAuthorizationPost>(
-    'login',
-    { email, password },
-    { signal }
-  );
-  tokenSet(data.token);
+export const getLoginPost = createAsyncThunk<
+  TResLogin,
+  { email: string | null; password: string | null; signal?: AbortSignal }
+>('login', async ({ signal, ...param }) => {
+  const { data } = await api.post<TResLogin>('login', param, {signal});
+  console.log('loginPost=', data);
   return data;
 });
-export { setCity, getOffers, setEmail,getLoginPost, getLogin };

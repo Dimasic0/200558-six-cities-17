@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {memo,FC} from 'react';
-import { useNavigate } from 'react-router-dom';
 
 export enum Address {
   main= '/',
