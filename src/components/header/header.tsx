@@ -31,9 +31,9 @@ function Header() {
               {
                 email &&
                 <li className="header__nav-item">
-                  <div className="header__nav-link">
+                  <a className="header__nav-link" href="#">
                     <span className="header__signout">Sign out</span>
-                  </div>
+                  </a>
                 </li>
               }
             </ul>

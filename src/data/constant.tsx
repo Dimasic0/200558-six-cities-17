@@ -38,6 +38,25 @@ const {stringify} = JSON;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoize = <t extends Record<string, any>>(com: FC<t>) => memo<t>(com, (prop1, prop2) => stringify(prop1) === stringify(prop2));
+
+class dataInLocalStorage {
+  address: string;
+  constructor (address:string) {
+    this.address = address;
+  }
+
+  add(data:string) {
+    localStorage.setItem(this.address,data);
+  }
+
+  read() {
+    return localStorage.getItem(this.address);
+  }
+}
+
+export const token = new dataInLocalStorage('token');
+console.log('token=', token);
+
 export {memoize};
 
 export const tokenSet = (token:string):void => {

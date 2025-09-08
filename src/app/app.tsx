@@ -7,7 +7,7 @@ import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
-import { getOffers } from '../store/action';
+import { getOffers, getLogin } from '../store/action';
 import { useAppDispatch } from '../store';
 import axios from 'axios';
 
@@ -17,6 +17,7 @@ export default function App(): JSX.Element {
   useEffect(() => {
     const controller = new AbortController();
     dispatch(getOffers(controller.signal));
+    dispatch(getLogin(controller.signal));
     return () => controller.abort();
   });
   return (

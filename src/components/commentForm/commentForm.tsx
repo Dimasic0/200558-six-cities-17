@@ -15,7 +15,7 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
   function onInputChange(rat: number) {
     setRating(rat);
   }
-  const inputRatings = Array.from({ length: 5 }, (el, i) => (
+  const inputRatings = Array.from({ length: 5 }, (_, i) => (
     <Fragment key={i}>
       <input
         className="form__rating-input visually-hidden"
