@@ -7,6 +7,7 @@ import { api } from '../api.ts';
 // export const store = configureStore({reducer});
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<State> = useSelector;
+console.log('mid api=', {api});
 export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>

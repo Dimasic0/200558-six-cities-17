@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {memo,FC} from 'react';
+import { api } from '../api';
 
 export enum Address {
   main= '/',
@@ -53,8 +54,9 @@ class dataInLocalStorage {
   }
 }
 
-export const token = new dataInLocalStorage('token');
-console.log('token=', token);
+export const Token = new dataInLocalStorage('token');
+export const Email = new dataInLocalStorage('email');
+export const Password = new dataInLocalStorage('password');
 
 export {memoize};
 

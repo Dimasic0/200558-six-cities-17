@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import HeaderLogo from '../../components/headerLogo/headerLogo';
 import { useRef, FormEvent, MutableRefObject, RefObject } from 'react';
 import axios from 'axios';
-import { token } from '../../data/constant';
+import { Token } from '../../data/constant';
 import { setEmail } from '../../store/action';
 import { useAppDispatch } from '../../store';
 
@@ -27,10 +27,10 @@ export default function Login():JSX.Element {
     console.log('submit');
     axios.post<TResLogin>('https://16.design.htmlacademy.pro/six-cities/login', { email, password }).then(({ data })=>{
       console.log('login=',data);
-      token.add(data.token);
+      Token.add(data.token);
       navigate('/');
       dispatch(setEmail(data.email));
-    }).catch(()=>{console.log('errpr=',error)});
+    });
   }
 
   return (

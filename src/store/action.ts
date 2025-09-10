@@ -11,28 +11,28 @@ export const getOffers = createAsyncThunk<TOffer[], AbortSignal>('axios', async 
   return data;
 }
 );
-    interface TResLogin {
-      avatarUrl: string;
-      email: string;
-      isPro: boolean;
-      name: string;
-      token: string;
-    }
+    // interface TResLogin {
+    //   avatarUrl: string;
+    //   email: string;
+    //   isPro: boolean;
+    //   name: string;
+    //   token: string;
+    // }
 type TLoginRequest = { email: string };
-const getLogin = createAsyncThunk<string, AbortSignal | undefined>(
+export const getLogin = createAsyncThunk<string, AbortSignal | undefined>(
   'login',
-  async (signal) => {
-    console.log('api=', { api });
+  async (param, {extra:api}) => {
+    // console.log('param=', param);
     const { data } = await api.get<TLoginRequest>('login');
     console.log('getLogin data=', data.email);
     return data.email;
   }
 );
-export const getLoginPost = createAsyncThunk<
-  TResLogin,
-  { email: string | null; password: string | null; signal?: AbortSignal }
->('login', async ({ signal, ...param }) => {
-  const { data } = await api.post<TResLogin>('login', param, {signal});
-  console.log('loginPost=', data);
-  return data;
-});
+// export const getLoginPost = createAsyncThunk<
+//   TResLogin,
+//   { email: string | null; password: string | null; signal?: AbortSignal }
+// >('loginPost', async ({ signal, ...param }) => {
+//   const { data } = await api.post<TResLogin>('login', param, {signal});
+//   console.log('loginPost=', data);
+//   return data;
+// });
