@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderLogo from '../../components/headerLogo/headerLogo';
-import { useRef, FormEvent, MutableRefObject, RefObject } from 'react';
+import { FormEvent, useRef } from 'react';
 import axios from 'axios';
 import { Token } from '../../data/constant';
 import { setEmail } from '../../store/action';
@@ -12,8 +12,10 @@ export default function Login():JSX.Element {
   const navigate = useNavigate();
   const emailInputRef = useRef<HTMLInputElement>(null);
   const passworInputdRef = useRef<HTMLInputElement>(null);
-  
-  function onAuthorization (evt:FormEvent) {
+
+  function onAuthorization(evt: FormEvent<HTMLFormElement>) {
+    let formData = new FormData(evt.currentTarget);
+    formData = Object.fromEntries(formData);
     evt.preventDefault();
     interface TResLogin {
       avatarUrl :string;
@@ -21,13 +23,10 @@ export default function Login():JSX.Element {
       isPro:boolean;
       name:string;
       token:string;
-    } 
-    const email: string = emailInputRef.current?.value || '';
-    const password: string = passworInputdRef.current?.value || '';
-    console.log('submit');
-    axios.post<TResLogin>('https://16.design.htmlacademy.pro/six-cities/login', { email, password }).then(({ data })=>{
-      console.log('login=',data);
-      Token.add(data.token);
+    }
+
+    axios.post<TResLogin>('https://16.design.htmlacademy.pro/six-cities/login', formData).then(({ data })=>{
+      Token.value = data.token;
       navigate('/');
       dispatch(setEmail(data.email));
     });

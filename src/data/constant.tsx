@@ -1,6 +1,4 @@
-import axios from 'axios';
 import {memo,FC} from 'react';
-import { api } from '../api';
 
 export enum Address {
   main= '/',
@@ -45,28 +43,19 @@ class dataInLocalStorage {
     this.address = address;
   }
 
-  add(data:string) {
+  set value(data:string) {
     localStorage.setItem(this.address,data);
   }
 
-  read() {
+  get value() {
     return localStorage.getItem(this.address);
+  }
+
+  delete() {
+    localStorage.removeItem(this.address);
   }
 }
 
 export const Token = new dataInLocalStorage('token');
-export const Email = new dataInLocalStorage('email');
-export const Password = new dataInLocalStorage('password');
 
 export {memoize};
-
-export const tokenSet = (token:string):void => {
-  localStorage.setItem('token',token);
-  axios.defaults.headers['x-token'] = token;
-};
-
-export const tokenGet = () => localStorage.getItem('token');
-
-export const tokenDelete = (token:string):void => {
-  localStorage.removeItem('token');
-};

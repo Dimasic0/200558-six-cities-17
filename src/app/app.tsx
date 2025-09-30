@@ -13,7 +13,6 @@ import { useAppDispatch } from '../store';
 export default function App(): JSX.Element {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    console.log('App');
     const controller = new AbortController();
     dispatch(getOffers(controller.signal));
     dispatch(getLogin());

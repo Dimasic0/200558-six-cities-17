@@ -10,8 +10,8 @@ export const api = createAPI();
 
 const token = 'x-token';
 api.interceptors.request.use((config) => {
-  if (config.headers[token] === undefined) {
-    config.headers[token] = Token.read();
+  if (!config.headers[token]) {
+    config.headers[token] = Token.value;
   }
   return config;
 });

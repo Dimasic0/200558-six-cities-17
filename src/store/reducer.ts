@@ -1,5 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit';
-import { setEmail, getOffers, setCity, getLogin , getLoginPost } from './action';
+import { setEmail, getOffers, setCity, getLogin } from './action';
 import { useSelector } from 'react-redux';
 import { TypedUseSelectorHook } from 'react-redux';
 import { TInitialState, TOffer } from '../types/types';
@@ -33,10 +33,6 @@ export const reducer = createReducer(initialState, (builder) => {
   builder.addCase(setEmail,(state: TInitialState, { payload }: TPayloadString) => {
     state.email = payload;
   });
-  // builder.addCase(getLoginPost.fulfilled, (state:TInitialState, { payload }) => {
-  //   console.log('getLoginPost payload=', payload);
-  //   state.email = payload.email;
-  // });
 });
 
 export const useAppSelector: TypedUseSelectorHook<TInitialState> = useSelector;

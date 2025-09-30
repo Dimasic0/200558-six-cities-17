@@ -1,5 +1,10 @@
 import react, { Fragment, useState } from 'react';
-import { TCommentForm } from '../../types/types';
+import { TCommentForm, TObject } from '../../types/types';
+
+export type TCommentFromEvt = { comment: string; rating: number };
+export type TCommentForm = {
+  onSubmit: (evt: TCommentFromEvt) => void | boolean | number | string | TObject;
+};
 
 function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
   const [text, setText] = useState<string>('');
@@ -63,6 +68,7 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
+          disabled={text.length < 50}
         >
           Submit
         </button>

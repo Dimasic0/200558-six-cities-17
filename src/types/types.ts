@@ -92,6 +92,5 @@ export type TComment = {
   comment: string;
   rating: number;
 };
-export type TCommentForm = {
-  onSubmit: (evt: { comment: string; rating: number }) => void;
-};
+
+export type TPropSignal = { signal: AbortSignal };

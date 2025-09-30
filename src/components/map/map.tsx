@@ -1,17 +1,19 @@
 import {useRef, useEffect} from 'react';
 import {Icon, Marker, layerGroup} from 'leaflet';
 import useMap from '../../hooks/use-map';
-import { TOffer, TLocation } from '../../types/types';
+import {TLocation } from '../../types/types';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../data/constant';
 import 'leaflet/dist/leaflet.css';
 
+type point = {
+  [K: string]: any;
+  id: string;
+  location: TLocation;
+};
+
 interface MapProps {
   city: TLocation;
-  points: {
-    [K: string]: any;
-    id: string;
-    location: TLocation;
-  }[];
+  points: point[];
   selectedPoint: string | null;
 }
 
@@ -35,7 +37,7 @@ function Map(props: MapProps): JSX.Element {
   useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
-      points.forEach(({ location, id }:TOffer):void => {
+      points.forEach(({ location, id }: point):void => {
         const marker = new Marker({
           lat: location.latitude,
           lng: location.longitude

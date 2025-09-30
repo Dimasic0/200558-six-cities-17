@@ -1,28 +1,23 @@
 import { useEffect, useState } from 'react';
-import CommentForm from '../../components/commentForm/commentForm';
+import CommentForm, { TCommentFromEvt } from '../../components/commentForm/commentForm';
 import OfferInsideList from '../../components/offerInsideList/offerInsideList';
 import OfferGallery from '../../components/offerGallery/offerGallery';
 import Comments from '../../components/comments/comments.tsx';
 import Header from '../../components/header/header';
 import Cards from '../../components/cards/cards';
-import { TComment, TOffer, TOffers, TCommentForm } from '../../types/types';
+import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
 import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
 import Map from '../../components/map/map';
 import { useOffers } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
-import {useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { useParams } from 'react-router-dom';
+import { api } from '../../api.ts';
 
 export default function Offer() {
-  const navigate = useNavigate();
   const [offer, setOffer] = useState<TOffer | null>(null);
-  const [nearOffer, setNearOffer] = useState<TOffers[] | null>(null);
+  const [nearOffers, setNearOffers] = useState<TOffers[] | null>(null);
 
   const [comments, setComments] = useState<TComment[] | null>(null);
-  console.log('offer=', offer);
-  console.log('nearOffer=', nearOffer);
-  console.log('comments=', comments);
-  console.log('----------------------------------------');
   const [cardHover, setCardHover] = useState<string | null>(null);
 
   const offers = useOffers();
@@ -33,45 +28,26 @@ export default function Offer() {
   if (offer !== null) {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }
-
-  // const requests = () => {
-  //   const controller = new AbortController();
-  //   (async () => {
-  //     let res = await axios.get<TOffer>(`offers/${id}`, { signal: controller.signal }).catch(() => navigate('*'));
-  //     setOffer(res.data);
-  //     res = await axios.get<TOffers[]>(`offers/${id}/nearby`, { signal: controller.signal });
-  //     setNearOffer(res.data);
-  //     res = await axios.get(`comments/${id}`, { signal: controller.signal });
-  //     setComments(res.data);
-  //   })();
-  //   return controller;
-  // };
-  const requests = () => {
-    const controller = new AbortController();
-    (async () => {
-      const configRequests = [`offers/${id}`, setOffer, `offers/${id}/nearby`, setNearOffer, `comments/${id}`, setComments];
-      const res = await axios.get<TOffer>(configRequests[0], { signal: controller.signal }).catch(() => navigate('*'));
-      console.log('res=',res);
-      configRequests[1](res.data);
-      for(let i = 2; i < configRequests.length - 1; i+=2) {
-        console.log('i=',i);
-        let res = await axios.get<TOffer>(configRequests[i], { signal: controller.signal });
-        configRequests[i + 1](res.data);
-      };
-    })();
-    return controller;
+  const getCommit = ({ signal }:TPropSignal) => {
+    api.get<TComment[]>(`comments/${id}`, { signal }).then(({ data }) => {
+      setComments(data);
+    });
   };
-
-  const onCommontFormSubmit = (evt: TCommentForm) => {
-    console.log('onCommontFormSubmit evt=',evt, 'axios=', axios.defaults);
-    axios.post(`comments/${id}`, evt).then((response)=>{
-      console.log('response=', response);
-      requests();
+  const requestsController = new AbortController();
+  const onCommontFormSubmit = (evt: TCommentFromEvt) => {
+    api.post(`comments/${id}`, evt).then(() => {
+      getCommit(requestsController);
     });
   };
 
   useEffect(() => {
-    const requestsController = requests();
+    api.get<TOffer>(`offers/${id}`, { signal: requestsController.signal }).then(({ data }) => {
+      setOffer(data);
+    });
+    api.get<TOffers[]>(`offers/${id}/nearby`, { signal: requestsController.signal }).then(({ data }) => {
+      setNearOffers(data);
+    });
+    getCommit(requestsController);
     return () => requestsController.abort();
   },[]);
   return (
@@ -87,26 +63,6 @@ export default function Offer() {
           <main className="page__main page__main--offer">
             <section className="offer">
               <div className="offer__gallery-container container">
-                {/* <div className="offer__gallery">
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/room.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-02.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-03.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/studio-01.jpg" alt="Photo studio" />
-              </div>
-              <div className="offer__image-wrapper">
-                <img className="offer__image" src="img/apartment-01.jpg" alt="Photo studio" />
-              </div>
-            </div> */}
                 <OfferGallery>{offerGalleryParams}</OfferGallery>
               </div>
               <div className="offer__container container">
@@ -190,11 +146,9 @@ export default function Offer() {
               <section className="near-places places">
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
-                  {nearOffer && <Cards offers={nearOffer}
+                  {nearOffers && <Cards offers={nearOffers}
                     variant='vertical'
-                    onHover={(id) => {
-                      setCardHover(id);
-                    }}
+                    onHover={setCardHover}
                   />}
                 </div>
               </section>
