@@ -28,7 +28,7 @@ export default function Offer() {
   if (offer !== null) {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }
-  const getCommit = ({ signal }:TPropSignal) => {
+  const getComment = ({ signal }:TPropSignal) => {
     api.get<TComment[]>(`comments/${id}`, { signal }).then(({ data }) => {
       setComments(data);
     });
@@ -36,7 +36,7 @@ export default function Offer() {
   const requestsController = new AbortController();
   const onCommontFormSubmit = (evt: TCommentFromEvt) => {
     api.post(`comments/${id}`, evt).then(() => {
-      getCommit(requestsController);
+      getComment(requestsController);
     });
   };
 
@@ -47,7 +47,7 @@ export default function Offer() {
     api.get<TOffers[]>(`offers/${id}/nearby`, { signal: requestsController.signal }).then(({ data }) => {
       setNearOffers(data);
     });
-    getCommit(requestsController);
+    getComment(requestsController);
     return () => requestsController.abort();
   },[]);
   return (
