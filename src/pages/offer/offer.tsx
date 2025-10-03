@@ -22,34 +22,34 @@ export default function Offer() {
 
   const offers = useOffers();
 
-  const {id} = useParams();
+  const {offerId} = useParams();
 
   let offerGalleryParams: TOfferGalleryChildren[];
   if (offer !== null) {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }
   const getComment = ({ signal }:TPropSignal) => {
-    api.get<TComment[]>(`comments/${id}`, { signal }).then(({ data }) => {
+    api.get<TComment[]>(`comments/${offerId}`, { signal }).then(({ data }) => {
       setComments(data);
     });
   };
   const requestsController = new AbortController();
   const onCommontFormSubmit = (evt: TCommentFromEvt) => {
-    api.post(`comments/${id}`, evt).then(() => {
+    api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
     });
   };
 
   useEffect(() => {
-    api.get<TOffer>(`offers/${id}`, { signal: requestsController.signal }).then(({ data }) => {
+    api.get<TOffer>(`offers/${offerId}`, { signal: requestsController.signal }).then(({ data }) => {
       setOffer(data);
     });
-    api.get<TOffers[]>(`offers/${id}/nearby`, { signal: requestsController.signal }).then(({ data }) => {
+    api.get<TOffers[]>(`offers/${offerId}/nearby`, { signal: requestsController.signal }).then(({ data }) => {
       setNearOffers(data);
     });
     getComment(requestsController);
     return () => requestsController.abort();
-  },[]);
+  });
   return (
     <div className="page" data-t={cardHover}>
       {offer === null ?
@@ -146,7 +146,8 @@ export default function Offer() {
               <section className="near-places places">
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
-                  {nearOffers && <Cards offers={nearOffers}
+                  {nearOffers &&
+                  <Cards offers={nearOffers}
                     variant='vertical'
                     onHover={setCardHover}
                   />}

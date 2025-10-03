@@ -4,7 +4,7 @@ export enum Address {
   main= '/',
   login='/login',
   favorites= '/favorites',
-  offer= '/offer/:id'
+  offer= '/offer/:offerId'
 }
 
 export enum PrivateStatus {
