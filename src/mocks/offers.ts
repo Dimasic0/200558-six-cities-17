@@ -1,5 +1,5 @@
-import { TOffer } from '../types/types';
-const offers: TOffer[] = [
+import { TOffers } from '../types/types';
+const offers: TOffers[] = [
   {
     id: '82fc8d67-a851-4637-964f-88fe508e833c',
     title: 'Tile House',

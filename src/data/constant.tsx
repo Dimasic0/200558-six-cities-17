@@ -48,7 +48,7 @@ class dataInLocalStorage {
   }
 
   get value() {
-    return localStorage.getItem(this.address);
+    return localStorage.getItem(this.address) as string;
   }
 
   delete() {

@@ -14,8 +14,7 @@ export default function Login():JSX.Element {
   const passworInputdRef = useRef<HTMLInputElement>(null);
 
   function onAuthorization(evt: FormEvent<HTMLFormElement>) {
-    let formData = new FormData(evt.currentTarget);
-    formData = Object.fromEntries(formData);
+    const formData = Object.fromEntries(new FormData(evt.currentTarget));
     evt.preventDefault();
     interface TResLogin {
       avatarUrl :string;

@@ -24,7 +24,7 @@ export default function Offer() {
 
   const {offerId} = useParams();
 
-  let offerGalleryParams: TOfferGalleryChildren[];
+  let offerGalleryParams: TOfferGalleryChildren[] = [];
   if (offer !== null) {
     offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
   }

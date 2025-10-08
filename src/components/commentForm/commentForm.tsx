@@ -1,5 +1,5 @@
 import react, { Fragment, useState } from 'react';
-import { TCommentForm, TObject } from '../../types/types';
+import { TObject } from '../../types/types';
 
 export type TCommentFromEvt = { comment: string; rating: number };
 export type TCommentForm = {

@@ -15,7 +15,7 @@ export const getLogin = createAsyncThunk<
   string,
   AbortSignal | undefined,
   { extra: AxiosInstance }
->('login', async (param, { extra: api }) => {
+>('login', async (_, { extra: api }) => {
   const { data } = await api.get<TLoginRequest>('login');
   return data.email;
 });

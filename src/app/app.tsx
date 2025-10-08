@@ -21,9 +21,7 @@ export default function App(): JSX.Element {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route index element={<Favorites />} /> */}
         <Route index element={<Main/>} />
-        {/* <Route index element={<Offer offers={offers} />} /> */}
         <Route path={Address.login} element={<Login />} />
         <Route path={Address.favorites} element={
           <PrivateRoute status={PrivateStatus.Auth}>
