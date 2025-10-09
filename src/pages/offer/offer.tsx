@@ -8,7 +8,7 @@ import Cards from '../../components/cards/cards';
 import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
 import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
 import Map from '../../components/map/map';
-import { useOffers } from '../../store/selectors';
+import { useEmail, useOffers } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
@@ -21,6 +21,7 @@ export default function Offer() {
   const [cardHover, setCardHover] = useState<string | null>(null);
 
   const offers = useOffers();
+  const email = useEmail();
 
   const {offerId} = useParams();
 
@@ -35,12 +36,14 @@ export default function Offer() {
   };
   const requestsController = new AbortController();
   const onCommontFormSubmit = (evt: TCommentFromEvt) => {
+    console.log('onCommontFormSubmit=', evt);
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
     });
   };
 
   useEffect(() => {
+    console.log('useEffect []');
     api.get<TOffer>(`offers/${offerId}`, { signal: requestsController.signal }).then(({ data }) => {
       setOffer(data);
     });
@@ -49,7 +52,7 @@ export default function Offer() {
     });
     getComment(requestsController);
     return () => requestsController.abort();
-  });
+  },[]);
   return (
     <div className="page" data-t={cardHover}>
       {offer === null ?
@@ -131,7 +134,7 @@ export default function Offer() {
                   <section className="offer__reviews reviews">
                     <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
                     <Comments data={comments} bemBlock="reviews"/>
-                    <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />
+                    { email && <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />}
                   </section>
                 </div>
               </div>
