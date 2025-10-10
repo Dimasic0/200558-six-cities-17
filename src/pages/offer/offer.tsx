@@ -36,14 +36,12 @@ export default function Offer() {
   };
   const requestsController = new AbortController();
   const onCommontFormSubmit = (evt: TCommentFromEvt) => {
-    console.log('onCommontFormSubmit=', evt);
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
     });
   };
 
   useEffect(() => {
-    console.log('useEffect []');
     api.get<TOffer>(`offers/${offerId}`, { signal: requestsController.signal }).then(({ data }) => {
       setOffer(data);
     });
