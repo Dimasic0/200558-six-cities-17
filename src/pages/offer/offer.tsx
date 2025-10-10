@@ -23,13 +23,13 @@ export default function Offer() {
   const offers = useOffers();
   const email = useEmail();
 
-  const {offerId} = useParams();
+  const { offerId } = useParams();
 
   let offerGalleryParams: TOfferGalleryChildren[] = [];
   if (offer !== null) {
-    offerGalleryParams = offer.images.map((el,i) => ({src:el, alt: '', id: `${i}`}));
+    offerGalleryParams = offer.images.map((el, i) => ({ src: el, alt: '', id: `${i}` }));
   }
-  const getComment = ({ signal }:TPropSignal) => {
+  const getComment = ({ signal }: TPropSignal) => {
     api.get<TComment[]>(`comments/${offerId}`, { signal }).then(({ data }) => {
       setComments(data);
     });
@@ -50,16 +50,16 @@ export default function Offer() {
     });
     getComment(requestsController);
     return () => requestsController.abort();
-  },[]);
+  }, []);
   return (
     <div className="page" data-t={cardHover}>
       {offer === null ?
 
-        <Loading/>
+        <Loading />
 
         :
         <>
-          <Header isAuthorized/>
+          <Header isAuthorized />
 
           <main className="page__main page__main--offer">
             <section className="offer">
@@ -69,9 +69,9 @@ export default function Offer() {
               <div className="offer__container container">
                 <div className="offer__wrapper">
                   {offer.isPremium &&
-                  <div className="offer__mark">
-                    <span>Premium</span>
-                  </div>}
+                    <div className="offer__mark">
+                      <span>Premium</span>
+                    </div>}
                   <div className="offer__name-wrapper">
                     <h1 className="offer__name">{offer.title}</h1>
                     <button className="offer__bookmark-button button" type="button">
@@ -83,7 +83,7 @@ export default function Offer() {
                   </div>
                   <div className="offer__rating rating">
                     <div className="offer__stars rating__stars">
-                      <span style={{ width: `${offer.rating / 5 * 100 }%` }}></span>
+                      <span style={{ width: `${offer.rating / 5 * 100}%` }}></span>
                       <span className="visually-hidden">Rating</span>
                     </div>
                     <span className="offer__rating-value rating__value">{offer.rating}</span>
@@ -96,7 +96,7 @@ export default function Offer() {
                       {offer.bedrooms} Bedrooms
                     </li>
                     <li className="offer__feature offer__feature--adults">
-                  Max {offer.maxAdults} adults
+                      Max {offer.maxAdults} adults
                     </li>
                   </ul>
                   <div className="offer__price">
@@ -105,7 +105,7 @@ export default function Offer() {
                   </div>
                   <div className="offer__inside">
                     <h2 className="offer__inside-title">What&apos;s inside</h2>
-                    <OfferInsideList list={offer.goods}/>
+                    <OfferInsideList list={offer.goods} />
                   </div>
                   <div className="offer__host">
                     <h2 className="offer__host-title">Meet the host</h2>
@@ -122,17 +122,17 @@ export default function Offer() {
                     </div>
                     <div className="offer__description">
                       <p className="offer__text">
-                    A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
+                        A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam. The building is green and from 18th century.
                       </p>
                       <p className="offer__text">
-                    An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
+                        An independent House, strategically located between Rembrand Square and National Opera, but where the bustle of the city comes to rest in this alley flowery and colorful.
                       </p>
                     </div>
                   </div>
                   <section className="offer__reviews reviews">
                     <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
-                    <Comments data={comments} bemBlock="reviews"/>
-                    { email && <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />}
+                    <Comments data={comments} bemBlock="reviews" />
+                    {email && <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />}
                   </section>
                 </div>
               </div>
@@ -148,10 +148,10 @@ export default function Offer() {
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
                   {nearOffers &&
-                  <Cards offers={nearOffers}
-                    variant='vertical'
-                    onHover={setCardHover}
-                  />}
+                    <Cards offers={nearOffers}
+                      variant='vertical'
+                      onHover={setCardHover}
+                    />}
                 </div>
               </section>
             </div>
