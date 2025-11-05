@@ -43,6 +43,7 @@ export type TOffersProp = {
   offers: TOffers[];
 };
 export type TObject = Record<string, object | null | undefined | string | number>;
+export type TObjectDate = Record<string, object | string | number | Date>;
 export type TOffersByCities = Record<string, TOffers[]>;
 
 export type City = {

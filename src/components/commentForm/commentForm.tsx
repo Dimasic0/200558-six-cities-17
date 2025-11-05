@@ -1,12 +1,13 @@
-import react, { Fragment, useState } from 'react';
+import react, { Fragment, RefObject, useState } from 'react';
 import { TObject } from '../../types/types';
 
 export type TCommentFromEvt = { comment: string; rating: number };
 export type TCommentForm = {
   onSubmit: (evt: TCommentFromEvt) => void | boolean | number | string | TObject;
+  textareaRef: RefObject<HTMLTextAreaElement>;
 };
 
-function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
+function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
   const [text, setText] = useState<string>('');
   const [rating, setRating] = useState<number>(2);
 
@@ -58,6 +59,7 @@ function CommentForm({ onSubmit }: TCommentForm): JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         defaultValue={''}
         onInput={onInput}
+        ref={textareaRef}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
