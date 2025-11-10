@@ -14,7 +14,7 @@ type point = {
 interface MapProps {
   city: TLocation;
   points: point[];
-  selectedPoint: string | null;
+  selectedPoint?: string | null;
 }
 
 const defaultCustomIcon = new Icon({

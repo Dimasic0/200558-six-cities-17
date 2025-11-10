@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CommentForm, { TCommentFromEvt } from '../../components/commentForm/commentForm';
 import OfferInsideList from '../../components/offerInsideList/offerInsideList';
 import OfferGallery from '../../components/offerGallery/offerGallery';
@@ -13,12 +13,18 @@ import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
 
+
 export default function Offer() {
   const [offer, setOffer] = useState<TOffer | null>(null);
-  const [nearOffers, setNearOffers] = useState<TOffers[] | null>(null);
+  const [nearOffers, setNearOffers] = useState<TOffers[]>([]);
+  nearOffers.length = Math.min(3, nearOffers.length);
 
-  const [comments, setComments] = useState<TComment[] | null>(null);
-  const [cardHover, setCardHover] = useState<string | null>(null);
+  const [comments, setComments] = useState<TComment[]>([]);
+  if(comments.length > 10) {
+    comments.splice(0, comments.length - 10);
+  }
+
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
   const offers = useOffers();
   const email = useEmail();
@@ -36,8 +42,11 @@ export default function Offer() {
   };
   const requestsController = new AbortController();
   const onCommontFormSubmit = (evt: TCommentFromEvt) => {
+    const textarea = textareaRef.current as HTMLTextAreaElement;
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
+      textarea.value = '';
+
     });
   };
 
@@ -52,7 +61,7 @@ export default function Offer() {
     return () => requestsController.abort();
   }, []);
   return (
-    <div className="page" data-t={cardHover}>
+    <div className="page">
       {offer === null ?
 
         <Loading />
@@ -130,15 +139,14 @@ export default function Offer() {
                     </div>
                   </div>
                   <section className="offer__reviews reviews">
-                    <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">1</span></h2>
+                    <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments?.length}</span></h2>
                     <Comments data={comments} bemBlock="reviews" />
-                    {email && <CommentForm onSubmit={onCommontFormSubmit} key="CommentForm" />}
+                    {email && <CommentForm onSubmit={onCommontFormSubmit} textareaRef={textareaRef} key="CommentForm" />}
                   </section>
                 </div>
               </div>
               <section className="offer__map map">
                 <Map points={offers}
-                  selectedPoint={cardHover}
                   city={offer.city.location}
                 />
               </section>
@@ -147,10 +155,9 @@ export default function Offer() {
               <section className="near-places places">
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
-                  {nearOffers &&
+                  {nearOffers.length > 0 &&
                     <Cards offers={nearOffers}
                       variant='vertical'
-                      onHover={setCardHover}
                     />}
                 </div>
               </section>
