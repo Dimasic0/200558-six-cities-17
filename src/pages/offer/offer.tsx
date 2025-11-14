@@ -17,6 +17,8 @@ import { api } from '../../api.ts';
 export default function Offer() {
   const [offer, setOffer] = useState<TOffer | null>(null);
   const [nearOffers, setNearOffers] = useState<TOffers[]>([]);
+  const [idOffer, setIdOffer] = useState<string | null>(null);
+
   nearOffers.length = Math.min(3, nearOffers.length);
 
   const [comments, setComments] = useState<TComment[]>([]);
@@ -41,7 +43,7 @@ export default function Offer() {
     });
   };
   const requestsController = new AbortController();
-  const onCommontFormSubmit = (evt: TCommentFromEvt) => {
+  const onCommentFormSubmit = (evt: TCommentFromEvt) => {
     const textarea = textareaRef.current as HTMLTextAreaElement;
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
@@ -141,13 +143,14 @@ export default function Offer() {
                   <section className="offer__reviews reviews">
                     <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments?.length}</span></h2>
                     <Comments data={comments} bemBlock="reviews" />
-                    {email && <CommentForm onSubmit={onCommontFormSubmit} textareaRef={textareaRef} key="CommentForm" />}
+                    {email && <CommentForm onSubmit={onCommentFormSubmit} textareaRef={textareaRef} key="CommentForm" />}
                   </section>
                 </div>
               </div>
               <section className="offer__map map">
-                <Map points={offers}
+                <Map points={nearOffers}
                   city={offer.city.location}
+                  selectedPoint={idOffer}
                 />
               </section>
             </section>
@@ -158,6 +161,7 @@ export default function Offer() {
                   {nearOffers.length > 0 &&
                     <Cards offers={nearOffers}
                       variant='vertical'
+                      onHover={id => setIdOffer(id)}
                     />}
                 </div>
               </section>
