@@ -7,34 +7,36 @@ import Header from '../../components/header/header';
 import Cards from '../../components/cards/cards';
 import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
 import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
-import Map from '../../components/map/map';
-import { useEmail, useOffers } from '../../store/selectors';
+import Map, { point } from '../../components/map/map';
+import { useEmail } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
 
 
 export default function Offer() {
-  const [offer, setOffer] = useState<TOffer | null>(null);
+  const [offer, setOffer] = useState<TOffer | undefined>(undefined);
   const [nearOffers, setNearOffers] = useState<TOffers[]>([]);
-  const [idOffer, setIdOffer] = useState<string | null>(null);
 
   nearOffers.length = Math.min(3, nearOffers.length);
+  const mapOffers: point[] = [...nearOffers];
+  if(offer) {
+    mapOffers.push(offer);
+  }
 
   const [comments, setComments] = useState<TComment[]>([]);
   if(comments.length > 10) {
     comments.splice(0, comments.length - 10);
   }
 
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | undefined>(undefined);
 
-  const offers = useOffers();
   const email = useEmail();
 
   const { offerId } = useParams();
 
   let offerGalleryParams: TOfferGalleryChildren[] = [];
-  if (offer !== null) {
+  if (offer !== undefined) {
     offerGalleryParams = offer.images.map((el, i) => ({ src: el, alt: '', id: `${i}` }));
   }
   const getComment = ({ signal }: TPropSignal) => {
@@ -64,7 +66,7 @@ export default function Offer() {
   }, []);
   return (
     <div className="page">
-      {offer === null ?
+      {offer === undefined ?
 
         <Loading />
 
@@ -148,9 +150,9 @@ export default function Offer() {
                 </div>
               </div>
               <section className="offer__map map">
-                <Map points={nearOffers}
+                <Map points={mapOffers}
                   city={offer.city.location}
-                  selectedPoint={idOffer}
+                  selectedPoint={offer.id}
                 />
               </section>
             </section>
@@ -158,11 +160,9 @@ export default function Offer() {
               <section className="near-places places">
                 <h2 className="near-places__title">Other places in the neighbourhood</h2>
                 <div className="near-places__list places__list">
-                  {nearOffers.length > 0 &&
-                    <Cards offers={nearOffers}
-                      variant='vertical'
-                      onHover={id => setIdOffer(id)}
-                    />}
+                  <Cards offers={nearOffers}
+                    variant='vertical'
+                  />
                 </div>
               </section>
             </div>

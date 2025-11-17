@@ -6,7 +6,7 @@ import { TInitialState, TOffer } from '../types/types';
 
 export const initialState: TInitialState = {
   city: 'Paris',
-  offersByCities: null,
+  offersByCities: undefined,
   email: '',
 };
 type TPayloadOffer = { payload : TOffer[]};

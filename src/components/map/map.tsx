@@ -5,7 +5,7 @@ import {TLocation } from '../../types/types';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../data/constant';
 import 'leaflet/dist/leaflet.css';
 
-type point = {
+export type point = {
   [K: string]: any;
   id: string;
   location: TLocation;
@@ -31,7 +31,7 @@ const currentCustomIcon = new Icon({
 
 function Map(props: MapProps): JSX.Element {
   const {city, points, selectedPoint} = props;
-  const mapRef = useRef(null);
+  const mapRef = useRef(undefined);
   const map = useMap(mapRef, city);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ export default function Favorites(): JSX.Element {
     <div className="page">
       <Header />
 
-      {offers === null ?
+      {offers === undefined ?
         <Loading/>
         :
         <main className="page__main page__main--favorites">
