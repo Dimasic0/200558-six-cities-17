@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import HeaderLogo from '../../components/headerLogo/headerLogo';
-import { FormEvent, useRef } from 'react';
+import { FormEvent } from 'react';
 import axios from 'axios';
 import { Token } from '../../data/constant';
 import { setEmail } from '../../store/action';

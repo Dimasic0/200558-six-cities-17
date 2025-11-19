@@ -31,7 +31,7 @@ const currentCustomIcon = new Icon({
 
 function Map(props: MapProps): JSX.Element {
   const {city, points, selectedPoint} = props;
-  const mapRef = useRef(undefined);
+  const mapRef = useRef<HTMLDivElement>(null);
   const map = useMap(mapRef, city);
 
   useEffect(() => {

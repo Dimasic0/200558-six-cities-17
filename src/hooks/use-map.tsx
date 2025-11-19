@@ -3,14 +3,14 @@ import {Map, TileLayer} from 'leaflet';
 import { TLocation } from '../types/types';
 
 function useMap(
-  mapRef: MutableRefObject<HTMLElement | undefined>,
+  mapRef: MutableRefObject<HTMLElement | null>,
   city: TLocation
 ): Map | undefined {
   const [map, setMap] = useState<Map | undefined>(undefined);
   const isRenderedRef = useRef<boolean>(false);
 
   useEffect(() => {
-    if (mapRef.current !== undefined && !isRenderedRef.current) {
+    if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = new Map(mapRef.current, {
         center: {
           lat: city.latitude,

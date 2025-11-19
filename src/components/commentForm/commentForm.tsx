@@ -4,7 +4,7 @@ import { TObject } from '../../types/types';
 export type TCommentFromEvt = { comment: string; rating: number };
 export type TCommentForm = {
   onSubmit: (evt: TCommentFromEvt) => void | boolean | number | string | TObject;
-  textareaRef: RefObject<HTMLTextAreaElement | undefined>;
+  textareaRef: RefObject<HTMLTextAreaElement>;
 };
 
 function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
