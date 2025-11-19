@@ -15,7 +15,7 @@ import { api } from '../../api.ts';
 
 
 export default function Offer() {
-  const [offer, setOffer] = useState<TOffer | undefined>(undefined);
+  const [offer, setOffer] = useState<TOffer>(undefined);
   const [nearOffers, setNearOffers] = useState<TOffers[]>([]);
 
   nearOffers.length = Math.min(3, nearOffers.length);
@@ -29,7 +29,7 @@ export default function Offer() {
     comments.splice(0, comments.length - 10);
   }
 
-  const textareaRef = useRef<HTMLTextAreaElement | undefined>(undefined);
+  const textareaRef = useRef<HTMLTextAreaElement>();
 
   const email = useEmail();
 

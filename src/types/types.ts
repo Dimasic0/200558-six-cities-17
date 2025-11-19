@@ -70,7 +70,7 @@ export type TAuthorizationPost = {
 };
 
 export type TInitialState = TData & {
-  offersByCities: TOffersByCities | undefined;
+  offersByCities?: TOffersByCities;
   email: string;
 };
 
