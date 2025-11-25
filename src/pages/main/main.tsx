@@ -1,9 +1,9 @@
 import Cards from '../../components/cards/cards';
-import {useState } from 'react';
+import {useCallback, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
 import Header from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
-import Locations from '../../components/locations/locations';
+import {Locations} from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
 import { setCity } from '../../store/action';
 import { TCity } from '../../types/types';
@@ -23,10 +23,10 @@ export default function Main() {
   const dispatch = useDispatch();
 
 
-  function onLocationsClick(city:TCity) {
+  const onLocationsClick = useCallback((city:TCity) => {
     dispatch(setCity(city));
-  }
-
+  },[]);
+  
   switch (sorting) {
     case sortingName.low:
       offers.sort((a,b) => a.price - b.price);
@@ -66,9 +66,7 @@ export default function Main() {
                     <div className="cities__places-list places__list tabs__content">
                       {offersLength > 0 &&
                         <Cards offers={offers}
-                          onHover={(id) => {
-                            setCardHover(id);
-                          }}
+                          onHover={setCardHover}
                           variant="vertical"
                           classTextBlock="favorites__card-info"
                         />}

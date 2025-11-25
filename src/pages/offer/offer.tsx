@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CommentForm, { TCommentFromEvt } from '../../components/commentForm/commentForm';
 import OfferInsideList from '../../components/offerInsideList/offerInsideList';
 import OfferGallery from '../../components/offerGallery/offerGallery';
@@ -45,14 +45,14 @@ export default function Offer() {
     });
   };
   const requestsController = new AbortController();
-  const onCommentFormSubmit = (evt: TCommentFromEvt) => {
+  const onCommentFormSubmit = useCallback((evt: TCommentFromEvt) => {
     const textarea = textareaRef.current as HTMLTextAreaElement;
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
       textarea.value = '';
 
     });
-  };
+  },[]);
 
   useEffect(() => {
     api.get<TOffer>(`offers/${offerId}`, { signal: requestsController.signal }).then(({ data }) => {

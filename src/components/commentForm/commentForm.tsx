@@ -7,7 +7,7 @@ export type TCommentForm = {
   textareaRef: RefObject<HTMLTextAreaElement>;
 };
 
-function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
+function CommentFormFun({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
   const [text, setText] = useState<string>('');
   const [rating, setRating] = useState<number>(2);
 
@@ -78,4 +78,7 @@ function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
     </form>
   );
 }
+
+const CommentForm = memo(CommentFormFun);
+
 export default CommentForm;
