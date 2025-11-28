@@ -33,19 +33,15 @@ const OfferDataFun = ({ offer, comments, nearOffers, getComment }: OfferContaine
   return (
     <section className="offer">
       <div className="offer__gallery-container container">
-        {
-          useMemo(() => (
-            <div className="offer__gallery">
-              {
-                offer?.images.map((el, i) => (
-                  <div className="offer__image-wrapper" key={i}>
-                    <img className='offer__image' src={el} />
-                  </div>
-                ))
-              }
-            </div>
-          ), [offer?.images])
-        }
+        <div className="offer__gallery">
+          {
+            offer.images.map((el, i) => (
+              <div className="offer__image-wrapper" key={i}>
+                <img className='offer__image' src={el} />
+              </div>
+            ))
+          }
+        </div>
       </div>
       <div className="offer__container container">
         <div className="offer__wrapper">

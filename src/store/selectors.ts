@@ -3,8 +3,11 @@ import { useAppSelector } from './reducer';
 
 const emptyArray: TOffers[] = [];
 
-export const useOffers = () =>[...
-useAppSelector((state) => state?.offersByCities?.[state?.city] || emptyArray)];
+export const useOffers = () => useAppSelector((state) => {
+  emptyArray.length = 0;
+  return state.offersByCities?.[state.city] || emptyArray;
+}
+);
 export const useCity = () => useAppSelector(({ city }) => city);
 
 export const useOffersСities = () => useAppSelector((state) => state.offersByCities);

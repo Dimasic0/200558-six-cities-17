@@ -73,7 +73,7 @@ export type TAuthorizationPost = {
 };
 
 export type TInitialState = TData & {
-  offersByCities?: TOffersByCities;
+  offersByCities: TOffersByCities | null;
   email: string;
 };
 

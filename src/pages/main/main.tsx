@@ -77,7 +77,7 @@ export default function Main() {
                       {offersLength > 0 &&
                         <Map points={offersSort}
                           selectedPoint={cardHover}
-                          city={offers?.[0]?.city.location}
+                          city={offers[0].city.location}
                         />}
                     </section>
                   </div>
