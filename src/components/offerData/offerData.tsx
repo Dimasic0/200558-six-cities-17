@@ -15,12 +15,17 @@ interface OfferContainerProp {
   getComment: ()=>void;
 }
 const OfferDataFun = ({ offer, comments, nearOffers, getComment }: OfferContainerProp): JSX.Element => {
+  console.log('OfferDataFun');
   const email = useEmail();
   const { offerId } = useParams();
-  const mapOffers: point[] = [...nearOffers];
-  mapOffers.push(offer);
+  const mapOffers: point[] = useMemo(() => [...nearOffers, offer], [nearOffers, offer]);
+  console.log('mapOffers=', mapOffers);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  if (comments.length > 10) {
+    comments.splice(0, comments.length - 10);
+  }
 
   const onCommentFormSubmit = useCallback((evt: TCommentFromEvt) => {
     const textarea = textareaRef.current as HTMLTextAreaElement;
@@ -33,15 +38,17 @@ const OfferDataFun = ({ offer, comments, nearOffers, getComment }: OfferContaine
   return (
     <section className="offer">
       <div className="offer__gallery-container container">
-        <div className="offer__gallery">
-          {
-            offer.images.map((el, i) => (
-              <div className="offer__image-wrapper" key={i}>
-                <img className='offer__image' src={el} />
-              </div>
-            ))
-          }
-        </div>
+        {useMemo(()=>(
+          <div className="offer__gallery">
+            {
+              offer.images.map((el, i) => (
+                <div className="offer__image-wrapper" key={i}>
+                  <img className='offer__image' src={el} />
+                </div>
+              ))
+            }
+          </div>
+        ),[offer.images])}
       </div>
       <div className="offer__container container">
         <div className="offer__wrapper">
