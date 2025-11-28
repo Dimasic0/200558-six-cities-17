@@ -1,4 +1,7 @@
 import {СITIES} from '../data/constant';
+import { JSX } from 'react';
+
+export type jsxElementNull = JSX.Element | null;
 
 export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 

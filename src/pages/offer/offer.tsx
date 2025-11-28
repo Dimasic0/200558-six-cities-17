@@ -1,17 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import CommentForm, { TCommentFromEvt } from '../../components/commentForm/commentForm';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { CommentForm, TCommentFromEvt } from '../../components/commentForm/commentForm';
 import OfferInsideList from '../../components/offerInsideList/offerInsideList';
 import OfferGallery from '../../components/offerGallery/offerGallery';
 import Comments from '../../components/comments/comments.tsx';
-import Header from '../../components/header/header';
+import {Header} from '../../components/header/header';
 import Cards from '../../components/cards/cards';
-import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
-import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
+import { jsxElementNull, TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
+// import { TOfferGalleryChildren } from '../../components/offerGallery/offerGallery';
 import Map, { point } from '../../components/map/map';
 import { useEmail } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
+import { JSX } from 'react';
 
 
 export default function Offer() {
@@ -34,11 +35,17 @@ export default function Offer() {
   const email = useEmail();
 
   const { offerId } = useParams();
-
-  let offerGalleryParams: TOfferGalleryChildren[] = [];
-  if (offer !== undefined) {
-    offerGalleryParams = offer.images.map((el, i) => ({ src: el, alt: '', id: `${i}` }));
-  }
+  const OfferGallery = useMemo(() => (
+    <div className="offer__gallery">
+      {
+        offer?.images.map((el, i) => (
+          <div className="offer__image-wrapper" key={i}>
+            <img className='offer__image' src={el} />
+          </div>
+        ))
+      }
+    </div>
+  ), [offer?.images]);
   const getComment = ({ signal }: TPropSignal) => {
     api.get<TComment[]>(`comments/${offerId}`, { signal }).then(({ data }) => {
       setComments(data);
@@ -50,7 +57,6 @@ export default function Offer() {
     api.post(`comments/${offerId}`, evt).then(() => {
       getComment(requestsController);
       textarea.value = '';
-
     });
   },[]);
 
@@ -77,7 +83,7 @@ export default function Offer() {
           <main className="page__main page__main--offer">
             <section className="offer">
               <div className="offer__gallery-container container">
-                <OfferGallery>{offerGalleryParams}</OfferGallery>
+                {OfferGallery}
               </div>
               <div className="offer__container container">
                 <div className="offer__wrapper">

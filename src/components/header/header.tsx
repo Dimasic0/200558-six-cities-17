@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom';
-import { memoize, Token } from '../../data/constant';
+import { Token } from '../../data/constant';
 import { useEmail } from '../../store/selectors';
 import { setEmail } from '../../store/action';
 import { useDispatch } from 'react-redux';
+import { memo } from 'react';
 
-function Header() {
+function HeaderFun() {
   const email = useEmail();
   const dispatch = useDispatch();
   function onExit() {
@@ -51,4 +52,4 @@ function Header() {
   );
 }
 
-export default memoize(Header);
+export const Header = memo(HeaderFun);

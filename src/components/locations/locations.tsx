@@ -8,7 +8,7 @@ type TLocationsProps = {
   city?:TCity;
 };
 
-export const Locations = memo(({ cities, onClick, city, defaultActive}: TLocationsProps): JSX.Element => {
+const LocationsFun = ({ cities, onClick, city, defaultActive}: TLocationsProps): JSX.Element => {
   const [active, setActive] = useState(city || defaultActive);
   useEffect(()=>{
     if(city !== undefined) {
@@ -34,4 +34,6 @@ export const Locations = memo(({ cities, onClick, city, defaultActive}: TLocatio
       }
     </ul>
   );
-});
+};
+
+export const Locations = memo(LocationsFun);
