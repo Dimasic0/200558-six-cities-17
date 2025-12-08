@@ -2,10 +2,11 @@ import Cards from '../../components/cards/cards';
 import {useCallback, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
 import {Header} from '../../components/header/header';
-import { useOffers } from '../../store/selectors';
+import { useAllState, useOffers } from '../../store/selectors';
 import {Locations} from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
-import { setCity } from '../../store/action';
+//import { setCity } from '../../store/action';
+import { setCity } from '../../store/slice/slice';
 import { TCity } from '../../types/types';
 import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
@@ -14,6 +15,10 @@ import { TSortingName } from '../../data/constant';
 import {Spinner} from '../../components/spinner/spinner';
 
 export default function Main() {
+  console.log('main');
+  const state = useAllState();
+  console.log('state=',state);
+
   const [cardHover, setCardHover] = useState<string | null>(null);
   const [sorting, setSorting] = useState<TSortingName>(sortingName.popular);
 

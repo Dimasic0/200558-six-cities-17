@@ -2,8 +2,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {Header} from '../../components/header/header';
 import Cards from '../../components/cards/cards';
 import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
-import { point } from '../../components/map/map';
-import { useEmail } from '../../store/selectors';
 import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
@@ -24,7 +22,7 @@ export default function Offer() {
       setComments(data);
     });
   };
-  const requestsController = useMemo(()=>new AbortController(),[]);
+  const requestsController = useMemo(() => new AbortController(),[]);
 
   const getCommentController = useCallback(() => getComment(requestsController), []);
   useEffect(() => {

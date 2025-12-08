@@ -9,8 +9,10 @@ import { useEffect } from 'react';
 import Main from '../pages/main/main';
 import { getOffers, getLogin } from '../store/action';
 import { useAppDispatch } from '../store';
+import {slice} from '../store/slice/slice';
 
 export default function App(): JSX.Element {
+  console.log('slice=', slice);
   const dispatch = useAppDispatch();
   useEffect(() => {
     const controller = new AbortController();

@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Token } from '../../data/constant';
 import { useEmail } from '../../store/selectors';
-import { setEmail } from '../../store/action';
+//import { setEmail } from '../../store/action';
+import { setEmail } from '../../store/slice/slice';
 import { useDispatch } from 'react-redux';
 import { memo } from 'react';
 
