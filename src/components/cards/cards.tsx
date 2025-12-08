@@ -1,4 +1,4 @@
-import { memoize } from '../../data/constant';
+import { memo } from 'react';
 import { TOffers } from '../../types/types';
 import Card from '../card/card';
 
@@ -23,4 +23,4 @@ const Cards = ({ offers, ...props }: TCardsProps): JSX.Element => (
   </>
 );
 
-export default memoize(Cards);
+export default memo(Cards);

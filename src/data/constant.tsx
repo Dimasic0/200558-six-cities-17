@@ -7,6 +7,11 @@ export enum Address {
   offer= '/offer/:offerId'
 }
 
+export enum NameReducer {
+  slice = 'slice',
+  sliceAsync = 'sliceAsync'
+};
+
 export enum PrivateStatus {
   Auth = 'AUTH',
   Guest = 'GUEST',

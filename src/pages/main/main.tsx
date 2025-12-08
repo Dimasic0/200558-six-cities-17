@@ -1,19 +1,24 @@
 import Cards from '../../components/cards/cards';
-import {useState } from 'react';
+import {useCallback, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
-import Header from '../../components/header/header';
-import { useOffers } from '../../store/selectors';
-import Locations from '../../components/locations/locations';
+import {Header} from '../../components/header/header';
+import { useAllState, useOffers } from '../../store/selectors';
+import {Locations} from '../../components/locations/locations';
 import { СITIES } from '../../data/constant';
-import { setCity } from '../../store/action';
+//import { setCity } from '../../store/action';
+import { setCity } from '../../store/slice/slice';
 import { TCity } from '../../types/types';
 import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
-import Spinner from '../../components/spinner/spinner';
+import {Spinner} from '../../components/spinner/spinner';
 
 export default function Main() {
+  console.log('main');
+  const state = useAllState();
+  console.log('state=',state);
+
   const [cardHover, setCardHover] = useState<string | null>(null);
   const [sorting, setSorting] = useState<TSortingName>(sortingName.popular);
 
@@ -23,21 +28,21 @@ export default function Main() {
   const dispatch = useDispatch();
 
 
-  function onLocationsClick(city:TCity) {
+  const onLocationsClick = useCallback((city:TCity) => {
     dispatch(setCity(city));
-  }
+  },[]);
 
-  switch (sorting) {
-    case sortingName.low:
-      offers.sort((a,b) => a.price - b.price);
-      break;
-    case sortingName.high:
-      offers.sort((a,b) => b.price - a.price);
-      break;
-    case sortingName.rated:
-      offers.sort((a,b) => a.rating - b.rating);
-      break;
-  }
+  const offersSort = useMemo(()=>{
+    switch (sorting) {
+      case sortingName.low:
+        return offers.toSorted((a,b) => a.price - b.price);
+      case sortingName.high:
+        return offers.toSorted((a,b) => b.price - a.price);
+      case sortingName.rated:
+        return offers.toSorted((a,b) => a.rating - b.rating);
+    }
+    return [...offers];
+  }, [sorting , JSON.stringify(offers)]);
 
   return (
     <div className="page page--gray page--main">
@@ -58,17 +63,15 @@ export default function Main() {
                 <div className="cities__places-container container">
                   <section className="cities__places places">
                     <h2 className="visually-hidden">Places</h2>
-                    <b className="places__found">{offers?.length} places to stay in Amsterdam</b>
+                    <b className="places__found">{offersSort?.length} places to stay in Amsterdam</b>
                     <form className="places__sorting" action="#" method="get">
                       <span className="places__sorting-caption">Sort by </span>
                       <FormSorting onClick={setSorting}/>
                     </form>
                     <div className="cities__places-list places__list tabs__content">
                       {offersLength > 0 &&
-                        <Cards offers={offers}
-                          onHover={(id) => {
-                            setCardHover(id);
-                          }}
+                        <Cards offers={offersSort}
+                          onHover={setCardHover}
                           variant="vertical"
                           classTextBlock="favorites__card-info"
                         />}
@@ -77,9 +80,9 @@ export default function Main() {
                   <div className="cities__right-section">
                     <section className="cities__map map">
                       {offersLength > 0 &&
-                        <Map points={offers}
+                        <Map points={offersSort}
                           selectedPoint={cardHover}
-                          city={offers?.[0]?.city.location}
+                          city={offers[0].city.location}
                         />}
                     </section>
                   </div>

@@ -1,4 +1,4 @@
-import react, { Fragment, RefObject, useState } from 'react';
+import react, { Fragment, RefObject, useState, memo } from 'react';
 import { TObject } from '../../types/types';
 
 export type TCommentFromEvt = { comment: string; rating: number };
@@ -7,7 +7,7 @@ export type TCommentForm = {
   textareaRef: RefObject<HTMLTextAreaElement>;
 };
 
-function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
+const CommentFormFun = ({ onSubmit, textareaRef }: TCommentForm): JSX.Element => {
   const [text, setText] = useState<string>('');
   const [rating, setRating] = useState<number>(2);
 
@@ -78,4 +78,5 @@ function CommentForm({ onSubmit, textareaRef }: TCommentForm): JSX.Element {
     </form>
   );
 }
-export default CommentForm;
+
+export const CommentForm = memo(CommentFormFun);

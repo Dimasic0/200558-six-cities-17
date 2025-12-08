@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react';
+import { JSX, useEffect, useState, memo } from 'react';
 import { TCity, TCities } from '../../types/types';
 
 type TLocationsProps = {
@@ -8,7 +8,7 @@ type TLocationsProps = {
   city?:TCity;
 };
 
-export default function Locations({ cities, onClick, city, defaultActive}: TLocationsProps): JSX.Element {
+const LocationsFun = ({ cities, onClick, city, defaultActive}: TLocationsProps): JSX.Element => {
   const [active, setActive] = useState(city || defaultActive);
   useEffect(()=>{
     if(city !== undefined) {
@@ -34,4 +34,6 @@ export default function Locations({ cities, onClick, city, defaultActive}: TLoca
       }
     </ul>
   );
-}
+};
+
+export const Locations = memo(LocationsFun);

@@ -1,4 +1,7 @@
 import {СITIES} from '../data/constant';
+import { JSX } from 'react';
+
+export type jsxElementNull = JSX.Element | null;
 
 export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 
@@ -70,7 +73,7 @@ export type TAuthorizationPost = {
 };
 
 export type TInitialState = TData & {
-  offersByCities?: TOffersByCities;
+  offersByCities: TOffersByCities | null;
   email: string;
 };
 
@@ -95,3 +98,6 @@ export type TComment = {
 };
 
 export type TPropSignal = { signal: AbortSignal };
+
+export type TPayloadCity = { payload: TCity };
+export type TPayloadString = { payload: string };
