@@ -1,6 +1,26 @@
 import {СITIES} from '../data/constant';
+import { JSX } from 'react';
+
+export type jsxElementNull = JSX.Element | null;
 
 export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
+
+export type TPayload<t> = { payload:t };
+
+export interface IResLogin {
+      avatarUrl :string;
+      email:string;
+      isPro:boolean;
+      name:string;
+      token:string;
+    };
+export interface IResLoginOptional {
+  avatarUrl?: string;
+  email?: string;
+  isPro?: boolean;
+  name?: string;
+  token?: string;
+};
 
 export type TOffers = {
   id: string;
@@ -13,6 +33,20 @@ export type TOffers = {
   isPremium: boolean;
   rating: number;
   previewImage: string;
+  favorites?: boolean;
+};
+
+export type TOffersOptional = {
+  id: string;
+  price?: number;
+  title?: string;
+  type?: HousingRange;
+  city?: City;
+  location?: TLocation;
+  isFavorite?: boolean;
+  isPremium?: boolean;
+  rating?: number;
+  previewImage?: string;
   favorites?: boolean;
 };
 
@@ -44,7 +78,7 @@ export type TOffersProp = {
 };
 export type TObject = Record<string, object | null | undefined | string | number>;
 export type TObjectDate = Record<string, object | string | number | Date>;
-export type TOffersByCities = Record<string, TOffers[]>;
+export type TOffersByCities = Record<string, Record<string, TOffers>>;
 
 export type City = {
   name: TCity;
@@ -70,7 +104,7 @@ export type TAuthorizationPost = {
 };
 
 export type TInitialState = TData & {
-  offersByCities?: TOffersByCities;
+  offersByCities: TOffersByCities | null;
   email: string;
 };
 
@@ -79,7 +113,7 @@ export type TReducer = { offers: TOffer[] };
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
 
-export type TCity = typeof СITIES[number] | '';
+export type TCity = typeof СITIES[number];
 export type TCities = typeof СITIES;
 
 export type TComment = {
@@ -95,3 +129,6 @@ export type TComment = {
 };
 
 export type TPropSignal = { signal: AbortSignal };
+
+export type TPayloadCity = { payload: TCity };
+export type TPayloadString = { payload: string };

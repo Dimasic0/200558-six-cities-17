@@ -14,8 +14,8 @@ export default function App(): JSX.Element {
   const dispatch = useAppDispatch();
   useEffect(() => {
     const controller = new AbortController();
-    dispatch(getOffers(controller.signal));
     dispatch(getLogin());
+    dispatch(getOffers(controller.signal));
     return () => controller.abort();
   },[]);
   return (

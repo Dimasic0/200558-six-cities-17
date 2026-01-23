@@ -1,21 +1,53 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TCity, TOffer } from '../types/types';
+import { TCity, TOffers, TOffersOptional } from '../types/types';
 import axios, { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { setEmail } from './slice/slice';
+import { NameReducer } from '../data/constant';
+import { setOffers } from './offersSlice/offersSlice';
+import { setUser } from './userSlice/userSlice';
 
 export const setCity = createAction<TCity>('catalog/setCity');
-export const setEmail = createAction<string>('email');
-export const getOffers = createAsyncThunk<TOffer[], AbortSignal>('axios', async (signal) => {
-  const { data } = await axios.get<TOffer[]>('https://16.design.htmlacademy.pro/six-cities/offers',{signal});
-  return data;
-}
+//export const setEmail = createAction<string>('email');
+export const getOffers = createAsyncThunk<TOffers[], AbortSignal, Promise<void>>(
+  `${NameReducer.sliceAsync}/offers`,
+  async (signal, { dispatch, extra: api }) => {
+    const { data } = await api.get<TOffers[]>(
+      'offers',
+      { signal },
+    );
+    dispatch(setOffers(data));
+  },
 );
 type TLoginRequest = { email: string };
 export const getLogin = createAsyncThunk<
-  string,
+  void,
   AbortSignal | undefined,
   { extra: AxiosInstance }
->('login', async (_, { extra: api }) => {
-  const { data } = await api.get<TLoginRequest>('login');
-  return data.email;
+>(`${NameReducer.sliceAsync}/login`, async (_, { extra: api, dispatch }) => {
+  const { data } = await api.get<TLoginRequest>('login').catch(() => {
+    dispatch(setUser({email:''}));
+  });
+  console.log('aftores=', data);
+  dispatch(setUser(data));
 });
+
+export const rqFavorite = createAsyncThunk<
+  void,
+  { id: string; state: boolean | number; signal?: AbortSignal },
+  { extra: AxiosInstance }
+>(
+  `${NameReducer.sliceAsync}/favorite`,
+  async ({ id, state, signal }, { extra: api, dispatch }) => {
+    state = Number(state);
+    Math.max(state,0);
+    Math.min(state,1);
+    const { data } = await api.post<TOffersOptional>(
+      `favorite/${id}/${state}`,
+      {
+        signal,
+      },
+    );
+    dispatch(setOffers(data));
+  },
+);

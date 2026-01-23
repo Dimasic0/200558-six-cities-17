@@ -7,6 +7,13 @@ export enum Address {
   offer= '/offer/:offerId'
 }
 
+export enum NameReducer {
+  user = 'user',
+  city = 'city',
+  slice = 'slice',
+  offers = 'offersByCities'
+};
+
 export enum PrivateStatus {
   Auth = 'AUTH',
   Guest = 'GUEST',
@@ -21,8 +28,9 @@ export enum sortingName {
 }
 export type TSortingName = `${sortingName}`;
 const СITIES = ['Paris', 'Cologne', 'Brussels', 'Amsterdam', 'Hamburg', 'Dusseldorf'] as const;
+const cityDefault = 'Paris';
 
-export { СITIES };
+export { СITIES, cityDefault };
 
 export const URL_MARKER_DEFAULT =
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';

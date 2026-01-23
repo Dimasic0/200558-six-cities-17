@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
 
@@ -6,7 +6,7 @@ type TFormSorting ={
   onClick: (el: TSortingName) => void;
 };
 
-const FormSorting = ({ onClick }: TFormSorting):JSX.Element => {
+const FormSortingFun = ({ onClick }: TFormSorting):JSX.Element => {
   const [isDisclosed, setIsDisclosed] = useState(false);
   const [active, setActive] = useState<TSortingName>('Popular');
 
@@ -40,5 +40,7 @@ const FormSorting = ({ onClick }: TFormSorting):JSX.Element => {
       }
     </>);
 };
+ 
+const FormSorting = memo(FormSortingFun);
 
 export { FormSorting };

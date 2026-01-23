@@ -3,8 +3,10 @@ import HeaderLogo from '../../components/headerLogo/headerLogo';
 import { FormEvent } from 'react';
 import axios from 'axios';
 import { Token } from '../../data/constant';
-import { setEmail } from '../../store/action';
+//import { setEmail } from '../../store/action';
 import { useAppDispatch } from '../../store';
+import { IResLogin } from '../../types/types';
+import { setUser } from '../../store/userSlice/userSlice';
 
 
 export default function Login():JSX.Element {
@@ -14,18 +16,12 @@ export default function Login():JSX.Element {
   function onAuthorization(evt: FormEvent<HTMLFormElement>) {
     const formData = Object.fromEntries(new FormData(evt.currentTarget));
     evt.preventDefault();
-    interface TResLogin {
-      avatarUrl :string;
-      email:string;
-      isPro:boolean;
-      name:string;
-      token:string;
-    }
 
-    axios.post<TResLogin>('https://16.design.htmlacademy.pro/six-cities/login', formData).then(({ data })=>{
+    axios.post<IResLogin>('https://16.design.htmlacademy.pro/six-cities/login', formData).then(({ data })=>{
       Token.value = data.token;
       navigate('/');
-      dispatch(setEmail(data.email));
+      console.log('login=',data);
+      dispatch(setUser(data));
     });
   }
 

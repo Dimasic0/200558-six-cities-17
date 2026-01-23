@@ -1,11 +1,18 @@
 import { Link } from 'react-router-dom';
-import { memoize, Token } from '../../data/constant';
-import { useEmail } from '../../store/selectors';
-import { setEmail } from '../../store/action';
+import { Address, Token } from '../../data/constant';
+import { useEmail, useFavorites } from '../../store/selectors';
+//import { setEmail } from '../../store/action';
 import { useDispatch } from 'react-redux';
+import { memo } from 'react';
+import {TOffers } from '../../types/types';
+import { useUser } from '../../store/selectors';
+import { setEmail } from '../../store/userSlice/userSlice';
 
-function Header() {
-  const email = useEmail();
+function HeaderFun() {
+  type TOffersFavorites = Array<TOffers | TOffers[]>;
+  let offersFavorites: TOffersFavorites = useFavorites();
+  offersFavorites = offersFavorites.flatMap((offers) => offers);
+  const {email,...user} = useUser();
   const dispatch = useDispatch();
   function onExit() {
     dispatch(setEmail(''));
@@ -23,13 +30,13 @@ function Header() {
           <nav className="header__nav">
             <ul className="header__nav-list">
               <li className="header__nav-item user">
-                <Link className="header__nav-link header__nav-link--profile" to="/login">
-                  <div className="header__avatar-wrapper user__avatar-wrapper">
+                <Link className="header__nav-link header__nav-link--profile" to={email ? Address.favorites : Address.login}>
+                  <div className="header__avatar-wrapper user__avatar-wrapper" style={email ? {backgroundImage: `url(${user.avatarUrl})`} : {}}>
                   </div>
                   {email ?
                     <>
-                      <span className="header__user-name user__name">{email}</span>
-                      <span className="header__favorite-count">3</span>
+                      <span className="header__user-name user__name">{user.name}</span>
+                      <span className="header__favorite-count">{offersFavorites.length}</span>
                     </>
                     :
                     <span className="header__login">Sign in</span>}
@@ -51,4 +58,4 @@ function Header() {
   );
 }
 
-export default memoize(Header);
+export const Header = memo(HeaderFun);

@@ -2,6 +2,7 @@ import { TOffers } from '../../types/types';
 import { Link } from 'react-router-dom';
 import cls from 'classnames';
 import { memoize } from '../../data/constant';
+import { BookmarkButton } from '../bookmarkButton/bookmarkButton';
 
 type TCardProps = {
   offer: TOffers & { point?: object };
@@ -52,11 +53,12 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
             <b className="place-card__price-value">{offer.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button className={cls('place-card__bookmark-button', { 'place-card__bookmark-button--active': offer.isFavorite }, 'button')} type="button">
+          <BookmarkButton width='18' height='19' id={offer.id} defoultState={offer.isFavorite} bemBlock='place-card'/>
+          {/* <button className={cls('place-card__bookmark-button', { 'place-card__bookmark-button--active': offer.isFavorite }, 'button')} type="button">
             <svg className="place-card__bookmark-icon" width="18" height="19">
               <use xlinkHref="#icon-bookmark"></use>
             </svg><span className="visually-hidden">In bookmarks</span>
-          </button>
+          </button> */}
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
