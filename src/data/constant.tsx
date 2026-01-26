@@ -11,7 +11,7 @@ export enum NameReducer {
   user = 'user',
   city = 'city',
   slice = 'slice',
-  offers = 'offersByCities'
+  offers = 'offers'
 };
 
 export enum PrivateStatus {

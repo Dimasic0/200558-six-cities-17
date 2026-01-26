@@ -5,14 +5,13 @@ import {Header} from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
 import {Locations} from '../../components/locations/locations';
 import { cityDefault, СITIES } from '../../data/constant';
-//import { setCity } from '../../store/action';
-import { setCity } from '../../store/slice/slice';
 import { TCity } from '../../types/types';
 import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
 import {Spinner} from '../../components/spinner/spinner';
+import { setCity } from '../../store/action';
 
 export default function Main() {
 

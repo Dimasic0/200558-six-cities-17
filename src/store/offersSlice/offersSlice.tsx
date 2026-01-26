@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { cityDefault, NameReducer } from '../../data/constant';
 import { TCity, TOffersByCities, TOffersOptional } from '../../types/types';
+import { setCity } from '../action';
 
 interface TInitialState {
     offersByCities: TOffersByCities | null;
@@ -46,6 +47,9 @@ export const offersSlice = createSlice({
     }
   },
   extraReducers: (builder) => {
+    builder.addCase(setCity,(state, {payload:city})=>{
+      state.city = city;
+    });
     // builder.addCase(
     //   getOffers.fulfilled,
     //   (state: TInitialState, { payload:offers }: TPayloadOffer) => {

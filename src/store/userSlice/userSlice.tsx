@@ -16,13 +16,13 @@ export const userSlice = createSlice({
   name: NameReducer.user,
   initialState,
   reducers: {
-    setUser: (state: IResLoginOptional, { payload }: TPayloadInitial) => {
-      console.log('setUser=',payload);
-      Object.assign(state,payload);
+    setUser: (state: IResLoginOptional, { payload: user }: TPayloadInitial) => {
+      console.log('setUser=',user);
+      Object.assign(state,user);
     },
-    setEmail: (state: IResLoginOptional, { payload }: TPayloadString) => {
-      console.log('setEmail=', payload);
-      Object.assign(state, {email: payload});
+    setEmail: (state: IResLoginOptional, { payload:email }: TPayloadString) => {
+      console.log('setEmail=', email);
+      state.email = email;
     }
   },
 });
