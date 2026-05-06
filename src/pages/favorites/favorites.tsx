@@ -3,13 +3,23 @@ import Cards from '../../components/cards/cards';
 import {Header} from '../../components/header/header';
 import { useFavorites, useOffersСities } from '../../store/selectors';
 import Loading from '../../components/loading/loading';
+import { useEffect } from 'react';
+import {  rqFavoriteGet } from '../../store/action';
+import { useAppDispatch } from '../../store';
 
 
 export default function Favorites(): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const offers = useOffersСities();
   const favorites = useFavorites();
 
   const CARDS_CLASSTEXTBLOCK = 'favorites__card-info';
+
+  useEffect(()=>{
+    const controller = new AbortController();
+    dispatch(rqFavoriteGet(controller.signal));
+  },[]);
 
   return (
     <div className="page">

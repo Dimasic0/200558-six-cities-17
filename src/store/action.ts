@@ -12,6 +12,7 @@ export const getOffers = createAsyncThunk<TOffers[], AbortSignal, Promise<void>>
   `${NameReducer.offers}/offers`,
   async (signal, { dispatch, extra: api }) => {
     const { data } = await api.get<TOffers[]>('offers', { signal });
+    console.log('setOffers(data)=', setOffers(data));
     dispatch(setOffers(data));
   },
 );
@@ -42,6 +43,23 @@ export const rqFavorite = createAsyncThunk<
       `favorite/${id}/${state}`,
       {
         signal,
+      },
+    );
+    dispatch(setOffers(data));
+  },
+);
+
+export const rqFavoriteGet = createAsyncThunk<
+  void,
+  AbortSignal,
+  { extra: AxiosInstance }
+>(
+  `${NameReducer.offers}/favoriteGet`,
+  async (signal, { extra: api, dispatch }) => {
+    const { data } = await api.get<TOffersOptional>(
+      'favorite',
+      {
+        signal
       },
     );
     dispatch(setOffers(data));

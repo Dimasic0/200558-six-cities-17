@@ -1,5 +1,5 @@
 import Cards from '../../components/cards/cards';
-import {useCallback, useMemo, useState } from 'react';
+import {useCallback, useEffect, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
 import {Header} from '../../components/header/header';
 import { useOffers } from '../../store/selectors';
@@ -11,7 +11,7 @@ import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
 import {Spinner} from '../../components/spinner/spinner';
-import { setCity } from '../../store/action';
+import { getOffers, setCity } from '../../store/action';
 
 export default function Main() {
 
@@ -40,6 +40,11 @@ export default function Main() {
     }
     return [...offers];
   }, [sorting ,offers]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+     dispatch(getOffers(controller.signal));
+     },[]);
 
   return (
     <div className="page page--gray page--main">
