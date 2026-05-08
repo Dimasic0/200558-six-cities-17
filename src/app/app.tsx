@@ -7,7 +7,7 @@ import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect, useRef } from 'react';
 import Main from '../pages/main/main';
-import { getOffers, getLogin } from '../store/action';
+import { getLogin } from '../store/action';
 import { useAppDispatch } from '../store';
 import { useEmail } from '../store/selectors';
 

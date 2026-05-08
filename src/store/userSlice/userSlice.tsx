@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { NameReducer } from '../../data/constant';
 import { IResLoginOptional, TPayload, TPayloadString } from '../../types/types';
 
-const initialState: IResLoginOptional = {
+export const userInitialState: IResLoginOptional = {
   email: '',
   avatarUrl: '',
   name:'',
@@ -14,7 +14,7 @@ type TPayloadInitial = TPayload<IResLoginOptional>;
 
 export const userSlice = createSlice({
   name: NameReducer.user,
-  initialState,
+  userInitialState,
   reducers: {
     setUser: (state: IResLoginOptional, { payload: user }: TPayloadInitial) => {
       console.log('setUser=',user);

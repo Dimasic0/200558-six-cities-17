@@ -8,7 +8,7 @@ interface TInitialState {
     city:TCity ;
 };
 
-const initialState: TInitialState = {
+export const initialStateOffers: TInitialState = {
   offersByCities: null,
   city:cityDefault
 };
@@ -17,7 +17,7 @@ type TPayloadOffer = { payload: TOffersOptional | TOffersOptional[] };
 
 export const offersSlice = createSlice({
   name: NameReducer.offers,
-  initialState,
+  initialStateOffers,
   reducers:{
     setOffers: (state: TInitialState, { payload: offers }: TPayloadOffer) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment

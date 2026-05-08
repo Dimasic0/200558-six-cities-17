@@ -1,26 +1,26 @@
-import {СITIES} from '../data/constant';
+import { СITIES } from '../data/constant';
 import { JSX } from 'react';
 
 export type jsxElementNull = JSX.Element | null;
 
 export type HousingRange = 'apartment' | 'room' | 'house' | 'hotel';
 
-export type TPayload<t> = { payload:t };
+export type TPayload<t> = { payload: t };
 
 export interface IResLogin {
-      avatarUrl :string;
-      email:string;
-      isPro:boolean;
-      name:string;
-      token:string;
-    };
+  avatarUrl: string;
+  email: string;
+  isPro: boolean;
+  name: string;
+  token: string;
+}
 export interface IResLoginOptional {
   avatarUrl?: string;
   email?: string;
   isPro?: boolean;
   name?: string;
   token?: string;
-};
+}
 
 export type TOffers = {
   id: string;
@@ -76,7 +76,10 @@ export type TDataOfferProps = { data: TOffer };
 export type TOffersProp = {
   offers: TOffers[];
 };
-export type TObject = Record<string, object | null | undefined | string | number>;
+export type TObject = Record<
+  string,
+  object | null | undefined | string | number
+>;
 export type TObjectDate = Record<string, object | string | number | Date>;
 export type TOffersByCities = Record<string, Record<string, TOffers>>;
 
@@ -91,7 +94,7 @@ export type TLocation = {
   zoom: number;
 };
 
-export type TData= {
+export type TData = {
   city: TCity;
 };
 
@@ -113,7 +116,7 @@ export type TReducer = { offers: TOffer[] };
 export type TChildrenJsx = { children: JSX.Element };
 export type TChildrenString = { children: string };
 
-export type TCity = typeof СITIES[number];
+export type TCity = (typeof СITIES)[number];
 export type TCities = typeof СITIES;
 
 export type TComment = {
@@ -132,3 +135,8 @@ export type TPropSignal = { signal: AbortSignal };
 
 export type TPayloadCity = { payload: TCity };
 export type TPayloadString = { payload: string };
+export type TAction = {
+  type: string;
+  payload: any;
+};
+export type TReducer = (state, action: TAction) => any;
