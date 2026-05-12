@@ -1,7 +1,8 @@
 import { it, expect } from 'vitest';
-import { TObject,TAction, TReducer } from '../../types/types';
+import { TAction } from './test type.ts';
+import { TObject } from '../../types/types.ts';
 
-type TTestAction=(text:string, fun:()=> any, type:string, parameters:Array)=>void;
+type TTestAction=(text:string, fun:() => any, type:string, parameters:Array<any>)=>void;
 export const testAction: TTestAction = (text, fun = () => ({}), type, parameters) => {
   it(text, () => {
     for (const param of parameters) {
@@ -18,13 +19,14 @@ export const testActionLink:TTestAction = (text, fun, type, parameters) => {
     }
   });
   it(`${text} link ===`, () => {
-    for (let param of parameters) {
+    for (const param of parameters) {
       const objSetCity = fun(param);
       expect(objSetCity.payload).toBe(param);
     }
   });
 };
 
+export type TReducer = (state, action: TAction) => any;
 
 type TTestReducer = (
   text: string,
@@ -32,7 +34,7 @@ type TTestReducer = (
   action: TAction,
   reducer: TReducer,
   expectState: TObject,
-) => void;
+) => any;
 export const testReducer: TTestReducer = (
   text,
   initialState,
@@ -40,10 +42,12 @@ export const testReducer: TTestReducer = (
   reducer,
   expectState,
 ) => {
+  const state = reducer({ ...initialState }, action);
   it(`${text} reducer`, () => {
     const state = reducer({ ...initialState }, action);
     expect(state).toEqual(expectState);
   });
+  return state;
 };
 
 export const testReducerByChange: TTestReducer = (
@@ -52,9 +56,9 @@ export const testReducerByChange: TTestReducer = (
   action,
   reducer,
   expectState,
-) => {
-  testReducer(text, initialState, action, reducer, {
-    ...initialState,
-    ...expectState,
-  });
-};
+) => testReducer(text, initialState, action, reducer, {
+  ...initialState,
+  ...expectState,
+});
+
+export type TTestSpecificRedux = (text:string,initialState:TObject, action:TAction, expect:TObject)=>void;

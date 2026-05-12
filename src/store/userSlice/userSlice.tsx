@@ -14,7 +14,7 @@ type TPayloadInitial = TPayload<IResLoginOptional>;
 
 export const userSlice = createSlice({
   name: NameReducer.user,
-  userInitialState,
+  initialState:userInitialState,
   reducers: {
     setUser: (state: IResLoginOptional, { payload: user }: TPayloadInitial) => {
       console.log('setUser=',user);

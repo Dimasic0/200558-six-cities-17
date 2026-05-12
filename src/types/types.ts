@@ -135,8 +135,3 @@ export type TPropSignal = { signal: AbortSignal };
 
 export type TPayloadCity = { payload: TCity };
 export type TPayloadString = { payload: string };
-export type TAction = {
-  type: string;
-  payload: any;
-};
-export type TReducer = (state, action: TAction) => any;

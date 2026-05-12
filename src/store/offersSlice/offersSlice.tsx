@@ -17,7 +17,7 @@ type TPayloadOffer = { payload: TOffersOptional | TOffersOptional[] };
 
 export const offersSlice = createSlice({
   name: NameReducer.offers,
-  initialStateOffers,
+  initialState:initialStateOffers,
   reducers:{
     setOffers: (state: TInitialState, { payload: offers }: TPayloadOffer) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
