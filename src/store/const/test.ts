@@ -38,30 +38,27 @@ type TTestReducer = (
 export const testReducer: TTestReducer = (
   text,
   initialState,
-  action,
   reducer,
-  expectState,
+  ...lastParams
 ) => {
-  const state = reducer({ ...initialState }, action);
-  it(`${text} reducer`, () => {
+  for (const [action, expectState] of lastParams) {
     const state = reducer({ ...initialState }, action);
-    expect(state).toEqual(expectState);
-  });
-  return state;
+    it(`${text} reducer`, () => {
+      const state = reducer({ ...initialState }, action);
+      expect(state).toEqual(expectState);
+    });
+    return state;
+  }
 };
 
 export const testReducerByChange: TTestReducer = (
   text,
   initialState,
-  action,
   reducer,
-  expectState,
+  ...lastParams
 ) => {
-  const expect = Object.assign({...initialState}, expectState);
-  return testReducer(text, initialState, action, reducer, {
-  ...initialState,
-  ...expectState,
-});
-}
+  const expect = Object.assign({ ...initialState }, expectState);
+  return testReducer(text, initialState, reducer, ...lastParams);
+};
 
 export type TTestSpecificRedux = (text:string,initialState:TObject, action:TAction, expect:TObject)=>any;

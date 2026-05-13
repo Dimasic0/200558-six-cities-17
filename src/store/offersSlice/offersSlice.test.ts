@@ -6,9 +6,9 @@ import { initialStateOffers } from './offersSlice.ts';
 const testOffersReducerByChange: TTestSpecificRedux = (
   text,
   initialState,
-  action,
-  expect,
-) => testReducerByChange(text, initialState, action, offersSlice.reducer, expect);
+  ...lastParams
+) =>
+  testReducerByChange(text, initialState, offersSlice.reducer, ...lastParams);
 describe('offersSlice', () => {
   // it('offersSlice reducer',() => {
   //   const city = 'london';
