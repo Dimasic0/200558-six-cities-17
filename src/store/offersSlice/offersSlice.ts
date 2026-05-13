@@ -3,23 +3,23 @@ import { cityDefault, NameReducer } from '../../data/constant';
 import { TCity, TOffersByCities, TOffersOptional } from '../../types/types';
 import { setCity } from '../action';
 
-interface TInitialState {
-    offersByCities: TOffersByCities | null;
-    city:TCity ;
+interface TStateOffers {
+  offersByCities: TOffersByCities | null;
+  city: TCity;
 };
 
-export const initialStateOffers: TInitialState = {
+export const initialStateOffers: TStateOffers = {
   offersByCities: null,
-  city:cityDefault
+  city: cityDefault,
 };
 
 type TPayloadOffer = { payload: TOffersOptional | TOffersOptional[] };
 
 export const offersSlice = createSlice({
   name: NameReducer.offers,
-  initialState:initialStateOffers,
-  reducers:{
-    setOffers: (state: TInitialState, { payload: offers }: TPayloadOffer) => {
+  initialState: initialStateOffers,
+  reducers: {
+    setOffers: (state: TStateOffers, { payload: offers }: TPayloadOffer) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (state.offersByCities === null) {
@@ -33,21 +33,21 @@ export const offersSlice = createSlice({
       for (const offer of offers) {
         if (!offersByCities[offer.city.name]) {
           offersByCities[offer.city.name] = {
-            [offer.id]: offer
+            [offer.id]: offer,
           };
           continue;
         }
-        if (offersByCities[offer.city.name][offer.id]){
+        if (offersByCities[offer.city.name][offer.id]) {
           const offerLast = offersByCities[offer.city.name][offer.id];
           Object.assign(offerLast, offer);
           continue;
         }
         offersByCities[offer.city.name][offer.id] = offer;
       }
-    }
+    },
   },
   extraReducers: (builder) => {
-    builder.addCase(setCity,(state, {payload:city})=>{
+    builder.addCase(setCity, (state, { payload: city }) => {
       state.city = city;
     });
     // builder.addCase(
@@ -74,7 +74,7 @@ export const offersSlice = createSlice({
     //     }
     //   }
     // );
-  }
+  },
 });
 
 export const { setOffers } = offersSlice.actions;

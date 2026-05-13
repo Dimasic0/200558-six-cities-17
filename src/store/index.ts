@@ -3,7 +3,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, State } from '../types/state.ts';
 import { api } from '../api.ts';
 import { NameReducer } from '../data/constant.tsx';
-import { offersSlice } from './offersSlice/offersSlice.tsx';
+import { offersSlice } from './offersSlice/offersSlice.ts';
 import { userSlice } from './userSlice/userSlice.tsx';
 
 // export const store = configureStore({reducer});

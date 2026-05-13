@@ -1,22 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { offersSlice, setOffers } from './offersSlice.tsx';
+import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
 import { testReducerByChange, TTestSpecificRedux } from '../const/test.ts';
-import { initialStateOffers } from './offersSlice.tsx';
+import { initialStateOffers } from './offersSlice.ts';
 const testOffersReducerByChange: TTestSpecificRedux = (
   text,
   initialState,
   action,
   expect,
-) => {
-  testReducerByChange(
-    text,
-    initialStateOffers,
-    action,
-    offersSlice.reducer,
-    expect,
-  );
-};
+) => testReducerByChange(text, initialState, action, offersSlice.reducer, expect);
 describe('offersSlice', () => {
   // it('offersSlice reducer',() => {
   //   const city = 'london';
@@ -32,7 +24,7 @@ describe('offersSlice', () => {
   testOffersReducerByChange('setCity', initialStateOffers, setCity(props), {
     city: props,
   });
-  const offer = {
+  let offer = {
     id: '82fc8d67-a851-4637-964f-88fe508e833c',
     title: 'Tile House',
     type: 'hotel',
@@ -67,6 +59,7 @@ describe('offersSlice', () => {
       },
     },
   );
+
   offer = {
     id: 'cced6fa8-419a-4fde-9702-2a6c81dda568',
     title: 'Nice, cozy, warm big bed apartment',
@@ -91,13 +84,52 @@ describe('offersSlice', () => {
     rating: 4.6,
   };
   state = testOffersReducerByChange(
-    'setOffer',
+    'setOffer 2 offers in Paris',
     state,
     setOffers(offer),
     {
       offersByCities: {
+        ...state.offersByCities,
         Paris: {
-          '82fc8d67-a851-4637-964f-88fe508e833c': offer,
+          ...state.offersByCities.Paris,
+          'cced6fa8-419a-4fde-9702-2a6c81dda568': offer,
+        },
+      },
+    },
+  );
+
+  offer = {
+    id: '00720bc9-dd78-4384-9c5b-9f70359e807d',
+    title: 'Canal View Prinsengracht',
+    type: 'hotel',
+    price: 315,
+    previewImage: 'https://16.design.htmlacademy.pro/static/hotel/2.jpg',
+    city: {
+      name: 'Cologne',
+      location: {
+        latitude: 50.938361,
+        longitude: 6.959974,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 50.950361,
+      longitude: 6.961974,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: false,
+    rating: 1.6,
+  };
+  state = testOffersReducerByChange(
+    'setOffer Cologne',
+    state,
+    setOffers(offer),
+    {
+      offersByCities: {
+        ...state.offersByCities,
+        Cologne: {
+          '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
         },
       },
     },

@@ -56,9 +56,12 @@ export const testReducerByChange: TTestReducer = (
   action,
   reducer,
   expectState,
-) => testReducer(text, initialState, action, reducer, {
+) => {
+  const expect = Object.assign({...initialState}, expectState);
+  return testReducer(text, initialState, action, reducer, {
   ...initialState,
   ...expectState,
 });
+}
 
-export type TTestSpecificRedux = (text:string,initialState:TObject, action:TAction, expect:TObject)=>void;
+export type TTestSpecificRedux = (text:string,initialState:TObject, action:TAction, expect:TObject)=>any;
