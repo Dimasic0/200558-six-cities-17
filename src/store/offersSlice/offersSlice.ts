@@ -3,7 +3,7 @@ import { cityDefault, NameReducer } from '../../data/constant';
 import { TCity, TOffersByCities, TOffersOptional } from '../../types/types';
 import { setCity } from '../action';
 
-interface TStateOffers {
+export interface TStateOffers {
   offersByCities: TOffersByCities | null;
   city: TCity;
 };

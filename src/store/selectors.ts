@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { TOffers } from '../types/types';
 import { useAppSelector } from './index';
 import { NameReducer } from '../data/constant';

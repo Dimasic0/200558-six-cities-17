@@ -3,6 +3,8 @@ import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
 import { testReducerByChange, TTestSpecificRedux } from '../const/test.ts';
 import { initialStateOffers } from './offersSlice.ts';
+import { TStateOffers } from './offersSlice.ts';
+
 const testOffersReducerByChange: TTestSpecificRedux = (
   text,
   initialState,
@@ -20,6 +22,12 @@ describe('offersSlice', () => {
   //   const state = offersSlice.reducer({...initialState}, cityAction);
   //   expect(state).toEqual({ ...initialState, city });
   // });
+    testOffersReducerByChange(
+      'action wrong',
+      undefined,
+      {},
+      initialStateOffers,
+    );
   const props = 'london';
   testOffersReducerByChange('setCity', initialStateOffers, setCity(props), {
     city: props,
@@ -47,7 +55,7 @@ describe('offersSlice', () => {
     isPremium: true,
     rating: 2.9,
   };
-  let state = testOffersReducerByChange(
+  let state: TStateOffers = testOffersReducerByChange(
     'setOffer',
     initialStateOffers,
     setOffers(offer),
@@ -127,11 +135,73 @@ describe('offersSlice', () => {
     setOffers(offer),
     {
       offersByCities: {
-        ...state.offersByCities,
+        ...state?.offersByCities,
         Cologne: {
           '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
         },
       },
     },
   );
+
+  offer = {
+    id: '00720bc9-dd78-4384-9c5b-9f70359e807d',
+    title: 'Canal View Prinsengracht',
+    type: 'hotel',
+    price: 300,
+    previewImage: 'https://16.design.htmlacademy.pro/static/hotel/2.jpg',
+    city: {
+      name: 'Cologne',
+      location: {
+        latitude: 50.938361,
+        longitude: 6.959974,
+        zoom: 13,
+      },
+    },
+    location: {
+      latitude: 50.950361,
+      longitude: 6.961974,
+      zoom: 16,
+    },
+    isFavorite: false,
+    isPremium: false,
+    rating: 1.6,
+  };
+  state = testOffersReducerByChange(
+    'setOffer Cologne change',
+    state,
+    setOffers(offer),
+    {
+      offersByCities: {
+        ...state?.offersByCities,
+        Cologne: {
+          '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
+        },
+      },
+    },
+  );
+
+// type TTestParams =Array<[string,any,TAction,TObject]>;
+// const testParams: TTestParams = [
+//   [
+//     'setOffer',
+//     initialStateOffers,
+//     setOffers(offer),
+//     {
+//       offersByCities: {
+//         Paris: {
+//           '82fc8d67-a851-4637-964f-88fe508e833c': offer,
+//         },
+//       },
+//     },
+//   ],
+// ];  
+// let state;
+// for (let test of testParams) {
+//   const [text, initialState = (state)=>state, Action, expectStatus] = test;
+//   if (typeof initialState  === 'function')
+//   {
+//      initialState = initialState(state);
+//   }
+//     state = testOffersReducerByChange(text, initialState, Action, expectStatus);
+// }
 });

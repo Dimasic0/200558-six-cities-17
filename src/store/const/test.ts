@@ -2,8 +2,18 @@ import { it, expect } from 'vitest';
 import { TAction } from './test type.ts';
 import { TObject } from '../../types/types.ts';
 
-type TTestAction=(text:string, fun:() => any, type:string, parameters:Array<any>)=>void;
-export const testAction: TTestAction = (text, fun = () => ({}), type, parameters) => {
+type TTestAction = (
+  text: string,
+  fun: () => any,
+  type: string,
+  parameters: Array<any>,
+) => void;
+export const testAction: TTestAction = (
+  text,
+  fun = () => ({}),
+  type,
+  parameters,
+) => {
   it(text, () => {
     for (const param of parameters) {
       const objSetCity = fun(param);
@@ -11,7 +21,7 @@ export const testAction: TTestAction = (text, fun = () => ({}), type, parameters
     }
   });
 };
-export const testActionLink:TTestAction = (text, fun, type, parameters) => {
+export const testActionLink: TTestAction = (text, fun, type, parameters) => {
   it(text, () => {
     for (const param of parameters) {
       const objSetCity = fun(param);
@@ -31,24 +41,33 @@ export type TReducer = (state, action: TAction) => any;
 type TTestReducer = (
   text: string,
   initialState: TObject,
-  action: TAction,
   reducer: TReducer,
-  expectState: TObject,
+  ...lastParams: Array<TAction | TObject>
 ) => any;
+
 export const testReducer: TTestReducer = (
   text,
   initialState,
   reducer,
   ...lastParams
 ) => {
-  for (const [action, expectState] of lastParams) {
-    const state = reducer({ ...initialState }, action);
-    it(`${text} reducer`, () => {
-      const state = reducer({ ...initialState }, action);
+  const lastParamsFor = (callBack = () => {}) => {
+    let state;
+    for (let i = 0; i < lastParams.length - 1; i += 2) {
+      const [action, expectState] = lastParams.slice(i, i + 2);
+      initialState =
+        initialState === undefined ? undefined : { ...initialState };
+      state = reducer(initialState, action);
+      callBack(state, expectState);
+    }
+    return state;
+  };
+  it(`${text} reducer`, () => {
+    lastParamsFor((state, expectState) => {
       expect(state).toEqual(expectState);
     });
-    return state;
-  }
+  });
+  return lastParamsFor();
 };
 
 export const testReducerByChange: TTestReducer = (
@@ -57,8 +76,18 @@ export const testReducerByChange: TTestReducer = (
   reducer,
   ...lastParams
 ) => {
-  const expect = Object.assign({ ...initialState }, expectState);
+  //const expect = Object.assign({ ...initialState }, expectState);
+  if (typeof initialState === 'object') {
+    for (let i = 1; i < lastParams.length; i += 2) {
+      lastParams[i] = { ...initialState, ...lastParams[i] };
+    }
+  }
   return testReducer(text, initialState, reducer, ...lastParams);
 };
 
-export type TTestSpecificRedux = (text:string,initialState:TObject, action:TAction, expect:TObject)=>any;
+export type TTestSpecificRedux = (
+  text: string,
+  initialState: TObject,
+  action: TAction,
+  expect: TObject,
+) => any;
