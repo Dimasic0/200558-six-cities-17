@@ -5,7 +5,6 @@ import { NameReducer } from '../data/constant';
 
 const emptyArray: TOffers[] = [];
 
-export const useAllState = () => useAppSelector((state) => state);
 export const useOffers = () => {
   const offers = useAppSelector((state) => {
     emptyArray.length = 0;

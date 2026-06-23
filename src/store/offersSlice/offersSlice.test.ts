@@ -1,16 +1,17 @@
 import { describe, it, expect } from 'vitest';
 import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
-import { testReducerByChange, TTestSpecificRedux } from '../const/test.ts';
+import { testReducerByChange, testReduxUndefined, TTestSpecificRedux } from '../const/test.ts';
 import { initialStateOffers } from './offersSlice.ts';
 import { TStateOffers } from './offersSlice.ts';
 
+const { reducer } = offersSlice;
 const testOffersReducerByChange: TTestSpecificRedux = (
   text,
   initialState,
   ...lastParams
 ) =>
-  testReducerByChange(text, initialState, offersSlice.reducer, ...lastParams);
+  testReducerByChange(text, initialState, reducer, ...lastParams);
 describe('offersSlice', () => {
   // it('offersSlice reducer',() => {
   //   const city = 'london';
@@ -22,6 +23,7 @@ describe('offersSlice', () => {
   //   const state = offersSlice.reducer({...initialState}, cityAction);
   //   expect(state).toEqual({ ...initialState, city });
   // });
+    testReduxUndefined('', reducer, initialStateOffers);
     testOffersReducerByChange(
       'action wrong',
       undefined,

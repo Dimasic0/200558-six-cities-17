@@ -36,7 +36,7 @@ export const testActionLink: TTestAction = (text, fun, type, parameters) => {
   });
 };
 
-export type TReducer = (state, action: TAction) => any;
+export type TReducer = (state:any, action: TAction) => any;
 
 type TTestReducer = (
   text: string,
@@ -84,6 +84,9 @@ export const testReducerByChange: TTestReducer = (
   }
   return testReducer(text, initialState, reducer, ...lastParams);
 };
+
+type TTestReduxUndefined = (text:string,reducer:TReducer,expectState:any)=>any;
+export const testReduxUndefined:TTestReduxUndefined = (text,reducer,expectState) => testReducer(text+' defoult',undefined,reducer,{type:'', payload:{email:''}},expectState);
 
 export type TTestSpecificRedux = (
   text: string,

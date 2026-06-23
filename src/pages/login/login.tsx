@@ -3,7 +3,6 @@ import HeaderLogo from '../../components/headerLogo/headerLogo';
 import { FormEvent } from 'react';
 import axios from 'axios';
 import { Token } from '../../data/constant';
-//import { setEmail } from '../../store/action';
 import { useAppDispatch } from '../../store';
 import { IResLogin } from '../../types/types';
 import { setUser } from '../../store/userSlice/userSlice';
