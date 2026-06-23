@@ -36,7 +36,7 @@ export const testActionLink: TTestAction = (text, fun, type, parameters) => {
   });
 };
 
-export type TReducer = (state:any, action: TAction) => any;
+export type TReducer = (state: any, action: TAction) => any;
 
 type TTestReducer = (
   text: string,
@@ -85,8 +85,23 @@ export const testReducerByChange: TTestReducer = (
   return testReducer(text, initialState, reducer, ...lastParams);
 };
 
-type TTestReduxUndefined = (text:string,reducer:TReducer,expectState:any)=>any;
-export const testReduxUndefined:TTestReduxUndefined = (text,reducer,expectState) => testReducer(text+' defoult',undefined,reducer,{type:'', payload:{email:''}},expectState);
+type TTestReduxUndefined = (
+  text: string,
+  reducer: TReducer,
+  expectState: any,
+) => any;
+export const testReduxUndefined: TTestReduxUndefined = (
+  text,
+  reducer,
+  expectState,
+) =>
+  testReducer(
+    text + ' defoult',
+    undefined,
+    reducer,
+    { type: '', payload: { email: '' } },
+    expectState,
+  );
 
 export type TTestSpecificRedux = (
   text: string,
@@ -94,3 +109,27 @@ export type TTestSpecificRedux = (
   action: TAction,
   expect: TObject,
 ) => any;
+
+type TTestDescribe = (
+  text: string,
+  reducer: TReducer,
+  expectState: any,
+  callback: (
+    testReducer: (text: string, initialState: any, lastProps: any[]) => any,
+    testReducerByChange:(text:string,lastProps: any[]) => any
+  ) => void,
+) => void;
+export const testDescribe: TTestDescribe = (text, reducer, expectState, callback) => {
+  const testSpecificReducer = (
+    text: string,
+    initialState: any,
+    ...lastProps: any[]
+  ) => testReducer(text, initialState, reducer, ...lastProps);
+
+  const testSpecificReducerByChange = (text: string, initialState: any, ...lastProps: any[]) =>
+    testReducerByChange(text, initialState, reducer, ...lastProps);
+  describe(text,()=> {
+  testReduxUndefined('', reducer, expectState);
+  callback(testSpecificReducer, testSpecificReducerByChange);
+  });
+};
