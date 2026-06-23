@@ -110,24 +110,34 @@ export type TTestSpecificRedux = (
   expect: TObject,
 ) => any;
 
+type TTestReducer = (text: string, initialState: any, ...lastProps: any[]) => any;
+type TTestReducerByChange = (
+  text: string,
+  initialState: any,
+  ...lastProps: any[],
+) => any;
+
 type TTestDescribe = (
   text: string,
   reducer: TReducer,
   expectState: any,
   callback: (
-    testReducer: (text: string, initialState: any, lastProps: any[]) => any,
-    testReducerByChange:(text:string,lastProps: any[]) => any
+    testReducer: TTestReducer,
+    testReducerByChange: TTestReducerByChange,
   ) => void,
 ) => void;
 export const testDescribe: TTestDescribe = (text, reducer, expectState, callback) => {
-  const testSpecificReducer = (
-    text: string,
-    initialState: any,
-    ...lastProps: any[]
+  const testSpecificReducer: TTestReducer = (
+    text,
+    initialState,
+    ...lastProps
   ) => testReducer(text, initialState, reducer, ...lastProps);
 
-  const testSpecificReducerByChange = (text: string, initialState: any, ...lastProps: any[]) =>
-    testReducerByChange(text, initialState, reducer, ...lastProps);
+  const testSpecificReducerByChange: TTestReducerByChange = (
+    text,
+    initialState,
+    ...lastProps
+  ) => testReducerByChange(text, initialState, reducer, ...lastProps);
   describe(text,()=> {
   testReduxUndefined('', reducer, expectState);
   callback(testSpecificReducer, testSpecificReducerByChange);
