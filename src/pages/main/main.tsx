@@ -2,7 +2,7 @@ import Cards from '../../components/cards/cards';
 import {useCallback, useEffect, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
 import {Header} from '../../components/header/header';
-import { useOffers } from '../../store/selectors';
+import { useOffers } from '../../store/useSelectors';
 import {Locations} from '../../components/locations/locations';
 import { cityDefault, СITIES } from '../../data/constant';
 import { TCity } from '../../types/types';

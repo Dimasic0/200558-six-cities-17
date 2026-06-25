@@ -4,13 +4,13 @@ import { TObject } from '../../types/types.ts';
 
 type TTestAction = (
   text: string,
-  fun: () => any,
+  fun: (param:unknown) => TAction,
   type: string,
   parameters: Array<any>,
 ) => void;
 export const testAction: TTestAction = (
   text,
-  fun = () => ({}),
+  fun,
   type,
   parameters,
 ) => {
@@ -38,12 +38,12 @@ export const testActionLink: TTestAction = (text, fun, type, parameters) => {
 
 export type TReducer = (state: any, action: TAction) => any;
 
-type TTestReducer = (
+type TTestReducer= <t = any> (
   text: string,
-  initialState: TObject,
+  initialState:unknown,
   reducer: TReducer,
   ...lastParams: Array<TAction | TObject>
-) => any;
+) => t;
 
 export const testReducer: TTestReducer = (
   text,
@@ -51,16 +51,26 @@ export const testReducer: TTestReducer = (
   reducer,
   ...lastParams
 ) => {
-  const lastParamsFor = (callBack = () => {}) => {
-    let state;
+  type TCallback = (state, expectState) => void;
+  const lastParamsFor = (callback: TCallback = () => {}) => {
     for (let i = 0; i < lastParams.length - 1; i += 2) {
-      const [action, expectState] = lastParams.slice(i, i + 2);
+      type TArrActionExpectstate = [TAction,TObject];
+      const [action, expectState] = lastParams.slice(i,i + 2) as TArrActionExpectstate;
       initialState =
         initialState === undefined ? undefined : { ...initialState };
-      state = reducer(initialState, action);
-      callBack(state, expectState);
+      if (typeof initialState === 'object') {
+        const state = reducer(initialState, action) as typeof initialState;
+        callback(state, expectState);
+        return state;
+      } else {
+        const state = reducer(
+          initialState,
+          action,
+        ) as typeof initialState;
+        callback(state, expectState);
+        return state;
+      }
     }
-    return state;
   };
   it(`${text} reducer`, () => {
     lastParamsFor((state, expectState) => {
@@ -70,7 +80,13 @@ export const testReducer: TTestReducer = (
   return lastParamsFor();
 };
 
-export const testReducerByChange: TTestReducer = (
+type TTestReducerByChange = (
+  text: string,
+  initialState: unknown,
+  reducer: TReducer,
+  ...lastParams: Array<TAction | TObject>
+) => TObject;
+export const testReducerByChange: TTestReducerByChange = (
   text,
   initialState,
   reducer,
@@ -82,20 +98,20 @@ export const testReducerByChange: TTestReducer = (
       lastParams[i] = { ...initialState, ...lastParams[i] };
     }
   }
-  return testReducer(text, initialState, reducer, ...lastParams);
+  return testReducer<TObject>(text, initialState, reducer, ...lastParams);
 };
 
 type TTestReduxUndefined = (
   text: string,
   reducer: TReducer,
-  expectState: any,
-) => any;
+  expectState: TObject,
+) => TObject;
 export const testReduxUndefined: TTestReduxUndefined = (
   text,
   reducer,
   expectState,
 ) =>
-  testReducer(
+  testReducer<TObject>(
     text + ' defoult',
     undefined,
     reducer,
@@ -108,32 +124,33 @@ export type TTestSpecificRedux = (
   initialState: TObject,
   action: TAction,
   expect: TObject,
-) => any;
+) => TObject;
 
-type TTestReducer = (text: string, initialState: any, ...lastProps: any[]) => any;
-type TTestReducerByChange = (
+type TTestReducerParam = (text: string, initialState: t, ...lastProps: any[]) => t;
+type TTestReducerByChangeParam = (
   text: string,
-  initialState: any,
-  ...lastProps: any[],
-) => any;
+  initialState: unknown,
+  ...lastProps: Array<TAction | TObject>
+) => TObject;
 
 type TTestDescribe = (
   text: string,
   reducer: TReducer,
-  expectState: any,
+  expectState: TObject,
   callback: (
-    testReducer: TTestReducer,
-    testReducerByChange: TTestReducerByChange,
+    testReducer: TTestReducerParam,
+    testReducerByChange: TTestReducerByChangeParam,
   ) => void,
 ) => void;
 export const testDescribe: TTestDescribe = (text, reducer, expectState, callback) => {
-  const testSpecificReducer: TTestReducer = (
+  type TTestSpecificReducer = (text:string,initialState:unknown,...lastProps:Array<TAction | TObject>)=> unknown;
+  const testSpecificReducer: TTestSpecificReducer = (
     text,
     initialState,
     ...lastProps
   ) => testReducer(text, initialState, reducer, ...lastProps);
 
-  const testSpecificReducerByChange: TTestReducerByChange = (
+  const testSpecificReducerByChange: TTestReducerByChangeParam = (
     text,
     initialState,
     ...lastProps

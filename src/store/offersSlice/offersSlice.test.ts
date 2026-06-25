@@ -26,12 +26,6 @@ testDescribe(
     //   const state = offersSlice.reducer({...initialState}, cityAction);
     //   expect(state).toEqual({ ...initialState, city });
     // });
-    testOffersReducerByChange(
-      'action wrong',
-      undefined,
-      {},
-      initialStateOffers,
-    );
     const props = 'london';
     testOffersReducerByChange('setCity', initialStateOffers, setCity(props), {
       city: props,

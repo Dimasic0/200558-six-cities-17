@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import Main from '../pages/main/main';
 import { getLogin } from '../store/action';
 import { useAppDispatch } from '../store';
-import { useEmail } from '../store/selectors';
+import { useEmail } from '../store/useSelectors';
 
 export default function App(): JSX.Element {
   const dispatch = useAppDispatch();
