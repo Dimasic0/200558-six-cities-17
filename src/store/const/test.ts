@@ -6,7 +6,7 @@ type TTestAction = (
   text: string,
   fun: (param:unknown) => TAction,
   type: string,
-  parameters: Array<any>,
+  parameters: Array<unknown>,
 ) => void;
 export const testAction: TTestAction = (
   text,
@@ -38,28 +38,27 @@ export const testActionLink: TTestAction = (text, fun, type, parameters) => {
 
 export type TReducer = (state: any, action: TAction) => any;
 
-type TTestReducer= <t = any> (
+type TTestReducer= <T extends  (TObject | undefined)> (
   text: string,
-  initialState:unknown,
+  initialState:T,
   reducer: TReducer,
   ...lastParams: Array<TAction | TObject>
-) => t;
+) => T;
 
-export const testReducer: TTestReducer = (
-  text,
-  initialState,
-  reducer,
-  ...lastParams
+export const testReducer = <T extends  (TObject | undefined)>(
+  text:string,
+  initialState:T,
+  reducer: TReducer,
+  ...lastParams: Array<TAction | TObject>
 ) => {
-  type TCallback = (state, expectState) => void;
+  type TCallback = (state: T, expectState: T) => void;
   const lastParamsFor = (callback: TCallback = () => {}) => {
     for (let i = 0; i < lastParams.length - 1; i += 2) {
-      type TArrActionExpectstate = [TAction,TObject];
+      type TArrActionExpectstate = [TAction,T];
       const [action, expectState] = lastParams.slice(i,i + 2) as TArrActionExpectstate;
-      initialState =
-        initialState === undefined ? undefined : { ...initialState };
-      if (typeof initialState === 'object') {
-        const state = reducer(initialState, action) as typeof initialState;
+      if (initialState !== undefined) {
+        initialState = { ...initialState };
+        const state:T = reducer(initialState, action) ;
         callback(state, expectState);
         return state;
       } else {
