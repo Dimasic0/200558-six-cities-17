@@ -10,7 +10,7 @@ const { reducer } = offersSlice;
 //   ...lastParams
 // ) =>
 //   testReducerByChange(text, initialState, reducer, ...lastParams);
-testDescribe(
+testDescribe<TStateOffers>(
   'offersSlice',
   reducer,
   initialStateOffers,
