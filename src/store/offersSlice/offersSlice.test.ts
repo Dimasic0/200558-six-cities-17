@@ -1,8 +1,7 @@
 import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
 import { testDescribe } from '../const/test.ts';
-import { initialStateOffers } from './offersSlice.ts';
-import { TStateOffers } from './offersSlice.ts';
+import { initialStateOffers, TStateOffers } from './offersSlice.ts';
 
 const { reducer } = offersSlice;
 // const testOffersReducerByChange: TTestSpecificRedux = (

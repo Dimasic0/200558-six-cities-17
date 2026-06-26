@@ -19,7 +19,7 @@ export const offersSlice = createSlice({
   name: NameReducer.offers,
   initialState: initialStateOffers,
   reducers: {
-    setOffers: (state: TStateOffers, { payload: offers }: TPayloadOffer) => {
+    setOffers: (state, { payload: offers }: TPayloadOffer) => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       if (state.offersByCities === null) {
