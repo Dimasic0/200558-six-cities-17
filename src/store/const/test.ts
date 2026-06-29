@@ -37,7 +37,29 @@ export type TReducer<TState extends TObject = TObject> = (
 ) => TState;
 
 type TExpectActions<TState extends TObject = TObject> = Array<TAction | TState>;
-type TExpectActionsPartial<TState extends TObject = TObject> = TExpectActions<Partial<TState>>;
+type TExpectActionsPartial<TState extends TObject = TObject> = TExpectActions<
+  Partial<TState>
+>;
+
+export type NarrowFromExpect<
+  TState extends TObject,
+  TExpect extends Partial<TState>,
+> = {
+  [K in keyof TState]: K extends keyof TExpect
+    ? null extends TState[K]
+      ? null extends NonNullable<TExpect[K]>
+        ? TState[K]
+        : NonNullable<TState[K]>
+      : TState[K]
+    : TState[K];
+};
+
+type LastExpectFromParams<
+  TState extends TObject,
+  TParams extends readonly unknown[],
+> = TParams extends readonly [...unknown[], infer TLast extends Partial<TState>]
+  ? TLast
+  : Partial<TState>;
 export const testReducer = <TState extends TObject>(
   text: string,
   initialState: TState | undefined,
@@ -74,32 +96,40 @@ export const testReducer = <TState extends TObject>(
   return lastParamsFor();
 };
 
-export const testReducerByChange = <TState extends TObject = TObject>(
+export const testReducerByChange = <
+  TState extends TObject = TObject,
+  TParams extends TExpectActionsPartial<TState> = TExpectActionsPartial<TState>,
+>(
   text: string,
   initialState: TState | undefined,
   reducer: TReducer<TState>,
-  ...lastParams: TExpectActionsPartial<TState>
-): TState => {
-  //const expect = Object.assign({ ...initialState }, expectState);
+  ...lastParams: TParams
+): NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>> => {
   if (typeof initialState === 'object') {
     for (let i = 1; i < lastParams.length; i += 2) {
       lastParams[i] = { ...initialState, ...lastParams[i] };
     }
   }
-  return testReducer<TState>(text, initialState, reducer, ...lastParams);
+  return testReducer<TState>(
+    text,
+    initialState,
+    reducer,
+    ...(lastParams as TExpectActions<TState>),
+  ) as NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>>;
 };
 
 export const testReduxUndefined = <TState extends TObject>(
   text: string,
   reducer: TReducer<TState>,
   expectState: TObject,
-) =>testReducer<TState>(
-  `${text} defoult`,
-  undefined,
-  reducer,
-  { type: '', payload: { email: '' } },
-  expectState,
-);
+) =>
+  testReducer<TState>(
+    `${text} defoult`,
+    undefined,
+    reducer,
+    { type: '', payload: { email: '' } },
+    expectState as TState,
+  );
 
 export type TTestSpecificRedux = (
   text: string,
@@ -108,17 +138,25 @@ export type TTestSpecificRedux = (
   expect: TObject,
 ) => TObject;
 
-type TTestReducerParam<
-  TState extends TObject = TObject,
-  TExpect extends TObject = TState,
-> = (
+type TTestReducerParam<TState extends TObject = TObject> = <
+  TParams extends TExpectActions<TState>,
+>(
   text: string,
   initialState: TState | undefined,
-  ...lastProps: TExpectActions<TExpect>
-) => TState;
+  ...lastProps: TParams
+) => NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>>;
+
+type TTestReducerByChangeParam<TState extends TObject = TObject> = <
+  TParams extends TExpectActionsPartial<TState>,
+>(
+  text: string,
+  initialState: TState | undefined,
+  ...lastProps: TParams
+) => NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>>;
+
 type TTest<TState extends TObject = TObject> = (
   testReducer: TTestReducerParam<TState>,
-  testReducerByChange: TTestReducerParam<TState,Partial<TState>>,
+  testReducerByChange: TTestReducerByChangeParam<TState>,
 ) => void;
 
 export const testDescribe = <TState extends TObject = TObject>(
@@ -127,29 +165,23 @@ export const testDescribe = <TState extends TObject = TObject>(
   expectState: Partial<TState>,
   test: TTest<TState>,
 ): void => {
-  type TTestSpecificReducer = (
-    text: string,
-    initialState: TState | undefined,
-    ...lastProps: TExpectActions<TState>
-  ) => TState;
-  const testSpecificReducer: TTestSpecificReducer = (
+  const testSpecificReducer: TTestReducerParam<TState> = (
     text,
     initialState,
     ...lastProps
-  ) => testReducer<TState>(text, initialState, reducer, ...lastProps);
+  ) =>
+    testReducer<TState>(
+      text,
+      initialState,
+      reducer,
+      ...lastProps,
+    ) as NarrowFromExpect<TState, LastExpectFromParams<TState, typeof lastProps>>;
 
-  type TTestSpecificReducerByChange = (
-    text,
-    initialState: TState | undefined,
-    ...lastProp: TExpectActionsPartial<TState>
-  ) => TState;
-
-  const testSpecificReducerByChange: TTestSpecificReducerByChange = (
+  const testSpecificReducerByChange: TTestReducerByChangeParam<TState> = (
     text,
     initialState,
     ...lastProps
-  ): TState =>
-    testReducerByChange<TState>(text, initialState, reducer, ...lastProps);
+  ) => testReducerByChange(text, initialState, reducer, ...lastProps);
   describe(text, () => {
     testReduxUndefined('', reducer, expectState);
     test(testSpecificReducer, testSpecificReducerByChange);

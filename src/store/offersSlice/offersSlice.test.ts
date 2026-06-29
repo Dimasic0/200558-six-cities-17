@@ -2,6 +2,7 @@ import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
 import { testDescribe } from '../const/test.ts';
 import { initialStateOffers, TStateOffers } from './offersSlice.ts';
+import { TOffers } from '../../types/types.ts';
 
 const { reducer } = offersSlice;
 // const testOffersReducerByChange: TTestSpecificRedux = (
@@ -29,7 +30,7 @@ testDescribe<TStateOffers>(
     testOffersReducerByChange('setCity', initialStateOffers, setCity(props), {
       city: props,
     });
-    let offer = {
+    let offer: TOffers = {
       id: '82fc8d67-a851-4637-964f-88fe508e833c',
       title: 'Tile House',
       type: 'hotel',
@@ -52,7 +53,7 @@ testDescribe<TStateOffers>(
       isPremium: true,
       rating: 2.9,
     };
-    let state: TStateOffers = testOffersReducerByChange(
+    let state = testOffersReducerByChange(
       'setOffer',
       initialStateOffers,
       setOffers(offer),
@@ -132,7 +133,7 @@ testDescribe<TStateOffers>(
       setOffers(offer),
       {
         offersByCities: {
-          ...state?.offersByCities,
+          ...state.offersByCities,
           Cologne: {
             '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
           },
@@ -169,7 +170,7 @@ testDescribe<TStateOffers>(
       setOffers(offer),
       {
         offersByCities: {
-          ...state?.offersByCities,
+          ...state.offersByCities,
           Cologne: {
             '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
           },
