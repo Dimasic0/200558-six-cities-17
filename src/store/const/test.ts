@@ -96,6 +96,20 @@ export const testReducer = <TState extends TObject>(
   return lastParamsFor();
 };
 
+let objs = [];
+const isObject = (value) =>
+  Object.prototype.toString.call(value) === '[object Object]';
+const copyObjSuperficial = (obj1, obj2) => {
+  for (let prop in obj2) {
+    if (!isObject(obj1[prop]) || !isObject(obj2[prop])) {
+      obj1[prop] = obj2[prop];
+      continue;
+    }
+    obj1[prop] = { ...obj1[prop] };
+    objs.push([obj1[prop], obj2[prop]]);
+  }
+};
+
 export const testReducerByChange = <
   TState extends TObject = TObject,
   TParams extends TExpectActionsPartial<TState> = TExpectActionsPartial<TState>,
@@ -107,7 +121,13 @@ export const testReducerByChange = <
 ): NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>> => {
   if (typeof initialState === 'object') {
     for (let i = 1; i < lastParams.length; i += 2) {
-      lastParams[i] = { ...initialState, ...lastParams[i] };
+      objs = [];
+      const initialStateCopy = { ...initialState };
+      copyObjSuperficial(initialStateCopy, lastParams[i]);
+      while (objs.length > 0) {
+        copyObjSuperficial(...objs.shift());
+      }
+      lastParams[i] = initialStateCopy;
     }
   }
   return testReducer<TState>(
@@ -175,7 +195,10 @@ export const testDescribe = <TState extends TObject = TObject>(
       initialState,
       reducer,
       ...lastProps,
-    ) as NarrowFromExpect<TState, LastExpectFromParams<TState, typeof lastProps>>;
+    ) as NarrowFromExpect<
+      TState,
+      LastExpectFromParams<TState, typeof lastProps>
+    >;
 
   const testSpecificReducerByChange: TTestReducerByChangeParam<TState> = (
     text,

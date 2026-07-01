@@ -95,9 +95,7 @@ testDescribe<TStateOffers>(
       setOffers(offer),
       {
         offersByCities: {
-          ...state.offersByCities,
           Paris: {
-            ...state.offersByCities.Paris,
             'cced6fa8-419a-4fde-9702-2a6c81dda568': offer,
           },
         },
@@ -133,7 +131,6 @@ testDescribe<TStateOffers>(
       setOffers(offer),
       {
         offersByCities: {
-          ...state.offersByCities,
           Cologne: {
             '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
           },
@@ -170,7 +167,6 @@ testDescribe<TStateOffers>(
       setOffers(offer),
       {
         offersByCities: {
-          ...state.offersByCities,
           Cologne: {
             '00720bc9-dd78-4384-9c5b-9f70359e807d': offer,
           },
