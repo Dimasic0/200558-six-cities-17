@@ -1,6 +1,5 @@
 import { TOffers } from '../../types/types';
 import { Link } from 'react-router-dom';
-import cls from 'classnames';
 import { memoize } from '../../data/constant';
 import { BookmarkButton } from '../bookmarkButton/bookmarkButton';
 

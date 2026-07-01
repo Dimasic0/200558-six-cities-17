@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Address, Token } from '../../data/constant';
-import { useEmail, useFavorites } from '../../store/useSelectors';
+import { useFavorites } from '../../store/useSelectors';
 //import { setEmail } from '../../store/action';
 import { useDispatch } from 'react-redux';
 import { memo } from 'react';

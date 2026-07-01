@@ -6,12 +6,12 @@ import { useOffers } from '../../store/useSelectors';
 import {Locations} from '../../components/locations/locations';
 import { cityDefault, СITIES } from '../../data/constant';
 import { TCity } from '../../types/types';
-import { useDispatch } from 'react-redux';
 import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
 import {Spinner} from '../../components/spinner/spinner';
 import { getOffers, setCity } from '../../store/action';
+import { useAppDispatch } from '../../store';
 
 export default function Main() {
 
@@ -22,7 +22,7 @@ export default function Main() {
   console.log('offers=', offers);
 
   const offersLength = offers.length;
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
 
   const onLocationsClick = useCallback((city:TCity) => {
@@ -44,7 +44,7 @@ export default function Main() {
   useEffect(() => {
     const controller = new AbortController();
      dispatch(getOffers(controller.signal));
-     },[]);
+  },[]);
 
   return (
     <div className="page page--gray page--main">

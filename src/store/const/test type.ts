@@ -9,4 +9,4 @@ export type TTestSpecificRedux = (
   action: TAction,
   expect: TObject,
 ) => void;
-export type TReducer = (state, action: TAction) => any;
+export type TReducer = (state:TObject, action: TAction) => any;

@@ -8,7 +8,7 @@ import { setUser } from './userSlice/userSlice';
 
 export const setCity = createAction<TCity>('catalog/setCity');
 //export const setEmail = createAction<string>('email');
-export const getOffers = createAsyncThunk<TOffers[], AbortSignal, Promise<void>>(
+export const getOffers = createAsyncThunk<void, AbortSignal, { extra: AxiosInstance }>(
   `${NameReducer.offers}/offers`,
   async (signal, { dispatch, extra: api }) => {
     const { data } = await api.get<TOffers[]>('offers', { signal });
@@ -22,11 +22,13 @@ export const getLogin = createAsyncThunk<
   AbortSignal | undefined,
   { extra: AxiosInstance }
 >(`${NameReducer.user}/login`, async (_, { extra: api, dispatch }) => {
-  const { data } = await api.get<TLoginRequest>('login').catch(() => {
-    dispatch(setUser({email:''}));
-  });
+  try {
+  const { data } = await api.get<TLoginRequest>('login');
   console.log('aftores=', data);
   dispatch(setUser(data));
+} catch (error) {
+  dispatch(setUser({email:''}));
+}
 });
 
 export const rqFavorite = createAsyncThunk<

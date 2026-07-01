@@ -78,7 +78,7 @@ export type TOffersProp = {
 };
 export type TObject = Record<
   string,
-  object | null | undefined | string | number
+  TObject | null | undefined | string | number
 >;
 export type TObjectDate = Record<string, object | string | number | Date>;
 export type TOffersByCities = Record<string, Record<string, TOffers>>;
