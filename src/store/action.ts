@@ -8,14 +8,14 @@ import { setUser } from './userSlice/userSlice';
 
 export const setCity = createAction<TCity>('catalog/setCity');
 //export const setEmail = createAction<string>('email');
-export const getOffers = createAsyncThunk<void, AbortSignal, { extra: AxiosInstance }>(
-  `${NameReducer.offers}/offers`,
-  async (signal, { dispatch, extra: api }) => {
-    const { data } = await api.get<TOffers[]>('offers', { signal });
-    console.log('setOffers(data)=', setOffers(data));
-    dispatch(setOffers(data));
-  },
-);
+export const getOffers = createAsyncThunk<
+  void,
+  AbortSignal,
+  { extra: AxiosInstance }
+>(`${NameReducer.offers}/offers`, async (signal, { dispatch, extra: api }) => {
+  const { data } = await api.get<TOffers[]>('offers', { signal });
+  dispatch(setOffers(data));
+});
 type TLoginRequest = { email: string };
 export const getLogin = createAsyncThunk<
   void,
@@ -23,12 +23,11 @@ export const getLogin = createAsyncThunk<
   { extra: AxiosInstance }
 >(`${NameReducer.user}/login`, async (_, { extra: api, dispatch }) => {
   try {
-  const { data } = await api.get<TLoginRequest>('login');
-  console.log('aftores=', data);
-  dispatch(setUser(data));
-} catch (error) {
-  dispatch(setUser({email:''}));
-}
+    const { data } = await api.get<TLoginRequest>('login');
+    dispatch(setUser(data));
+  } catch (error) {
+    dispatch(setUser({ email: '' }));
+  }
 });
 
 export const rqFavorite = createAsyncThunk<
@@ -39,8 +38,8 @@ export const rqFavorite = createAsyncThunk<
   `${NameReducer.offers}/favorite`,
   async ({ id, state, signal }, { extra: api, dispatch }) => {
     state = Number(state);
-    Math.max(state,0);
-    Math.min(state,1);
+    Math.max(state, 0);
+    Math.min(state, 1);
     const { data } = await api.post<TOffersOptional>(
       `favorite/${id}/${state}`,
       {
@@ -58,12 +57,9 @@ export const rqFavoriteGet = createAsyncThunk<
 >(
   `${NameReducer.offers}/favoriteGet`,
   async (signal, { extra: api, dispatch }) => {
-    const { data } = await api.get<TOffersOptional>(
-      'favorite',
-      {
-        signal
-      },
-    );
+    const { data } = await api.get<TOffersOptional>('favorite', {
+      signal,
+    });
     dispatch(setOffers(data));
   },
 );
