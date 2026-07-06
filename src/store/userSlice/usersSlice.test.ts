@@ -5,6 +5,7 @@ import {
   testDescribe,
 } from '../const/test.js';
 import { setEmail, setUser, userInitialState, userSlice } from './userSlice.js';
+import { IResLoginOptional } from '../../types/types.js';
 
 const reducer = userSlice.reducer;
 // const testUserReducerByChange: TTestUserRedux = (text,...lastProps) => {
@@ -24,13 +25,13 @@ const reducer = userSlice.reducer;
 //   });
 // });
 
-testDescribe(
+testDescribe<IResLoginOptional>(
   'userSlice',
   reducer,
   userInitialState,
   (_, testReducerByChange) => {
-    testReducerByChange('setEmail', setEmail('der'), { email: 'der' });
-    testReducerByChange('setUser', setUser({ email: 'der', token: 'fw' }), {
+    testReducerByChange('setEmail',userInitialState, setEmail('der'), { email: 'der' });
+    testReducerByChange('setUser',userInitialState, setUser({ email: 'der', token: 'fw' }), {
       email: 'der',
       token: 'fw',
     });
