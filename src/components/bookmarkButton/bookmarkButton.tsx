@@ -6,16 +6,16 @@ import { rqFavorite } from '../../store/action';
 interface BookmarkButtonProps {
   width: number | string;
   height: number | string;
-  defoultState: boolean | number;
+  defaultState: boolean | number;
   bemBlock: string;
   id?: string;
 }
 
-export const BookmarkButton = ({ width = 31, height = 33, defoultState = false, bemBlock, id }: BookmarkButtonProps): JSX.Element => {
+export const BookmarkButton = ({ width = 31, height = 33, defaultState = false, bemBlock, id }: BookmarkButtonProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  defoultState = !!defoultState;
-  const [state, setState] = useState<boolean>(defoultState);
+  defaultState = !!defaultState;
+  const [state, setState] = useState<boolean>(defaultState);
 
   const [sending, setSending] = useState<boolean>(false);
 

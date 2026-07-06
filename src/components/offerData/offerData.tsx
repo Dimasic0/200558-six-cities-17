@@ -59,7 +59,7 @@ const OfferDataFun = ({ offer, comments, nearOffers, getComment }: OfferContaine
             <>
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{offer.title}</h1>
-                <BookmarkButton width="31" height="33" defoultState={offer.isFavorite} id={offer.id} bemBlock='offer' />
+                <BookmarkButton width="31" height="33" defaultState={offer.isFavorite} id={offer.id} bemBlock='offer' />
                 {/* <button className="offer__bookmark-button button" type="button">
                   <svg className="offer__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
