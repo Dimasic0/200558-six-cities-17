@@ -4,7 +4,7 @@ import { TObject } from '../../types/types.ts';
 
 let objs: Array<[TObject | Array<unknown>, TObject | Array<unknown>]> = [];
 const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
-const copyObjSuperficial = (obj1: object, obj2: object): void => {
+const copyObjSuperficial = (obj1: TObject, obj2: TObject): void => {
   for (const prop in obj2) {
     const value1 = obj1[prop];
     const value2 = obj2[prop];
