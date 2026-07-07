@@ -1,4 +1,4 @@
-import { it, expect } from 'vitest';
+import { it, test, expect } from 'vitest';
 import { TAction } from './test-type.ts';
 import { TObject } from '../../types/types.ts';
 
@@ -47,25 +47,19 @@ type TTestAction = (
   parameters: Array<unknown>,
 ) => void;
 export const testAction: TTestAction = (text, fun, type, parameters) => {
-  it(text, () => {
-    for (const param of parameters) {
-      const objSetCity = fun(param);
-      expect(objSetCity).toEqual({ type: type, payload: param });
-    }
+  test.each(parameters)(`${text}: %j`, (param) => {
+    const objSetCity = fun(param);
+    expect(objSetCity).toEqual({ type, payload: param });
   });
 };
 export const testActionLink: TTestAction = (text, fun, type, parameters) => {
-  it(text, () => {
-    for (const param of parameters) {
-      const objSetCity = fun(param);
-      expect(objSetCity).toEqual({ type, payload: param });
-    }
+  test.each(parameters)(`${text}: %j`, (param) => {
+    const objSetCity = fun(param);
+    expect(objSetCity).toEqual({ type, payload: param });
   });
-  it(`${text} link ===`, () => {
-    for (const param of parameters) {
-      const objSetCity = fun(param);
-      expect(objSetCity.payload).toBe(param);
-    }
+  test.each(parameters)(`${text} link ===: %j`, (param) => {
+    const objSetCity = fun(param);
+    expect(objSetCity.payload).toBe(param);
   });
 };
 
