@@ -1,25 +1,38 @@
 import { it, expect } from 'vitest';
 import { TAction } from './test-type.ts';
+import { TObject } from '../../types/types.ts';
 
-let objs: Array<[object, object]> = [];
-const isObject = (value: unknown): value is object =>
-  Object.prototype.toString.call(value) === '[object Object]';
-const copyObjSuperficial = (obj1: object, obj2: object) => {
+let objs: Array<[TObject | Array<unknown>, TObject | Array<unknown>]> = [];
+const isObject = (value: unknown): value is object => typeof value === 'object' && value !== null;
+const copyObjSuperficial = (obj1: object, obj2: object): void => {
   for (const prop in obj2) {
     const value1 = obj1[prop];
     const value2 = obj2[prop];
+
     if (!isObject(value1) || !isObject(value2)) {
       obj1[prop] = value2;
       continue;
     }
-    obj1[prop] = { ...value1 };
+    if (Array.isArray(value2)) {
+      if (Array.isArray(value1)) {
+        obj1[prop] = [...value1, ...value2];
+      } else {
+        obj1[prop] = value2;
+      }
+      continue;
+    } else if (!Array.isArray(value1)) {
+      obj1[prop] = { ...value1 };
+    }
     objs.push([obj1[prop], obj2[prop]]);
   }
 };
-const copyObjReducer = <TState extends object>(obj1: TState, obj2: object): TState => {
+const copyObjReducer = <TState extends object>(
+  obj1: TState,
+  obj2: object,
+): TState => {
   objs = [];
   copyObjSuperficial(obj1, obj2);
-  while (objs.length > 0) {
+  while (objs.length) {
     type TObjsArr = [object, object];
     const [obj1, obj2] = objs.shift() as TObjsArr;
     copyObjSuperficial(obj1, obj2);
@@ -56,13 +69,13 @@ export const testActionLink: TTestAction = (text, fun, type, parameters) => {
   });
 };
 
-export type TReducer<TState extends object> = (
+export type TReducer<TState extends TObject> = (
   state: TState | undefined,
   action: TAction,
 ) => TState;
 
 export type NarrowFromExpect<
-  TState extends object,
+  TState extends TObject,
   TExpect extends Partial<TState>,
 > = {
   [K in keyof TState]: K extends keyof TExpect
@@ -75,21 +88,21 @@ export type NarrowFromExpect<
 };
 
 type LastExpectFromParams<
-  TState extends object,
+  TState extends TObject,
   TParams extends readonly unknown[],
 > = TParams extends readonly [...unknown[], infer TLast extends Partial<TState>]
   ? TLast
   : Partial<TState>;
 
-type TActionExpects<TState extends object> =
+type TActionExpects<TState extends TObject> =
   | [TAction, TState]
   | [TAction, TState, ...Array<TAction | TState>];
-type TActionExpectsPartial<TState extends object> = TActionExpects<
+type TActionExpectsPartial<TState extends TObject> = TActionExpects<
   Partial<TState>
 >;
 
 export const testReducer = <
-  TState extends object = object,
+  TState extends TObject,
   TParams extends TActionExpectsPartial<TState> = TActionExpectsPartial<TState>,
 >(
   text: string,
@@ -98,7 +111,7 @@ export const testReducer = <
   ...lastParams: TActionExpects<TState>
 ): NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>> => {
   type TCallback = (state: TState, expectState: TState) => void;
-  const lastParamsFor = (callback: TCallback = () => {}) => {
+  const lastParamsFor = (callback: TCallback = () => {}):TState => {
     let state: TState;
     for (let i = 0; i < lastParams.length - 1; i += 2) {
       type TArrActionExpectstate = [TAction, TState];
@@ -128,7 +141,7 @@ export const testReducer = <
 };
 
 export const testReducerByChange = <
-  TState extends object = object,
+  TState extends TObject,
   TParams extends TActionExpectsPartial<TState> = TActionExpectsPartial<TState>,
 >(
   text: string,
@@ -138,7 +151,6 @@ export const testReducerByChange = <
 ): NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>> => {
   if (typeof initialState === 'object') {
     for (let i = 1; i < lastParams.length; i += 2) {
-      objs = [];
       const initialStateCopy = { ...initialState };
       copyObjReducer(initialStateCopy, lastParams[i]);
       lastParams[i] = initialStateCopy;
@@ -153,7 +165,7 @@ export const testReducerByChange = <
   );
 };
 
-export const testReduxUndefined = <TState extends object>(
+export const testReduxUndefined = <TState extends TObject>(
   text: string,
   reducer: TReducer<TState>,
   expectState: TState,
@@ -173,13 +185,13 @@ export type TTestSpecificRedux = (
   expect: object,
 ) => object;
 
-type TTestReducerParam<TState extends object = object> = (
+type TTestReducerParam<TState extends TObject> = (
   text: string,
   initialState: TState | undefined,
   ...lastProps: TActionExpects<TState>
 ) => TState;
 
-type TTestReducerByChangeParam<TState extends object = object> = <
+type TTestReducerByChangeParam<TState extends TObject> = <
   TParams extends TActionExpectsPartial<TState>,
 >(
   text: string,
@@ -187,12 +199,12 @@ type TTestReducerByChangeParam<TState extends object = object> = <
   ...lastProps: TParams
 ) => NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>>;
 
-type TTest<TState extends object = object> = (
+type TTest<TState extends TObject = TObject> = (
   testReducer: TTestReducerParam<TState>,
   testReducerByChange: TTestReducerByChangeParam<TState>,
 ) => void;
 
-export const testDescribe = <TState extends object = object>(
+export const testDescribe = <TState extends TObject>(
   text: string,
   reducer: TReducer<TState>,
   expectState: TState,

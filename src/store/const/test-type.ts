@@ -1,12 +1,6 @@
 import { TObject } from '../../types/types';
 
-export type TAction = {
+export type TAction<TPayload  = unknown> = {
   type: string;
-  payload: any;
+  payload: TPayload;
 };
-export type TTestSpecificRedux = (
-  text: string,
-  action: TAction,
-  expect: TObject,
-) => void;
-export type TReducer = (state:TObject, action: TAction) => any;

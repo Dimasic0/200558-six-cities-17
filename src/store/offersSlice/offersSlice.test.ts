@@ -5,12 +5,6 @@ import { initialStateOffers, TStateOffers } from './offersSlice.ts';
 import { TOffers } from '../../types/types.ts';
 
 const { reducer } = offersSlice;
-// const testOffersReducerByChange: TTestSpecificRedux = (
-//   text,
-//   initialState,
-//   ...lastParams
-// ) =>
-//   testReducerByChange(text, initialState, reducer, ...lastParams);
 testDescribe<TStateOffers>(
   'offersSlice',
   reducer,
@@ -173,30 +167,5 @@ testDescribe<TStateOffers>(
         },
       },
     );
-
-    // type TTestParams =Array<[string,any,TAction,TObject]>;
-    // const testParams: TTestParams = [
-    //   [
-    //     'setOffer',
-    //     initialStateOffers,
-    //     setOffers(offer),
-    //     {
-    //       offersByCities: {
-    //         Paris: {
-    //           '82fc8d67-a851-4637-964f-88fe508e833c': offer,
-    //         },
-    //       },
-    //     },
-    //   ],
-    // ];
-    // let state;
-    // for (let test of testParams) {
-    //   const [text, initialState = (state)=>state, Action, expectStatus] = test;
-    //   if (typeof initialState  === 'function')
-    //   {
-    //      initialState = initialState(state);
-    //   }
-    //     state = testOffersReducerByChange(text, initialState, Action, expectStatus);
-    // }
   },
 );
