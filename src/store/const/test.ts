@@ -119,7 +119,7 @@ export const testReducer = <
         i + 3,
       ) as TArrActionExpectstate;
       if (state !== undefined) {
-        state = copyObjReducer({ ...state }, state);
+        state = structuredClone(state);
       }
       state = reducer(state, action);
       callback(text, state, expectState);
@@ -132,12 +132,11 @@ export const testReducer = <
     return state;
   };
 
-  lastParamsFor((text, state, expectState) => {
+  return lastParamsFor((text, state, expectState) => {
     it(`${text} reducer`, () => {
       expect(state).toEqual(expectState);
     });
   });
-  return lastParamsFor();
 };
 
 export const testReducerByChange = <
@@ -158,7 +157,7 @@ export const testReducerByChange = <
        i + 3,
      ) as TArrActionExpectstate;
      if (state !== undefined) {
-       state = copyObjReducer({ ...state }, state);
+       state = structuredClone(state);
      }
      expectState = copyObjReducer({ ...state }, expectState);
      state = reducer(state, action);
@@ -172,12 +171,11 @@ export const testReducerByChange = <
    return state;
  };
 
- lastParamsFor((text, state, expectState) => {
+ return lastParamsFor((text, state, expectState) => {
    it(`${text} reducer`, () => {
      expect(state).toEqual(expectState);
    });
  });
- return lastParamsFor();
 };
 
 const unknownReducerAction: TReducerAction = { type: '@@TEST/UNKNOWN' };
