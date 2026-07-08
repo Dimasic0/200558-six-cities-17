@@ -30,8 +30,8 @@ testDescribe<IResLoginOptional>(
   reducer,
   userInitialState,
   (_, testReducerByChange) => {
-    testReducerByChange('setEmail',userInitialState, setEmail('der'), { email: 'der' });
-    testReducerByChange('setUser',userInitialState, setUser({ email: 'der', token: 'fw' }), {
+    testReducerByChange(userInitialState, 'setEmail', setEmail('der'), { email: 'der' });
+    testReducerByChange(userInitialState,'setUser', setUser({ email: 'der', token: 'fw' }), {
       email: 'der',
       token: 'fw',
     });

@@ -335,7 +335,7 @@ testDescribe<TStateOffers>(
         },
       },
       'setOffer Cologne change',
-      setOffers(offers[2]),
+      setOffers(offers[3]),
       {
         offersByCities: {
           Cologne: {

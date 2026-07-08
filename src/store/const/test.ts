@@ -148,11 +148,36 @@ export const testReducerByChange = <
     reducer: TReducer<TState>,
     ...lastParams: TParams
   ): NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>> => {
-  return testReducer<TState, TParams>(
-    initialState,
-    reducer,
-    ...lastParams,
-  );
+ type TCallback = (text: string, state: TState, expectState: TState) => void;
+ const lastParamsFor = (callback: TCallback = () => {}): TState => {
+   let state: TState | undefined = initialState;
+   for (let i = 0; i < lastParams.length - 1; i += 3) {
+     type TArrActionExpectstate = [string, TReducerAction, TState];
+     let [text, action, expectState] = lastParams.slice(
+       i,
+       i + 3,
+     ) as TArrActionExpectstate;
+     if (state !== undefined) {
+       state = copyObjReducer({ ...state }, state);
+     }
+     expectState = copyObjReducer({ ...state }, expectState);
+     state = reducer(state, action);
+     callback(text, state, expectState);
+   }
+   if (state === undefined) {
+     throw new Error(
+       `${text}: expected at least one [action, expectState] pair`,
+     );
+   }
+   return state;
+ };
+
+ lastParamsFor((text, state, expectState) => {
+   it(`${text} reducer`, () => {
+     expect(state).toEqual(expectState);
+   });
+ });
+ return lastParamsFor();
 };
 
 const unknownReducerAction: TReducerAction = { type: '@@TEST/UNKNOWN' };
