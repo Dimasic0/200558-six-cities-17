@@ -5,10 +5,10 @@ import { TObject } from '../../types/types.ts';
 
 const isObject = (value: unknown): value is object =>
   typeof value === 'object' && value !== null;
-type TObjs = Array<[TObject | Array<unknown>, TObject | Array<unknown>]>;
+type TObjs = Array<[object | Array<unknown>, object | Array<unknown>]>;
 const copyObjSuperficial = (
-  obj1: TObject,
-  obj2: TObject,
+  obj1: object,
+  obj2: object,
   objs: TObjs,
 ): void => {
   for (const prop in obj2) {
@@ -32,16 +32,16 @@ const copyObjSuperficial = (
     objs.push([obj1[prop], obj2[prop]]);
   }
 };
-const copyObjReducer = <TState extends TObject>(
+const copyObjReducer = <TState extends object>(
   obj1: TState,
-  obj2: TObject,
+  obj2: TState,
 ): TState => {
   const objs: TObjs = [];
-  const copyObjThis = (obj1: TObject, obj2: TObject) =>
+  const copyObjThis = (obj1: object, obj2: object) =>
     copyObjSuperficial(obj1, obj2, objs);
   copyObjThis(obj1, obj2);
   while (objs.length) {
-    type TObjsArr = [TObject, TObject];
+    type TObjsArr = [object, object];
     const [obj1, obj2] = objs.shift() as TObjsArr;
     copyObjThis(obj1, obj2);
   }
@@ -71,10 +71,10 @@ const copyObjReducer = <TState extends TObject>(
 //   });
 // };
 
-export type TReducer<TState extends TObject> = Reducer<TState>;
+export type TReducer<TState extends object> = Reducer<TState>;
 
 export type NarrowFromExpect<
-  TState extends TObject,
+  TState extends object,
   TExpect extends Partial<TState>,
 > = {
   [K in keyof TState]: K extends keyof TExpect
@@ -87,22 +87,22 @@ export type NarrowFromExpect<
 };
 
 type LastExpectFromParams<
-  TState extends TObject,
+  TState extends object,
   TParams extends readonly unknown[],
 > = TParams extends readonly [...unknown[], infer TLast extends Partial<TState>]
   ? TLast
   : Partial<TState>;
 
-type TActionExpects<TState extends TObject, TAction = TReducerAction> =
+type TActionExpects<TState extends object, TAction = TReducerAction> =
   | [string,TAction, TState]
   | [string,TAction, TState, ...Array<TAction | TState | string>];
 type TActionExpectsPartial<
-  TState extends TObject,
+  TState extends object,
   TAction = TReducerAction,
 > = TActionExpects<Partial<TState>, TAction>;
 
 export const testReducer = <
-  TState extends TObject,
+  TState extends object,
   TParams extends TActionExpectsPartial<TState> = TActionExpectsPartial<TState>,
 >(
     initialState: TState | undefined,
@@ -141,7 +141,7 @@ export const testReducer = <
 };
 
 export const testReducerByChange = <
-  TState extends TObject,
+  TState extends object,
   TParams extends TActionExpectsPartial<TState> = TActionExpectsPartial<TState>,
 >(
     initialState: TState | undefined,
@@ -182,7 +182,7 @@ export const testReducerByChange = <
 
 const unknownReducerAction: TReducerAction = { type: '@@TEST/UNKNOWN' };
 
-export const testReduxUndefined = <TState extends TObject>(
+export const testReduxUndefined = <TState extends object>(
   text: string,
   reducer: TReducer<TState>,
   expectState: TState,
@@ -202,26 +202,25 @@ export type TTestSpecificRedux = (
   expect: object,
 ) => object;
 
-type TTestReducerParam<TState extends TObject, TAction = TReducerAction> = (
+type TTestReducerParam<TState extends object, TAction = TReducerAction> = (
   initialState: TState | undefined,
   ...lastProps: TActionExpects<TState, TAction>
 ) => TState;
 
 type TTestReducerByChangeParam<
-  TState extends TObject,
+  TState extends object,
   TAction = TReducerAction,
 > = <TParams extends TActionExpectsPartial<TState, TAction>>(
   initialState: TState | undefined,
   ...lastProps: TParams
 ) => NarrowFromExpect<TState, LastExpectFromParams<TState, TParams>>;
 
-type TTest<TState extends TObject = TObject, TAction = TReducerAction> = (
+type TTest<TState extends object = TObject, TAction = TReducerAction> = (
   testReducer: TTestReducerParam<TState, TAction>,
   testReducerByChange: TTestReducerByChangeParam<TState, TAction>,
 ) => void;
-
 export const testDescribe = <
-  TState extends TObject,
+  TState extends object,
   TStrictAction extends boolean = true,
 >(
     text: string,

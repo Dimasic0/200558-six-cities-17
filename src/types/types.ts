@@ -76,10 +76,12 @@ export type TDataOfferProps = { data: TOffer };
 export type TOffersProp = {
   offers: TOffers[];
 };
-export type TObject = Record<
-  string,
-  unknown
->;
+// export type TObject = Record<
+//   string | number ,
+//   unknown
+// >;
+export type TObject ={[key: string | number | symbol]: unknown};
+
 export type TObjectDate = Record<string, object | string | number | Date>;
 export type TOffersByCities = Record<string, Record<string, TOffers>>;
 

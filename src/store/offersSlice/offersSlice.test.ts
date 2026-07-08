@@ -279,7 +279,7 @@ testDescribe<TStateOffers>(
     //   expect(state).toEqual({ ...initialState, city });
     // });
     const props = 'Amsterdam';
-    testReducerByChange('setCity', initialStateOffers, setCity(props), {
+    testReducerByChange( initialStateOffers,'setCity', setCity(props), {
       city: props,
     });
     let offer: TOffers = {
