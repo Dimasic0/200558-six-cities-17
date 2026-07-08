@@ -2,7 +2,7 @@ import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
 import { testDescribe } from '../const/test.ts';
 import { initialStateOffers, TStateOffers } from './offersSlice.ts';
-import { TOffers } from '../../types/types.ts';
+import { TCity, TOffers } from '../../types/types.ts';
 
 const { reducer } = offersSlice;
 // testDescribe<TStateOffers>(
@@ -263,6 +263,7 @@ const offers: TOffers[] = [
     rating: 1.6,
   },
 ];
+
 testDescribe<TStateOffers>(
   'offersSlice',
   reducer,
@@ -279,7 +280,7 @@ testDescribe<TStateOffers>(
     //   expect(state).toEqual({ ...initialState, city });
     // });
     const props = 'Amsterdam';
-    testReducerByChange( initialStateOffers,'setCity', setCity(props), {
+    testReducerByChange(initialStateOffers,'setCity', setCity(props), {
       city: props,
     });
     let offer: TOffers = {
@@ -305,7 +306,7 @@ testDescribe<TStateOffers>(
       isPremium: true,
       rating: 2.9,
     };
-    let state = testReducerByChange(
+    const state = testReducerByChange(
       initialStateOffers,
       'setOffer',
       setOffers(offers[0]),
@@ -344,7 +345,7 @@ testDescribe<TStateOffers>(
         },
       },
     );
-
+    console.log(state);
     // offer = {
     //   id: 'cced6fa8-419a-4fde-9702-2a6c81dda568',
     //   title: 'Nice, cozy, warm big bed apartment',
