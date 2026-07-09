@@ -4,6 +4,7 @@ import type { State } from '../types/state';
 import { NameReducer } from '../data/constant';
 import type { TOffers } from '../types/types';
 
+/** Обычный оффер в Paris — нужен для проверки фильтрации избранного. */
 const parisOffer: TOffers = {
   id: 'offer-paris-1',
   title: 'Tile House',
@@ -20,6 +21,7 @@ const parisOffer: TOffers = {
   rating: 2.9,
 };
 
+/** Избранный оффер в Paris — попадает в результат useFavorites. */
 const parisFavoriteOffer: TOffers = {
   ...parisOffer,
   id: 'offer-paris-fav',
@@ -27,6 +29,7 @@ const parisFavoriteOffer: TOffers = {
   isFavorite: true,
 };
 
+/** Избранный оффер во втором городе — проверяем группировку по городам. */
 const cologneFavoriteOffer: TOffers = {
   id: 'offer-cologne-fav',
   title: 'Favorite in Cologne',
@@ -70,20 +73,29 @@ export const createMockState = (): State => ({
  * Упрощённый мок `useAppSelector` для тестов хуков из `useSelectors.ts`.
  * В каждом тесте задаём `mockState`, а `useAppSelector(selector)` вернёт `selector(mockState)`.
  */
-let mockState: State = createMockState();
+let mockState: State;
 
 vi.mock('./index', () => ({
   useAppSelector: (selector: (state: State) => unknown) => selector(mockState),
 }));
 
 // Важно: импортируем после `vi.mock`, чтобы `useSelectors.ts` увидел мок.
-import { useCity, useEmail, useUser } from './useSelectors';
+import {
+  useCity,
+  useEmail,
+  useFavorites,
+  useOffers,
+  useOffersСities,
+  useUser,
+} from './useSelectors';
 
 beforeEach(() => {
   mockState = createMockState();
 });
 
 describe('store hooks: useSelectors', () => {
+  // --- Простые селекторы: читают одно поле из store ---
+
   it('useUser returns user slice (useSelectors.ts:40)', () => {
     const { result } = renderHook(() => useUser());
     expect(result.current).toBe(mockState.user);
@@ -101,5 +113,129 @@ describe('store hooks: useSelectors', () => {
 
     const { result } = renderHook(() => useCity());
     expect(result.current).toBe('Amsterdam');
+  });
+
+  // --- useOffers: селектор + Object.values + useMemo ---
+
+  describe('useOffers', () => {
+    it('returns offers for the current city as an array', () => {
+      const { result } = renderHook(() => useOffers());
+
+      // Paris — текущий город в createMockState, там 2 оффера.
+      expect(result.current).toEqual(
+        expect.arrayContaining([parisOffer, parisFavoriteOffer]),
+      );
+      expect(result.current).toHaveLength(2);
+    });
+
+    it('returns only offers from the selected city', () => {
+      mockState.offers.city = 'Cologne';
+
+      const { result } = renderHook(() => useOffers());
+
+      expect(result.current).toEqual([cologneFavoriteOffer]);
+    });
+
+    it('returns an empty array when the current city has no offers', () => {
+      // Amsterdam есть в списке городов, но офферов для него нет.
+      mockState.offers.city = 'Amsterdam';
+
+      const { result } = renderHook(() => useOffers());
+
+      expect(result.current).toEqual([]);
+    });
+
+    it('returns an empty array when offersByCities is null', () => {
+      // Начальное состояние slice до загрузки данных с сервера.
+      mockState.offers.offersByCities = null;
+
+      const { result } = renderHook(() => useOffers());
+
+      expect(result.current).toEqual([]);
+    });
+  });
+
+  // --- useOffersСities: прямой доступ к offersByCities ---
+
+  describe('useOffersСities', () => {
+    const {offers} = mockState;
+    it('returns offersByCities from state', () => {
+      const { result } = renderHook(() => useOffersСities());
+
+      expect(result.current).toBe(offers.offersByCities);
+    });
+
+    it('reflects updates to offersByCities', () => {
+      offers.offersByCities = {
+        Hamburg: {
+          'offer-hamburg': {
+            ...parisOffer,
+            id: 'offer-hamburg',
+            city: {
+              name: 'Hamburg',
+              location: { latitude: 53.5511, longitude: 9.9937, zoom: 13 },
+            },
+          },
+        },
+      };
+
+      const { result } = renderHook(() => useOffersСities());
+
+      expect(result.current).toBe(offers.offersByCities);
+      expect(result.current?.Hamburg).toBeDefined();
+    });
+  });
+
+  // --- useFavorites: фильтрация isFavorite + группировка по городам ---
+
+  describe('useFavorites', () => {
+    it('returns favorite offers grouped by city', () => {
+      const { result } = renderHook(() => useFavorites());
+
+      // arrayContaining — порядок городов в for...in не гарантирован.
+      expect(result.current).toEqual(
+        expect.arrayContaining([
+          [parisFavoriteOffer],
+          [cologneFavoriteOffer],
+        ]),
+      );
+      expect(result.current).toHaveLength(2);
+    });
+
+    it('excludes non-favorite offers from groups', () => {
+      const { result } = renderHook(() => useFavorites());
+
+      const flatFavorites = result.current.flat();
+      expect(flatFavorites).not.toContain(parisOffer);
+      expect(flatFavorites.every((offer) => offer.isFavorite)).toBe(true);
+    });
+
+    it('returns an empty array when there are no favorites', () => {
+      mockState.offers.offersByCities = {
+        Paris: {
+          [parisOffer.id]: { ...parisOffer, isFavorite: false },
+        },
+      };
+
+      const { result } = renderHook(() => useFavorites());
+
+      expect(result.current).toEqual([]);
+    });
+
+    it('skips cities that have only non-favorite offers', () => {
+      mockState.offers.offersByCities = {
+        Paris: {
+          [parisOffer.id]: { ...parisOffer, isFavorite: false },
+        },
+        Cologne: {
+          [cologneFavoriteOffer.id]: cologneFavoriteOffer,
+        },
+      };
+
+      const { result } = renderHook(() => useFavorites());
+
+      // Paris пропускается, остаётся только группа Cologne.
+      expect(result.current).toEqual([[cologneFavoriteOffer]]);
+    });
   });
 });
