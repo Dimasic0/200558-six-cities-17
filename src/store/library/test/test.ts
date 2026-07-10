@@ -1,7 +1,8 @@
 import { it, test, expect } from 'vitest';
+import { renderHook } from '@testing-library/react';
 import type { Reducer } from '@reduxjs/toolkit';
 import { TReducerAction, TReducerActionFromStrict } from './test-type.ts';
-import { TObject } from '../../types/types.ts';
+import { TObject } from '../../../types/types.ts';
 
 const isObject = (value: unknown): value is object =>
   typeof value === 'object' && value !== null;
@@ -217,6 +218,27 @@ type TTest<TState extends object = TObject, TAction = TReducerAction> = (
   testReducer: TTestReducerParam<TState, TAction>,
   testReducerByChange: TTestReducerByChangeParam<TState, TAction>,
 ) => void;
+type TUseSelectorTestCase = [
+  text: string,
+  modifyState: () => void,
+  useSelector: () => unknown,
+  expected: { toEqual?: unknown; toBe?: unknown },
+];
+
+/** Один тест хука: меняем состояние, вызываем useSelector, сравниваем с ожиданием. */
+export const testUseSelector = (
+  ...params: Array<TUseSelectorTestCase>
+): void => {
+  for (const [text, modifyState, useSelector, expected] of params) {
+    it(text, () => {
+      modifyState();
+      const { result } = renderHook(() => useSelector());
+      const key = Object.keys(expected)[0] as 'toEqual' | 'toBe';
+      expect(result.current)[key](expected[key]);
+    });
+  }
+};
+
 export const testDescribe = <
   TState extends object,
   TStrictAction extends boolean = true,

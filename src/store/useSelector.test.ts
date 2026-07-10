@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { testUseSelector } from './library/test/test.ts';
 import type { State } from '../types/state';
 import { NameReducer } from '../data/constant';
 import type { TOffers } from '../types/types';
@@ -92,27 +93,6 @@ import {
 beforeEach(() => {
   mockState = createMockState();
 });
-
-/** Один тест хука: меняем mockState, вызываем useSelector, сравниваем с ожиданием. */
-const testUseSelector = (
-  ...params: Array<
-    [
-      text: string,
-      modifyState: () => State | void,
-      useSelector: () => unknown,
-      expected: { toEqual?: unknown; toBe?: unknown },
-    ]
-  >
-): void => {
-  for (const [text, modifyState, useSelector, expected] of params) {
-    it(text, () => {
-      modifyState();
-      const { result } = renderHook(() => useSelector());
-      const key = Object.keys(expected)[0] as 'toEqual' | 'toBe';
-      expect(result.current)[key](expected[key]);
-    });
-  }
-};
 
 describe('store hooks: useSelectors', () => {
   // --- Простые селекторы: читают одно поле из store ---
