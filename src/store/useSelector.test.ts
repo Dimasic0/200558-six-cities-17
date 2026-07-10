@@ -93,27 +93,78 @@ beforeEach(() => {
   mockState = createMockState();
 });
 
+/** Один тест хука: меняем mockState, вызываем useSelector, сравниваем с ожиданием. */
+const testUseSelector = (
+  ...params: Array<
+    [
+      text: string,
+      modifyState: () => State | void,
+      useSelector: () => unknown,
+      expected: { toEqual?: unknown; toBe?: unknown },
+    ]
+  >
+): void => {
+  for (const [text, modifyState, useSelector, expected] of params) {
+    it(text, () => {
+      modifyState();
+      const { result } = renderHook(() => useSelector());
+      const key = Object.keys(expected)[0] as 'toEqual' | 'toBe';
+      expect(result.current)[key](expected[key]);
+    });
+  }
+};
+
 describe('store hooks: useSelectors', () => {
   // --- Простые селекторы: читают одно поле из store ---
 
-  it('useUser returns user slice (useSelectors.ts:40)', () => {
-    const { result } = renderHook(() => useUser());
-    expect(result.current).toBe(mockState.user);
-  });
-
-  it('useEmail returns user.email', () => {
-    mockState.user.email = 'a@b.c';
-
-    const { result } = renderHook(() => useEmail());
-    expect(result.current).toBe('a@b.c');
-  });
-
-  it('useCity returns offers.city', () => {
-    mockState.offers.city = 'Amsterdam';
-
-    const { result } = renderHook(() => useCity());
-    expect(result.current).toBe('Amsterdam');
-  });
+  testUseSelector(
+    [
+      'useUser returns user slice (useSelectors.ts:40)',
+      () => {},
+      useUser,
+      {
+        toEqual: {
+          email: 'test@example.com',
+          avatarUrl: 'https://example.com/avatar.jpg',
+          name: 'Test User',
+          isPro: true,
+          token: 'test-token',
+        },
+      },
+    ],
+    [
+      'useEmail returns user.email',
+      () => {
+        mockState.user.email = 'a@b.c';
+      },
+      useEmail,
+      { toBe: 'a@b.c' },
+    ],
+    [
+      'useCity returns offers.city',
+      () => {
+        mockState.offers.city = 'Amsterdam';
+      },
+      useCity,
+      { toBe: 'Amsterdam' },
+    ],
+    [
+      'useOffersСities returns offersByCities from state',
+      () => {},
+      useOffersСities,
+      {
+        toEqual: {
+          Paris: {
+            [parisOffer.id]: parisOffer,
+            [parisFavoriteOffer.id]: parisFavoriteOffer,
+          },
+          Cologne: {
+            [cologneFavoriteOffer.id]: cologneFavoriteOffer,
+          },
+        },
+      },
+    ],
+  );
 
   // --- useOffers: селектор + Object.values + useMemo ---
 
@@ -128,45 +179,41 @@ describe('store hooks: useSelectors', () => {
       expect(result.current).toHaveLength(2);
     });
 
-    it('returns only offers from the selected city', () => {
-      mockState.offers.city = 'Cologne';
-
-      const { result } = renderHook(() => useOffers());
-
-      expect(result.current).toEqual([cologneFavoriteOffer]);
-    });
-
-    it('returns an empty array when the current city has no offers', () => {
-      // Amsterdam есть в списке городов, но офферов для него нет.
-      mockState.offers.city = 'Amsterdam';
-
-      const { result } = renderHook(() => useOffers());
-
-      expect(result.current).toEqual([]);
-    });
-
-    it('returns an empty array when offersByCities is null', () => {
-      // Начальное состояние slice до загрузки данных с сервера.
-      mockState.offers.offersByCities = null;
-
-      const { result } = renderHook(() => useOffers());
-
-      expect(result.current).toEqual([]);
-    });
+    testUseSelector(
+      [
+        'returns only offers from the selected city',
+        () => {
+          mockState.offers.city = 'Cologne';
+        },
+        useOffers,
+        { toEqual: [cologneFavoriteOffer] },
+      ],
+      [
+        'returns an empty array when the current city has no offers',
+        () => {
+          // Amsterdam есть в списке городов, но офферов для него нет.
+          mockState.offers.city = 'Amsterdam';
+        },
+        useOffers,
+        { toEqual: [] },
+      ],
+      [
+        'returns an empty array when offersByCities is null',
+        () => {
+          // Начальное состояние slice до загрузки данных с сервера.
+          mockState.offers.offersByCities = null;
+        },
+        useOffers,
+        { toEqual: [] },
+      ],
+    );
   });
 
   // --- useOffersСities: прямой доступ к offersByCities ---
 
   describe('useOffersСities', () => {
-    const {offers} = mockState;
-    it('returns offersByCities from state', () => {
-      const { result } = renderHook(() => useOffersСities());
-
-      expect(result.current).toBe(offers.offersByCities);
-    });
-
     it('reflects updates to offersByCities', () => {
-      offers.offersByCities = {
+      mockState.offers.offersByCities = {
         Hamburg: {
           'offer-hamburg': {
             ...parisOffer,
@@ -181,7 +228,7 @@ describe('store hooks: useSelectors', () => {
 
       const { result } = renderHook(() => useOffersСities());
 
-      expect(result.current).toBe(offers.offersByCities);
+      expect(result.current).toBe(mockState.offers.offersByCities);
       expect(result.current?.Hamburg).toBeDefined();
     });
   });
@@ -210,32 +257,35 @@ describe('store hooks: useSelectors', () => {
       expect(flatFavorites.every((offer) => offer.isFavorite)).toBe(true);
     });
 
-    it('returns an empty array when there are no favorites', () => {
-      mockState.offers.offersByCities = {
-        Paris: {
-          [parisOffer.id]: { ...parisOffer, isFavorite: false },
+    testUseSelector(
+      [
+        'returns an empty array when there are no favorites',
+        () => {
+          mockState.offers.offersByCities = {
+            Paris: {
+              [parisOffer.id]: { ...parisOffer, isFavorite: false },
+            },
+          };
         },
-      };
-
-      const { result } = renderHook(() => useFavorites());
-
-      expect(result.current).toEqual([]);
-    });
-
-    it('skips cities that have only non-favorite offers', () => {
-      mockState.offers.offersByCities = {
-        Paris: {
-          [parisOffer.id]: { ...parisOffer, isFavorite: false },
+        useFavorites,
+        { toEqual: [] },
+      ],
+      [
+        'skips cities that have only non-favorite offers',
+        () => {
+          mockState.offers.offersByCities = {
+            Paris: {
+              [parisOffer.id]: { ...parisOffer, isFavorite: false },
+            },
+            Cologne: {
+              [cologneFavoriteOffer.id]: cologneFavoriteOffer,
+            },
+          };
         },
-        Cologne: {
-          [cologneFavoriteOffer.id]: cologneFavoriteOffer,
-        },
-      };
-
-      const { result } = renderHook(() => useFavorites());
-
-      // Paris пропускается, остаётся только группа Cologne.
-      expect(result.current).toEqual([[cologneFavoriteOffer]]);
-    });
+        useFavorites,
+        // Paris пропускается, остаётся только группа Cologne.
+        { toEqual: [[cologneFavoriteOffer]] },
+      ],
+    );
   });
 });
