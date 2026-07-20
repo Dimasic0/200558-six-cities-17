@@ -1,8 +1,63 @@
 import { it, test, expect } from 'vitest';
+import type { Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import type { Reducer } from '@reduxjs/toolkit';
+import type { AxiosInstance } from 'axios';
+import type MockAdapter from 'axios-mock-adapter';
 import { TReducerAction, TReducerActionFromStrict } from './test-type.ts';
 import { TObject } from '../../../types/types.ts';
+
+export type THttpMethod = 'get' | 'post' | 'put' | 'delete';
+export type TReply<TRes = unknown> = [number] | [number, TRes];
+export type TThunkAction = (
+  dispatch: Mock,
+  getState: Mock,
+  api: AxiosInstance,
+) => Promise<unknown>;
+
+export type TTestAsyncActionDeps = {
+  mock: MockAdapter;
+  dispatch: Mock;
+  getState: Mock;
+  api: AxiosInstance;
+};
+
+/**
+ * Мокает HTTP-ответ, вызывает async thunk и проверяет, что dispatch
+ * получил ожидаемый sync-action (setOffers / setUser и т.п.).
+ *
+ * getDeps — getter: значения берутся внутри `it` (после beforeEach).
+ * reply: [status] — только код (ошибка без тела);
+ *        [status, body] — успешный ответ с данными.
+ */
+export const createTestAsyncAction =
+  (getDeps: () => TTestAsyncActionDeps) =>
+  <TRes = unknown>(
+    text: string,
+    type: THttpMethod,
+    url: string,
+    reply: TReply<TRes>,
+    action: TThunkAction,
+    expected?: unknown,
+  ): void => {
+    it(text, async () => {
+      const { mock, dispatch, getState, api } = getDeps();
+      const onRequest = {
+        get: () => mock.onGet(url),
+        post: () => mock.onPost(url),
+        put: () => mock.onPut(url),
+        delete: () => mock.onDelete(url),
+      }[type];
+
+      onRequest().reply(...reply);
+
+      await action(dispatch, getState, api);
+
+      if (expected !== undefined) {
+        expect(dispatch).toHaveBeenCalledWith(expected);
+      }
+    });
+  };
 
 const isObject = (value: unknown): value is object =>
   typeof value === 'object' && value !== null;

@@ -12,6 +12,7 @@ import {
   rqFavoriteGet,
   setCity,
 } from './action';
+import { createTestAsyncAction } from './library/test/test.ts';
 
 const API_BASE_URL = 'https://16.design.htmlacademy.pro/six-cities/';
 
@@ -42,6 +43,13 @@ let mock: MockAdapter;
 let dispatch: Mock;
 let getState: Mock;
 
+const testAsyncAction = createTestAsyncAction(() => ({
+  mock,
+  dispatch,
+  getState,
+  api,
+}));
+
 beforeEach(() => {
   api = axios.create({ baseURL: API_BASE_URL });
   mock = new MockAdapter(api);
@@ -66,82 +74,73 @@ describe('store actions', () => {
   });
 
   describe('getOffers', () => {
-    it('dispatches setOffers with fetched data', async () => {
-      const signal = new AbortController().signal;
-      mock.onGet('offers').reply(200, [parisOffer]);
-
-      await getOffers(signal)(dispatch, getState, api);
-
-      expect(dispatch).toHaveBeenCalledWith(setOffers([parisOffer]));
-    });
+    testAsyncAction(
+      'dispatches setOffers with fetched data',
+      'get',
+      'offers',
+      [200, [parisOffer]],
+      getOffers(new AbortController().signal),
+      setOffers([parisOffer]),
+    );
   });
 
   describe('getLogin', () => {
-    it('dispatches setUser when login request succeeds', async () => {
-      mock.onGet('login').reply(200, { email: 'user@example.com' });
+    testAsyncAction(
+      'dispatches setUser when login request succeeds',
+      'get',
+      'login',
+      [200, { email: 'user@example.com' }],
+      getLogin(undefined),
+      setUser({ email: 'user@example.com' }),
+    );
 
-      await getLogin(undefined)(dispatch, getState, api);
-
-      expect(dispatch).toHaveBeenCalledWith(
-        setUser({ email: 'user@example.com' }),
-      );
-    });
-
-    it('dispatches setUser with empty email when login request fails', async () => {
-      mock.onGet('login').reply(401);
-
-      await getLogin(undefined)(dispatch, getState, api);
-
-      expect(dispatch).toHaveBeenCalledWith(setUser({ email: '' }));
-    });
+    testAsyncAction(
+      'dispatches setUser with empty email when login request fails',
+      'get',
+      'login',
+      [401],
+      getLogin(undefined),
+      setUser({ email: '' }),
+    );
   });
 
   describe('rqFavorite', () => {
-    it('dispatches setOffers after posting favorite state', async () => {
-      mock.onPost(`favorite/${parisOffer.id}/1`).reply(200, favoriteOffer);
+    testAsyncAction(
+      'dispatches setOffers after posting favorite state',
+      'post',
+      `favorite/${parisOffer.id}/1`,
+      [200, favoriteOffer],
+      rqFavorite({ id: parisOffer.id, state: true }),
+      setOffers(favoriteOffer),
+    );
 
-      await rqFavorite({ id: parisOffer.id, state: true })(
-        dispatch,
-        getState,
-        api,
-      );
+    testAsyncAction(
+      'converts boolean false to 0 in request url',
+      'post',
+      `favorite/${parisOffer.id}/0`,
+      [200, parisOffer],
+      rqFavorite({ id: parisOffer.id, state: false }),
+      setOffers(parisOffer),
+    );
 
-      expect(dispatch).toHaveBeenCalledWith(setOffers(favoriteOffer));
-    });
-
-    it('converts boolean false to 0 in request url', async () => {
-      mock.onPost(`favorite/${parisOffer.id}/0`).reply(200, parisOffer);
-
-      await rqFavorite({ id: parisOffer.id, state: false })(
-        dispatch,
-        getState,
-        api,
-      );
-
-      expect(dispatch).toHaveBeenCalledWith(setOffers(parisOffer));
-    });
-
-    it('accepts numeric state in request url', async () => {
-      mock.onPost(`favorite/${parisOffer.id}/1`).reply(200, favoriteOffer);
-
-      await rqFavorite({ id: parisOffer.id, state: 1 })(
-        dispatch,
-        getState,
-        api,
-      );
-
-      expect(dispatch).toHaveBeenCalledWith(setOffers(favoriteOffer));
-    });
+    testAsyncAction(
+      'accepts numeric state in request url',
+      'post',
+      `favorite/${parisOffer.id}/1`,
+      [200, favoriteOffer],
+      rqFavorite({ id: parisOffer.id, state: 1 }),
+      setOffers(favoriteOffer),
+    );
   });
 
   describe('rqFavoriteGet', () => {
-    it('dispatches setOffers with fetched favorites', async () => {
-      const signal = new AbortController().signal;
-      mock.onGet('favorite').reply(200, [favoriteOffer]);
-
-      await rqFavoriteGet(signal)(dispatch, getState, api);
-
-      expect(dispatch).toHaveBeenCalledWith(setOffers([favoriteOffer]));
-    });
+    testAsyncAction(
+      'dispatches setOffers with fetched favorites',
+      'get',
+      'favorite',
+      [200, [favoriteOffer]],
+      rqFavoriteGet(new AbortController().signal),
+      setOffers([favoriteOffer]),
+    );
   });
 });
