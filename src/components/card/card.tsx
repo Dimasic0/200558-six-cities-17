@@ -30,9 +30,10 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
       className={`${config.className}__card place-card`}
       onMouseEnter={() => onHover(offer.id)}
       onMouseLeave={() => onHover(null)}
+      data-testId="card"
     >
       {offer.isPremium &&
-        <div className="place-card__mark">
+        <div className="place-card__mark" data-testId="premium">
           <span>Premium</span>
         </div>}
       <div className={`${config.className}__image-wrapper place-card__image-wrapper`}>
