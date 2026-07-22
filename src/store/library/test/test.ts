@@ -30,6 +30,13 @@ export type TTestAsyncActionDeps = {
  * reply: [status] — только код (ошибка без тела);
  *        [status, body] — успешный ответ с данными.
  */
+
+const onRequestObj = {
+  get: () => mock.onGet(url),
+  post: () => mock.onPost(url),
+  put: () => mock.onPut(url),
+  delete: () => mock.onDelete(url),
+};
 export const createTestAsyncAction =
   (getDeps: () => TTestAsyncActionDeps) =>
   <TRes = unknown>(
