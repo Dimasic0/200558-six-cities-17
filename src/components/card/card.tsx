@@ -10,14 +10,14 @@ type TCardProps = {
   classTextBlock?: string;
 };
 
-type TSetConfig = {className:string; width: number; height: number};
-const setConfig = (className: string, width: number, height: number): TSetConfig => ({
+export type TConfig = {className:string; width: number; height: number};
+const setConfig = (className: string, width: number, height: number): TConfig => ({
   className,
   width,
   height,
 });
 
-const configs = {
+export const configs = {
   vertical: setConfig('cities', 260, 200),
   horizontal: setConfig('favorites', 150, 110)
 } as const;

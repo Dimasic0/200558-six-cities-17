@@ -1,3 +1,4 @@
+import { createElement } from 'react';
 import { it, test, expect } from 'vitest';
 import type { Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
@@ -353,3 +354,40 @@ export const expectAttributeTestId = (
     expectElement.toHaveAttribute(attribute, String(attributes[attribute]));
   }
 };
+
+type TMockComponentProps = Record<string, unknown>;
+
+const propToDataAttr = (value: unknown): string => {
+  if (typeof value === 'string' || typeof value === 'number') {
+    return String(value);
+  }
+  if (typeof value === 'function') {
+    return '[Function]';
+  }
+  return JSON.stringify(value);
+};
+
+/**
+ * Фабрика компонента-заглушки.
+ * Рендерит: <p data-component="Name" data-prop-foo="...">{JSON.stringify(props)}</p>
+ *
+ * @example
+ * vi.mock('../bookmarkButton/bookmarkButton', async () => {
+ *   const { createMockComponent } = await import('../../store/library/test/test');
+ *   return { BookmarkButton: createMockComponent('BookmarkButton') };
+ * });
+ */
+export const createMockComponent =
+  (componentName: string) =>
+  (props: TMockComponentProps = {}) => {
+    const attributes: Record<string, string> = {
+      'data-component': componentName,
+    };
+
+    for (const key of Object.keys(props)) {
+      // React принимает только lowercase в data-* (defaultState → defaultstate)
+      attributes[`data-prop-${key.toLowerCase()}`] = propToDataAttr(props[key]);
+    }
+
+    return createElement('p', attributes, JSON.stringify(props));
+  };

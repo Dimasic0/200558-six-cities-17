@@ -1,11 +1,10 @@
 import { type ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { configureMockStore } from '@jedmao/redux-mock-store';
 import { describe, expect, it, vi } from 'vitest';
 import Card from './card';
+import { configs, TConfig } from './card';
 import { offers } from '../../mocks/offers';
 import type { TOffers } from '../../types/types';
 import {
@@ -15,7 +14,16 @@ import {
   expectTestIdToTextContent,
 } from '../../store/library/test/test';
 
-const mockStore = configureMockStore();
+// Заглушка вместо реального BookmarkButton (без Redux).
+// async import — иначе createMockComponent будет undefined из‑за hoist vi.mock.
+vi.mock('../bookmarkButton/bookmarkButton', async () => {
+  const { createMockComponent: mockComp } = await import(
+    '../../store/library/test/test'
+  );
+  return {
+    BookmarkButton: mockComp('BookmarkButton'),
+  };
+});
 
 // Два разных оффера: с Premium и без — чтобы проверить условный рендер
 const premiumOffer = offers[0];
@@ -27,11 +35,10 @@ type TCardTestProps = Partial<ComponentProps<typeof Card>> & {
 
 /**
  * Обёртка для рендера Card.
- * Provider — BookmarkButton внутри Card ходит в Redux через useAppDispatch.
  * MemoryRouter — нужен для <Link>, иначе React Router падает в тесте.
+ * Provider больше не нужен: BookmarkButton замокан.
  */
 const renderCard = (props: TCardTestProps = {}) => {
-  const store = mockStore({});
   const {
     offer = premiumOffer,
     variant = 'vertical',
@@ -40,18 +47,19 @@ const renderCard = (props: TCardTestProps = {}) => {
   } = props;
 
   return render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <Card
-          offer={offer}
-          variant={variant}
-          onHover={onHover}
-          classTextBlock={classTextBlock}
-        />
-      </MemoryRouter>
-    </Provider>,
+    <MemoryRouter>
+      <Card
+        offer={offer}
+        variant={variant}
+        onHover={onHover}
+        classTextBlock={classTextBlock}
+      />
+    </MemoryRouter>,
   );
 };
+
+const getBookmarkMock = () =>
+  document.querySelector('[data-component="BookmarkButton"]');
 
 describe('Card', () => {
   // variant='vertical' → configs.vertical → класс cities__card
@@ -66,7 +74,8 @@ describe('Card', () => {
     renderCard({ variant: 'horizontal' });
 
     expectByTestIdClass('card', 'favorites__card');
-    expectAttributeTestId('card-image', { width: 150, height: 110 });
+    const config: TConfig = configs.horizontal;
+    expectAttributeTestId('card-image', { width: config.width, height: config.height });
   });
 
   // isPremium: true → блок .place-card__mark; false → блока нет
@@ -75,13 +84,10 @@ describe('Card', () => {
     expect(screen.getByTestId('premium')).toBeInTheDocument();
 
     // rerender меняет props на том же дереве, без полного unmount
-    const store = mockStore({});
     rerender(
-      <Provider store={store}>
-        <MemoryRouter>
-          <Card offer={regularOffer} variant="vertical" />
-        </MemoryRouter>
-      </Provider>,
+      <MemoryRouter>
+        <Card offer={regularOffer} variant="vertical" />
+      </MemoryRouter>,
     );
     // queryBy* возвращает null, если элемента нет (getBy* бросил бы ошибку)
     expect(screen.queryByTestId('premium')).not.toBeInTheDocument();
@@ -142,5 +148,30 @@ describe('Card', () => {
 
     await user.unhover(card);
     expect(onHover).toHaveBeenCalledWith(null);
+  });
+
+  describe('BookmarkButton', () => {
+    // Card должен пробросить в кнопку избранного id, isFavorite и bem-блок карточки
+    it('receives id, defaultState and bemBlock from offer', () => {
+      renderCard({ offer: premiumOffer });
+
+      const bookmark = getBookmarkMock();
+      expect(bookmark).toBeInTheDocument();
+      expect(bookmark).toHaveAttribute('data-prop-id', premiumOffer.id);
+      expect(bookmark).toHaveAttribute(
+        'data-prop-defaultstate',
+        JSON.stringify(premiumOffer.isFavorite),
+      );
+      expect(bookmark).toHaveAttribute('data-prop-bemblock', 'place-card');
+      expect(bookmark).toHaveAttribute('data-prop-width', '18');
+      expect(bookmark).toHaveAttribute('data-prop-height', '19');
+    });
+
+    it('gets defaultState true when offer is favorite', () => {
+      const favoriteOffer = { ...premiumOffer, isFavorite: true };
+      renderCard({ offer: favoriteOffer });
+
+      expect(getBookmarkMock()).toHaveAttribute('data-prop-defaultstate', 'true');
+    });
   });
 });
