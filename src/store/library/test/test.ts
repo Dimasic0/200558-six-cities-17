@@ -6,6 +6,7 @@ import type { AxiosInstance } from 'axios';
 import type MockAdapter from 'axios-mock-adapter';
 import { TReducerAction, TReducerActionFromStrict } from './test-type.ts';
 import { TObject } from '../../../types/types.ts';
+import { screen } from '@testing-library/react';
 
 export type THttpMethod = 'get' | 'post' | 'put' | 'delete';
 export type TReply<TRes = unknown> = [number] | [number, TRes];
@@ -325,4 +326,30 @@ export const testDescribe = <
     testReduxUndefined('', reducer, expectState);
     test(testSpecificReducer, testSpecificReducerByChange);
   });
+};
+
+export const expectByTestIdClass  = (testId: string, ...classNames: string[]) => {
+
+  expect(screen.getByTestId(testId)).toHaveClass(...classNames);
+}
+export const expectTestIdToHaveClass  = (...arr: Array<[string, ...string[]]>) => {
+  arr.forEach(([testId, ...classNames]) => {
+    expect(screen.queryByTestId(testId)).toHaveClass(...classNames);
+  });
+}
+export const expectTestIdToTextContent  = (...arr: Array<[string, ...Array<string | number>]>) => {
+  arr.forEach(([testId, ...text]) => {
+    expect(screen.queryByTestId(testId)).toHaveTextContent(text+'');
+  });
+}
+
+export const expectAttributeTestId = (
+  testId: string,
+  attributes: Record<string, string | number>,
+) => {
+  const expectElement = expect(screen.getByTestId(testId));
+
+  for (const attribute in attributes) {
+    expectElement.toHaveAttribute(attribute, String(attributes[attribute]));
+  }
 };

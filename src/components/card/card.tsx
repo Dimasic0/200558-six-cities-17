@@ -37,20 +37,21 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
           <span>Premium</span>
         </div>}
       <div className={`${config.className}__image-wrapper place-card__image-wrapper`}>
-        <Link to={`/offer/${offer.id}`}>
+        <Link to={`/offer/${offer.id}`} data-testId="card-link">
           <img
             className="place-card__image"
             src={offer.previewImage}
             width={config.width}
             height={config.height}
             alt={offer.title}
+            data-testId="card-image"
           />
         </Link>
       </div>
-      <div className={`${classTextBlock} place-card__info`}>
+      <div className={`${classTextBlock} place-card__info`} data-testId="card-info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{offer.price}</b>
+            <b className="place-card__price-value" data-testId="card-price">{offer.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
           <BookmarkButton width='18' height='19' id={offer.id} defaultState={offer.isFavorite} bemBlock='place-card'/>
@@ -62,14 +63,14 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: raringWidth }}></span>
+            <span style={{ width: raringWidth }} data-testId="card-rating"></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`offer/${offer.id}`}>{offer.title}</Link>
+          <Link to={`offer/${offer.id}`} data-testId="card-title">{offer.title}</Link>
         </h2>
-        <p className="place-card__type">{offer.type}</p>
+        <p className="place-card__type" data-testId="card-type">{offer.type}</p>
       </div>
     </article>
   );
