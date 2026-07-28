@@ -6,7 +6,7 @@ import type { Reducer } from '@reduxjs/toolkit';
 import type { AxiosInstance } from 'axios';
 import type MockAdapter from 'axios-mock-adapter';
 import { TReducerAction, TReducerActionFromStrict } from './test-type.ts';
-import { TObject } from '../../../types/types.ts';
+import { TObject } from '../../types/types.ts';
 import { screen } from '@testing-library/react';
 
 export type THttpMethod = 'get' | 'post' | 'put' | 'delete';

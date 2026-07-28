@@ -12,13 +12,13 @@ import {
   expectByTestIdClass,
   expectTestIdToHaveClass,
   expectTestIdToTextContent,
-} from '../../store/library/test/test';
+} from '../../library/test/test';
 
 // Заглушка вместо реального BookmarkButton (без Redux).
 // async import — иначе createMockComponent будет undefined из‑за hoist vi.mock.
 vi.mock('../bookmarkButton/bookmarkButton', async () => {
   const { createMockComponent: mockComp } = await import(
-    '../../store/library/test/test'
+    '../../library/test/test'
   );
   return {
     BookmarkButton: mockComp('BookmarkButton'),

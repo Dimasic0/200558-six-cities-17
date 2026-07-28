@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { testUseSelector } from './library/test/test.ts';
+import { testUseSelector } from '../library/test/test.ts';
 import type { State } from '../types/state';
 import { NameReducer } from '../data/constant';
 import type { TOffers } from '../types/types';

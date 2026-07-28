@@ -1,6 +1,6 @@
 import { offersSlice, setOffers } from './offersSlice.ts';
 import { setCity } from '../action.ts';
-import { testDescribe } from '../library/test/test.ts';
+import { testDescribe } from '../../library/test/test.ts';
 import { initialStateOffers, TStateOffers } from './offersSlice.ts';
 import { TCity, TOffers } from '../../types/types.ts';
 

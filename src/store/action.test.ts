@@ -12,7 +12,7 @@ import {
   rqFavoriteGet,
   setCity,
 } from './action';
-import { createTestAsyncAction } from './library/test/test.ts';
+import { createTestAsyncAction } from '../library/test/test.ts';
 
 const API_BASE_URL = 'https://16.design.htmlacademy.pro/six-cities/';
 

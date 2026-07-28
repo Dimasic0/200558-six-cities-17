@@ -1,0 +1,55 @@
+---
+description: Тесты без дублирования — хелперы, фабрики, общие сетапы
+globs: "**/*.{test,spec}.{ts,tsx}"
+alwaysApply: false
+---
+
+# DRY в тестах
+
+Пиши тесты с минимальным повторяющимся кодом. Одинаковый сетап, рендер и поиск элементов — выноси в хелперы.
+
+## Что выносить
+
+- **`renderX(props?)`** — рендер компонента с дефолтными props и моками; в кейсе передавай только отличия.
+- **Селекторы / getters** — повторяющийся `screen.getBy…` / `closest` / запросы по роли.
+- **Фабрики данных** — объекты, стор, начальное состояние, если собираются в нескольких тестах.
+- **Общие проверки** — только если assert одинаковый по смыслу (не ради «сжать» разные кейсы).
+
+## Пример
+
+```tsx
+// ❌ BAD — один и тот же render/моки в каждом it
+it('marks default active', () => {
+  const onClick = vi.fn();
+  render(<Locations cities={СITIES} onClick={onClick} defaultActive="Paris" />);
+  expect(screen.getByText('Paris').closest('.locations__item-link')).toHaveClass('tabs__item--active');
+});
+
+it('calls onClick', async () => {
+  const onClick = vi.fn();
+  render(<Locations cities={СITIES} onClick={onClick} defaultActive="Paris" />);
+  await userEvent.setup().click(screen.getByText('Cologne'));
+  expect(onClick).toHaveBeenCalledWith('Cologne');
+});
+
+// ✅ GOOD — хелпер рендера + getter
+const renderLocations = (props: Partial<ComponentProps<typeof Locations>> = {}) => {
+  const { cities = СITIES, onClick = vi.fn(), ...rest } = props;
+  return { onClick, ...render(<Locations cities={cities} onClick={onClick} {...rest} />) };
+};
+
+const getCityLink = (name: string) =>
+  screen.getByText(name).closest('.locations__item-link');
+
+it('marks default active', () => {
+  renderLocations({ defaultActive: 'Paris' });
+  expect(getCityLink('Paris')).toHaveClass('tabs__item--active');
+});
+```
+
+## Границы
+
+- Не выноси в хелпер одноразовый код — только то, что повторяется (≥2 раза) или явно усложняет каждый кейс.
+- Не прячь суть теста: в `it` должно быть видно *что* проверяем; хелпер — *как* готовим окружение.
+- Простые компоненты без повторов (как Loading с 2–3 короткими `render`) — хелпер не обязателен.
+- Предпочитай локальные хелперы в файле теста; общие — только при реальном переиспользовании между файлами.
