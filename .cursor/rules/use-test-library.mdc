@@ -1,0 +1,76 @@
+---
+description: Использовать src/library/test/test; всегда читать исходник библиотеки (правило может устареть)
+globs: "**/*.{test,spec}.{ts,tsx},src/library/test/**"
+alwaysApply: false
+---
+
+# Тестовая библиотека проекта
+
+Импорт только из `src/library/test/test` (относительный путь от файла теста). Не дублируй её хелперы вручную и не импортируй из устаревшего `src/store/library/test`.
+
+## Источник истины — код библиотеки
+
+Таблица и примеры ниже **могут устареть**. Перед написанием или правкой тестов **обязательно** открой и просмотри актуальные экспорты в `src/library/test/test.ts` (и при необходимости `test-type.ts`). Не опирайся только на это правило.
+
+Если сценарий покрывается экспортом из библиотеки — **обязан** использовать его, а не писать то же вручную.
+
+## Синхронизация правила с библиотекой
+
+Любое изменение API библиотеки (`src/library/test/test.ts` / `test-type.ts`) — добавление, удаление, переименование экспорта или смена контракта — **обязано** сопровождаться обновлением этого файла (`.cursor/rules/use-test-library.mdc`): таблица «Когда что брать», примеры и границы.
+
+## Когда что брать
+
+Ориентир (сверь с файлом библиотеки):
+
+| Сценарий | Функция |
+| --- | --- |
+| Класс по `data-testid` | `expectByTestIdClass` / `expectTestIdToHaveClass` |
+| Текст по `data-testid` | `expectTestIdToTextContent` |
+| Атрибуты по `data-testid` | `expectAttributeTestId` |
+| Заглушка дочернего компонента в `vi.mock` | `createMockComponent` (только через `async () => { await import(...) }`) |
+| Найти заглушку(и) по имени | `getMockComponent` / `getMockComponents` |
+| Props заглушки (`data-prop-*`) | `expectMockProps` |
+| Тесты reducer / slice | `testDescribe` (+ `testReducer` / `testReducerByChange` внутри) |
+| Тесты `useSelector` | `testUseSelector` |
+| Async thunk + axios mock | `createTestAsyncAction` |
+
+## Примеры
+
+```tsx
+// ❌ BAD — ручной assert вместо библиотеки
+expect(screen.getByTestId('comment-user-name')).toHaveTextContent('Angelina');
+expect(screen.getByTestId('comment-avatar')).toHaveAttribute('src', url);
+
+// ✅ GOOD
+expectTestIdToTextContent(['comment-user-name', 'Angelina']);
+expectAttributeTestId('comment-avatar', { src: url, alt: 'Reviews avatar' });
+```
+
+```tsx
+// ❌ BAD — самодельный мок компонента
+vi.mock('../card/card', () => ({
+  default: () => <div data-testid="card-mock" />,
+}));
+
+// ✅ GOOD
+vi.mock('../card/card', async () => {
+  const { createMockComponent } = await import('../../library/test/test');
+  return { default: createMockComponent('Card') };
+});
+```
+
+```tsx
+// ❌ BAD — ручной querySelector / toHaveAttribute по data-prop-*
+expect(document.querySelectorAll('[data-component="Card"]')).toHaveLength(3);
+expect(card).toHaveAttribute('data-prop-variant', 'horizontal');
+
+// ✅ GOOD
+expect(getMockComponents('Card')).toHaveLength(3);
+expectMockProps(card, { variant: 'horizontal', onHover });
+```
+
+## Границы
+
+- Не тащи библиотеку «ради галочки», если кейс не про API из `test.ts` (клики, `toBeDisabled`, `toHaveStyle`, вызов колбэка — обычный RTL/vitest ок).
+- Не пиши локальный хелпер, который повторяет уже экспортированную функцию.
+- Новые общие assert/моки — сначала в `src/library/test/test.ts`, затем обнови это правило, потом используй в тестах.

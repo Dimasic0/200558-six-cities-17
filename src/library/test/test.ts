@@ -367,13 +367,41 @@ const propToDataAttr = (value: unknown): string => {
   return JSON.stringify(value);
 };
 
+/** Все заглушки createMockComponent с данным именем. */
+export const getMockComponents = (
+  componentName: string,
+): NodeListOf<Element> =>
+  document.querySelectorAll(`[data-component="${componentName}"]`);
+
+/** Первая заглушка createMockComponent с данным именем. */
+export const getMockComponent = (componentName: string): Element | null =>
+  document.querySelector(`[data-component="${componentName}"]`);
+
+/**
+ * Проверяет data-prop-* у заглушки createMockComponent.
+ * Значения кодируются так же, как в моке (function → '[Function]', object → JSON).
+ */
+export const expectMockProps = (
+  element: Element | null,
+  props: TMockComponentProps,
+) => {
+  const expectElement = expect(element);
+
+  for (const key of Object.keys(props)) {
+    expectElement.toHaveAttribute(
+      `data-prop-${key.toLowerCase()}`,
+      propToDataAttr(props[key]),
+    );
+  }
+};
+
 /**
  * Фабрика компонента-заглушки.
  * Рендерит: <p data-component="Name" data-prop-foo="...">{JSON.stringify(props)}</p>
  *
  * @example
  * vi.mock('../bookmarkButton/bookmarkButton', async () => {
- *   const { createMockComponent } = await import('../../store/library/test/test');
+ *   const { createMockComponent } = await import('../../library/test/test');
  *   return { BookmarkButton: createMockComponent('BookmarkButton') };
  * });
  */
