@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import axios, { AxiosInstance } from 'axios';
+import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
-import { configureMockStore } from '@jedmao/redux-mock-store';
+import { configureMockStore, type MockStore } from '@jedmao/redux-mock-store';
 import thunk from 'redux-thunk';
 import type { TOffers, TOffersOptional } from '../types/types';
 import { setOffers } from './offersSlice/offersSlice';
@@ -14,7 +14,6 @@ import {
   setCity,
 } from './action';
 import { createTestAsyncAction } from '../library/test/test.ts';
-import type { TTestAsyncActionDeps } from '../library/test/test.ts';
 
 const API_BASE_URL = 'https://16.design.htmlacademy.pro/six-cities/';
 
@@ -40,7 +39,7 @@ const favoriteOffer: TOffersOptional = {
   isFavorite: true,
 };
 let mock: MockAdapter;
-let store: TTestAsyncActionDeps['store'];
+let store: MockStore<any, any>;
 
 const testAsyncAction = createTestAsyncAction(() => ({
   mock,
