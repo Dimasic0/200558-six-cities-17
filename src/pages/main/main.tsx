@@ -2,7 +2,7 @@ import Cards from '../../components/cards/cards';
 import {useCallback, useEffect, useMemo, useState } from 'react';
 import Map from '../../components/map/map';
 import {Header} from '../../components/header/header';
-import { useOffers } from '../../store/useSelectors';
+import { useOffers } from '../../store/useSelectors/useSelectors';
 import {Locations} from '../../components/locations/locations';
 import { cityDefault, СITIES } from '../../data/constant';
 import { TCity } from '../../types/types';
@@ -10,7 +10,7 @@ import { FormSorting } from '../../components/sorting/sorting';
 import { sortingName } from '../../data/constant';
 import { TSortingName } from '../../data/constant';
 import {Spinner} from '../../components/spinner/spinner';
-import { getOffers, setCity } from '../../store/action';
+import { getOffers, setCity } from '../../store/action/action';
 import { useAppDispatch } from '../../store';
 
 export default function Main() {

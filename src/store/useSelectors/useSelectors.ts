@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
-import { TOffers } from '../types/types';
-import { useAppSelector } from './index';
-import { NameReducer } from '../data/constant';
+import { TOffers } from '../../types/types';
+import { useAppSelector } from '../index';
+import { NameReducer } from '../../data/constant';
 
 const emptyArray: TOffers[] = [];
 

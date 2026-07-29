@@ -4,7 +4,7 @@ import OfferInsideList from '../offerInsideList/offerInsideList';
 import Comments from '../comments/comments';
 import { CommentForm, TCommentFromEvt } from '../commentForm/commentForm';
 import Map, { point } from '../map/map';
-import { useEmail } from '../../store/useSelectors';
+import { useEmail } from '../../store/useSelectors/useSelectors';
 import { api } from '../../api';
 import { useParams } from 'react-router-dom';
 import { BookmarkButton } from '../bookmarkButton/bookmarkButton';

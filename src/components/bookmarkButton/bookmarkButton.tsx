@@ -1,7 +1,7 @@
 import cls from 'classnames';
 import { useState } from 'react';
 import { useAppDispatch } from '../../store';
-import { rqFavorite } from '../../store/action';
+import { rqFavorite } from '../../store/action/action';
 
 interface BookmarkButtonProps {
   width: number | string;

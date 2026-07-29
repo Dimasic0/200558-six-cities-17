@@ -1,10 +1,10 @@
 import { createAction } from '@reduxjs/toolkit';
-import { TCity, TOffers, TOffersOptional } from '../types/types';
+import { TCity, TOffers, TOffersOptional } from '../../types/types';
 import axios, { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { NameReducer } from '../data/constant';
-import { setOffers } from './offersSlice/offersSlice';
-import { setUser } from './userSlice/userSlice';
+import { NameReducer } from '../../data/constant';
+import { setOffers } from '../offersSlice/offersSlice';
+import { setUser } from '../userSlice/userSlice';
 
 export const setCity = createAction<TCity>('catalog/setCity');
 //export const setEmail = createAction<string>('email');

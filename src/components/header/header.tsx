@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 import { Address, Token } from '../../data/constant';
-import { useFavorites } from '../../store/useSelectors';
+import { useFavorites } from '../../store/useSelectors/useSelectors';
 //import { setEmail } from '../../store/action';
 import { useDispatch } from 'react-redux';
 import { memo } from 'react';
 import {TOffers } from '../../types/types';
-import { useUser } from '../../store/useSelectors';
+import { useUser } from '../../store/useSelectors/useSelectors';
 import { setEmail } from '../../store/userSlice/userSlice';
 
 function HeaderFun() {

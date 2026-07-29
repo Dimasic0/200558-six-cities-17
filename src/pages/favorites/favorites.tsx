@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
 import Cards from '../../components/cards/cards';
 import {Header} from '../../components/header/header';
-import { useFavorites, useOffersСities } from '../../store/useSelectors';
+import { useFavorites, useOffersСities } from '../../store/useSelectors/useSelectors';
 import Loading from '../../components/loading/loading';
 import { useEffect } from 'react';
-import {  rqFavoriteGet } from '../../store/action';
+import {  rqFavoriteGet } from '../../store/action/action';
 import { useAppDispatch } from '../../store';
 
 

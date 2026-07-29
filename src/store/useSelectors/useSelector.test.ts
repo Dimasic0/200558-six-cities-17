@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { testUseSelector } from '../library/test/test.ts';
-import type { State } from '../types/state';
-import { NameReducer } from '../data/constant';
-import type { TOffers } from '../types/types';
+import { testUseSelector } from '../../library/test/test.ts';
+import type { State } from '../../types/state.ts';
+import { NameReducer } from '../../data/constant.tsx';
+import type { TOffers } from '../../types/types.ts';
 
 /** Обычный оффер в Paris — нужен для проверки фильтрации избранного. */
 const parisOffer: TOffers = {
@@ -88,7 +88,7 @@ import {
   useOffers,
   useOffersСities,
   useUser,
-} from './useSelectors';
+} from '../useSelectors.ts';
 
 beforeEach(() => {
   mockState = createMockState();

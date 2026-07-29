@@ -7,9 +7,9 @@ import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
-import { getLogin } from '../store/action';
+import { getLogin } from '../store/action/action';
 import { useAppDispatch } from '../store';
-import { useEmail } from '../store/useSelectors';
+import { useEmail } from '../store/useSelectors/useSelectors';
 
 export default function App(): JSX.Element {
   const dispatch = useAppDispatch();

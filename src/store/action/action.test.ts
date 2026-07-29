@@ -3,9 +3,9 @@ import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { configureMockStore, type MockStore } from '@jedmao/redux-mock-store';
 import thunk from 'redux-thunk';
-import type { TOffers, TOffersOptional } from '../types/types';
-import { setOffers } from './offersSlice/offersSlice';
-import { setUser } from './userSlice/userSlice';
+import type { TOffers, TOffersOptional } from '../../types/types.ts';
+import { setOffers } from '../offersSlice/offersSlice.ts';
+import { setUser } from '../userSlice/userSlice.tsx';
 import {
   getLogin,
   getOffers,
@@ -13,7 +13,7 @@ import {
   rqFavoriteGet,
   setCity,
 } from './action';
-import { createTestAsyncAction } from '../library/test/test.ts';
+import { createTestAsyncAction } from '../../library/test/test.ts';
 
 const API_BASE_URL = 'https://16.design.htmlacademy.pro/six-cities/';
 

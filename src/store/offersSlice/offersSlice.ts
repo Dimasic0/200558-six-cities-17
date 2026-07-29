@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { cityDefault, NameReducer } from '../../data/constant';
 import { TCity, TOffersByCities, TOffersOptional } from '../../types/types';
-import { setCity } from '../action';
+import { setCity } from '../action/action';
 
 export interface TStateOffers {
   offersByCities: TOffersByCities | null;
