@@ -19,9 +19,10 @@ export type TThunkAction = (
 
 export type TTestAsyncActionDeps = {
   mock: MockAdapter;
-  dispatch: Mock;
-  getState: Mock;
-  api: AxiosInstance;
+  store: {
+    dispatch: (action: unknown) => unknown;
+    getActions: () => unknown[];
+  };
 };
 
 /**
@@ -33,12 +34,6 @@ export type TTestAsyncActionDeps = {
  *        [status, body] — успешный ответ с данными.
  */
 
-const onRequestObj = {
-  get: () => mock.onGet(url),
-  post: () => mock.onPost(url),
-  put: () => mock.onPut(url),
-  delete: () => mock.onDelete(url),
-};
 export const createTestAsyncAction =
   (getDeps: () => TTestAsyncActionDeps) =>
   <TRes = unknown>(
@@ -50,7 +45,7 @@ export const createTestAsyncAction =
     expected?: unknown,
   ): void => {
     it(text, async () => {
-      const { mock, dispatch, getState, api } = getDeps();
+      const { mock, store } = getDeps();
       const onRequest = {
         get: () => mock.onGet(url),
         post: () => mock.onPost(url),
@@ -58,12 +53,16 @@ export const createTestAsyncAction =
         delete: () => mock.onDelete(url),
       }[type];
 
-      onRequest().reply(...reply);
+      if (reply.length === 1) {
+        onRequest().reply(reply[0]);
+      } else {
+        onRequest().reply(reply[0], reply[1]);
+      }
 
-      await action(dispatch, getState, api);
+      await store.dispatch(action);
 
       if (expected !== undefined) {
-        expect(dispatch).toHaveBeenCalledWith(expected);
+        expect(store.getActions()).toContainEqual(expected);
       }
     });
   };

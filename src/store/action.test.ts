@@ -1,7 +1,8 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { Mock } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import axios, { AxiosInstance } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
+import { configureMockStore } from '@jedmao/redux-mock-store';
+import thunk from 'redux-thunk';
 import type { TOffers, TOffersOptional } from '../types/types';
 import { setOffers } from './offersSlice/offersSlice';
 import { setUser } from './userSlice/userSlice';
@@ -13,6 +14,7 @@ import {
   setCity,
 } from './action';
 import { createTestAsyncAction } from '../library/test/test.ts';
+import type { TTestAsyncActionDeps } from '../library/test/test.ts';
 
 const API_BASE_URL = 'https://16.design.htmlacademy.pro/six-cities/';
 
@@ -37,24 +39,21 @@ const favoriteOffer: TOffersOptional = {
   id: 'offer-paris-fav',
   isFavorite: true,
 };
-
-let api: AxiosInstance;
 let mock: MockAdapter;
-let dispatch: Mock;
-let getState: Mock;
+let store: TTestAsyncActionDeps['store'];
 
 const testAsyncAction = createTestAsyncAction(() => ({
   mock,
-  dispatch,
-  getState,
-  api,
+  store,
 }));
 
 beforeEach(() => {
-  api = axios.create({ baseURL: API_BASE_URL });
+  const api = axios.create({ baseURL: API_BASE_URL });
   mock = new MockAdapter(api);
-  dispatch = vi.fn();
-  getState = vi.fn();
+  const mockStore = configureMockStore<any, any>([
+    thunk.withExtraArgument(api),
+  ]);
+  store = mockStore({});
 });
 
 afterEach(() => {
