@@ -1,0 +1,45 @@
+---
+description: Комментарии в тестах — зачем кейс и неочевидная логика
+globs: "**/*.{test,spec}.{ts,tsx}"
+alwaysApply: false
+---
+
+# Комментарии в тестах
+
+Каждый `it` / `test` должен иметь короткий комментарий **над** кейсом: что проверяем и почему это важно (связь с кодом компонента).
+
+## Что писать
+
+- **Перед `it`** — одна строка: поведение / ветка логики, которую покрываем.
+- **У хелперов** (`renderX`, getters) — JSDoc или `//`, если неочевидно, зачем обёртка.
+- **Внутри кейса** — только там, где assert неочевиден (rerender, queryBy vs getBy, стиль, мок).
+
+## Пример
+
+```tsx
+// ❌ BAD — нет пояснения, что именно и зачем
+it('calls onClick', async () => {
+  const { onClick } = renderFormSorting();
+  await userEvent.setup().click(screen.getByText('Price: low to high'));
+  expect(onClick).toHaveBeenCalledWith('Price: low to high');
+});
+
+// ✅ GOOD — комментарий связывает тест с логикой компонента
+// onLiClick: setActive + закрытие списка + колбэк родителю
+it('calls onClick, updates active type and closes list when option is chosen', async () => {
+  const user = userEvent.setup();
+  const { onClick } = renderFormSorting();
+
+  await user.click(getSortingTrigger());
+  await user.click(getOption(sortingName.low));
+
+  expect(onClick).toHaveBeenCalledWith(sortingName.low);
+});
+```
+
+## Границы
+
+- Не дублируй текст `it('...')` дословно — добавляй смысл («почему» / какая ветка кода).
+- Не комментируй каждую строку (`// клик`, `// expect`) — только неочевидное.
+- Язык комментариев — как в соседних тестах проекта (сейчас русский).
+- Хелперы и константы наверху файла тоже комментируй кратко, если имя само по себе не объясняет роль.
