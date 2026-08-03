@@ -343,15 +343,48 @@ export const expectTestIdToTextContent  = (...arr: Array<[string, ...Array<strin
   });
 }
 
-export const expectAttributeTestId = (
-  testId: string,
+/**
+ * Резолвит цель для DOM-assert'ов.
+ * Element — как есть;
+ * "##id" — screen.getByTestId('id');
+ * иначе — document.querySelector(selector).
+ */
+const resolveElement = (target: Element | null | string): Element | null => {
+  if (typeof target !== 'string') {
+    return target;
+  }
+  if (target.startsWith('##')) {
+    return screen.getByTestId(target.slice(2));
+  }
+  return document.querySelector(target);
+};
+
+/**
+ * Проверяет атрибуты у DOM-элемента.
+ * Цель: Element, CSS-селектор или "##testid" (поиск по data-testid).
+ *
+ * @example
+ * expectAttribute(button, { type: 'button' });
+ * expectAttribute('.offer__bookmark-icon', { width: 18, height: 19 });
+ * expectAttribute('##comment-avatar', { src: url, alt: 'Reviews avatar' });
+ */
+export const expectAttribute = (
+  target: Element | null | string,
   attributes: Record<string, string | number>,
 ) => {
-  const expectElement = expect(screen.getByTestId(testId));
+  const expectElement = expect(resolveElement(target));
 
   for (const attribute in attributes) {
     expectElement.toHaveAttribute(attribute, String(attributes[attribute]));
   }
+};
+
+/** Атрибуты по data-testid. Обёртка над expectAttribute('##…'). */
+export const expectAttributeTestId = (
+  testId: string,
+  attributes: Record<string, string | number>,
+) => {
+  expectAttribute(`##${testId}`, attributes);
 };
 
 type TMockComponentProps = Record<string, unknown>;

@@ -26,7 +26,8 @@ alwaysApply: false
 | --- | --- |
 | Класс по `data-testid` | `expectByTestIdClass` / `expectTestIdToHaveClass` |
 | Текст по `data-testid` | `expectTestIdToTextContent` |
-| Атрибуты по `data-testid` | `expectAttributeTestId` |
+| Атрибуты у Element / селектора / `##testid` | `expectAttribute` |
+| Атрибуты по `data-testid` | `expectAttributeTestId` (обёртка над `expectAttribute('##…')`) |
 | Заглушка дочернего компонента в `vi.mock` | `createMockComponent` (только через `async () => { await import(...) }`) |
 | Найти заглушку(и) по имени | `getMockComponent` / `getMockComponents` |
 | Props заглушки (`data-prop-*`) | `expectMockProps` (Element или имя-строка) |
@@ -40,10 +41,15 @@ alwaysApply: false
 // ❌ BAD — ручной assert вместо библиотеки
 expect(screen.getByTestId('comment-user-name')).toHaveTextContent('Angelina');
 expect(screen.getByTestId('comment-avatar')).toHaveAttribute('src', url);
+expect(button).toHaveAttribute('type', 'button');
+expect(container.querySelector('.icon')).toHaveAttribute('width', '18');
 
 // ✅ GOOD
 expectTestIdToTextContent(['comment-user-name', 'Angelina']);
-expectAttributeTestId('comment-avatar', { src: url, alt: 'Reviews avatar' });
+expectAttribute('##comment-avatar', { src: url, alt: 'Reviews avatar' });
+// или expectAttributeTestId('comment-avatar', { src: url, alt: 'Reviews avatar' });
+expectAttribute(button, { type: 'button' });
+expectAttribute('.icon', { width: 18, height: 19 });
 ```
 
 ```tsx
