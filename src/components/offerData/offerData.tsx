@@ -1,4 +1,4 @@
-import {JSX, memo, useCallback, useMemo, useRef } from 'react';
+﻿import {JSX, memo, useCallback, useMemo, useRef } from 'react';
 import { TComment, TOffer, TOffers } from '../../types/types';
 import OfferInsideList from '../offerInsideList/offerInsideList';
 import Comments from '../comments/comments';
@@ -118,7 +118,7 @@ const OfferDataFun = ({ offer, comments, nearOffers, getComment }: OfferContaine
             </>
           ), [offer])}
           <section className="offer__reviews reviews">
-            <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments?.length}</span></h2>
+            <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount" data-testid="reviews-amount">{comments?.length}</span></h2>
             <Comments data={comments} bemBlock="reviews" />
             {email && <CommentForm onSubmit={onCommentFormSubmit} textareaRef={textareaRef} key="CommentForm" />}
           </section>

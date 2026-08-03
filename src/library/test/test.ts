@@ -378,12 +378,19 @@ export const getMockComponent = (componentName: string): Element | null =>
 
 /**
  * Проверяет data-prop-* у заглушки createMockComponent.
+ * Первый аргумент — DOM-элемент или имя компонента (строка → getMockComponent).
  * Значения кодируются так же, как в моке (function → '[Function]', object → JSON).
+ *
+ * @example
+ * expectMockProps('Map', { city, selectedPoint });
+ * expectMockProps(getMockComponents('Card')[0], { offer });
  */
 export const expectMockProps = (
-  element: Element | null,
+  target: Element | null | string,
   props: TMockComponentProps,
 ) => {
+  const element =
+    typeof target === 'string' ? getMockComponent(target) : target;
   const expectElement = expect(element);
 
   for (const key of Object.keys(props)) {
