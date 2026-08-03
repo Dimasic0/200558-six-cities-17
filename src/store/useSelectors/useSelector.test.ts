@@ -76,7 +76,7 @@ export const createMockState = (): State => ({
  */
 let mockState: State;
 
-vi.mock('./index', () => ({
+vi.mock('../index', () => ({
   useAppSelector: (selector: (state: State) => unknown) => selector(mockState),
 }));
 
@@ -88,7 +88,7 @@ import {
   useOffers,
   useOffersСities,
   useUser,
-} from '../useSelectors.ts';
+} from '../useSelectors/useSelectors.ts';
 
 beforeEach(() => {
   mockState = createMockState();
