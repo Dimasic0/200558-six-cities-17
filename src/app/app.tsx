@@ -4,7 +4,7 @@ import Favorites from '../pages/favorites/favorites';
 import Offer from '../pages/offer/offer';
 import { PrivateStatus, Address} from '../data/constant';
 import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
-import PrivateRoute from '../privateRoute';
+import PrivateRoute from '../store/privateRoute/privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';
 import { getLogin } from '../store/action/action';

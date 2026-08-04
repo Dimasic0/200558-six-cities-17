@@ -1,4 +1,4 @@
-import { PrivateStatus, Address } from './data/constant';
+import { PrivateStatus, Address } from '../../data/constant';
 import { Navigate } from 'react-router-dom';
 type TPrivateRoute = {
     status:PrivateStatus;
