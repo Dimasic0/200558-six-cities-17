@@ -1,7 +1,7 @@
 import { type ComponentProps } from 'react';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import OfferInsideList from './offerInsideList';
+import OfferInsideList from './offer-inside-list';
 
 // Фикстура списка удобств — переиспользуется в нескольких кейсах
 const sampleList = ['Wi-Fi', 'Heating', 'Kitchen', 'Cable TV'];

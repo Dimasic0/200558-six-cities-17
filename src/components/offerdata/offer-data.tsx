@@ -1,13 +1,13 @@
 ﻿import {JSX, memo, useCallback, useMemo, useRef } from 'react';
 import { TComment, TOffer, TOffers } from '../../types/types';
-import OfferInsideList from '../offerInsideList/offerInsideList';
+import OfferInsideList from '../offerInsideList/offer-inside-list';
 import Comments from '../comments/comments';
-import { CommentForm, TCommentFromEvt } from '../commentForm/commentForm';
+import { CommentForm, TCommentFromEvt } from '../commentForm/comment-form';
 import Map, { point } from '../map/map';
 import { useEmail } from '../../store/useSelectors/useSelectors';
 import { api } from '../../api';
 import { useParams } from 'react-router-dom';
-import { BookmarkButton } from '../bookmarkButton/bookmarkButton';
+import { BookmarkButton } from '../bookmarkbutton/bookmark-button';
 
 interface OfferContainerProp {
   offer: TOffer;

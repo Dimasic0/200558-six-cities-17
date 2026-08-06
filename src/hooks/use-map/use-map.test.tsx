@@ -2,6 +2,7 @@ import { createRef, type MutableRefObject } from 'react';
 import { renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TLocation } from '../../types/types';
+import useMap from './use-map';
 
 const {
   mockSetView,
@@ -27,8 +28,6 @@ const {
 vi.mock('leaflet', () => ({
   Map: MockMap,
 }));
-
-import useMap from './use-map';
 
 const city: TLocation = {
   latitude: 48.85661,

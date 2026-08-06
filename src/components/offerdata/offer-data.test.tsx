@@ -2,7 +2,7 @@ import { type ComponentProps, type RefObject } from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { OfferData } from './offerData';
+import { OfferData } from './offer-data';
 import { api } from '../../api';
 import { useEmail } from '../../store/useSelectors/useSelectors';
 import { offers } from '../../mocks/offers';

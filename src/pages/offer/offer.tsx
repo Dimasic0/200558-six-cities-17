@@ -5,7 +5,7 @@ import { TComment, TOffer, TOffers, TPropSignal } from '../../types/types';
 import Loading from '../../components/loading/loading.tsx';
 import { useParams } from 'react-router-dom';
 import { api } from '../../api.ts';
-import { OfferData } from '../../components/offerData/offerData.tsx';
+import { OfferData } from '../../components/offerdata/offer-data.tsx';
 
 
 export default function Offer() {
