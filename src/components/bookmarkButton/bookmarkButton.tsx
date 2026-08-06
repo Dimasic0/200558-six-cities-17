@@ -1,7 +1,10 @@
 import cls from 'classnames';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Address } from '../../data/constant';
 import { useAppDispatch } from '../../store';
 import { rqFavorite } from '../../store/action/action';
+import { useEmail } from '../../store/useSelectors/useSelectors';
 
 interface BookmarkButtonProps {
   width: number | string;
@@ -13,6 +16,8 @@ interface BookmarkButtonProps {
 
 export const BookmarkButton = ({ width = 31, height = 33, defaultState = false, bemBlock, id }: BookmarkButtonProps): JSX.Element => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const email = useEmail();
 
   defaultState = !!defaultState;
   const [state, setState] = useState<boolean>(defaultState);
@@ -20,8 +25,13 @@ export const BookmarkButton = ({ width = 31, height = 33, defaultState = false, 
   const [sending, setSending] = useState<boolean>(false);
 
   const onSending = () => {
+    if (!email) {
+      navigate(Address.login);
+      return;
+    }
+
     if (id && !sending) {
-      dispatch(rqFavorite({ id, state: !state })).then((data) => {
+      dispatch(rqFavorite({ id, state: !state })).unwrap().then((data) => {
         setState((state) => !state);
         setSending(false);
       }).catch(() => { setSending(false); });

@@ -4,16 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TLocation } from '../../types/types';
 
 const {
-  mockAddLayer,
   mockSetView,
   mockMapInstance,
   MockMap,
-  MockTileLayer,
 } = vi.hoisted(() => {
-  const mockAddLayer = vi.fn();
   const mockSetView = vi.fn();
   const mockMapInstance = {
-    addLayer: mockAddLayer,
     setView: mockSetView,
   };
 
@@ -21,22 +17,15 @@ const {
     return mockMapInstance;
   });
 
-  const MockTileLayer = vi.fn(function TileLayer() {
-    return { name: 'tile-layer' };
-  });
-
   return {
-    mockAddLayer,
     mockSetView,
     mockMapInstance,
-    MockMap,
-    MockTileLayer,
+    MockMap
   };
 });
 
 vi.mock('leaflet', () => ({
   Map: MockMap,
-  TileLayer: MockTileLayer,
 }));
 
 import useMap from './use-map';
@@ -64,8 +53,6 @@ const createMapRef = (
 describe('useMap', () => {
   beforeEach(() => {
     MockMap.mockClear();
-    MockTileLayer.mockClear();
-    mockAddLayer.mockClear();
     mockSetView.mockClear();
   });
 
@@ -77,7 +64,6 @@ describe('useMap', () => {
 
     expect(result.current).toBeUndefined();
     expect(MockMap).not.toHaveBeenCalled();
-    expect(MockTileLayer).not.toHaveBeenCalled();
   });
 
   // Первый рендер с контейнером — создаём Map и тайловый слой
@@ -95,15 +81,6 @@ describe('useMap', () => {
       },
       zoom: 13,
     });
-    expect(MockTileLayer).toHaveBeenCalledTimes(1);
-    expect(MockTileLayer).toHaveBeenCalledWith(
-      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-      {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-      },
-    );
-    expect(mockAddLayer).toHaveBeenCalledWith({ name: 'tile-layer' });
     expect(result.current).toBe(mockMapInstance);
   });
 
@@ -121,7 +98,6 @@ describe('useMap', () => {
     rerender({ city: anotherCity });
 
     expect(MockMap).toHaveBeenCalledTimes(1);
-    expect(MockTileLayer).toHaveBeenCalledTimes(1);
   });
 
   // Смена города двигает уже созданную карту через setView

@@ -4,13 +4,24 @@ import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { BookmarkButton } from './bookmarkButton';
 import { rqFavorite } from '../../store/action/action';
+import { Address } from '../../data/constant';
 
-const { mockDispatch } = vi.hoisted(() => ({
+const { mockDispatch, mockNavigate, mockUseEmail } = vi.hoisted(() => ({
   mockDispatch: vi.fn(),
+  mockNavigate: vi.fn(),
+  mockUseEmail: vi.fn(() => 'user@mail.ru'),
 }));
 
 vi.mock('../../store', () => ({
   useAppDispatch: () => mockDispatch,
+}));
+
+vi.mock('react-router-dom', () => ({
+  useNavigate: () => mockNavigate,
+}));
+
+vi.mock('../../store/useSelectors/useSelectors', () => ({
+  useEmail: () => mockUseEmail(),
 }));
 
 vi.mock('../../store/action/action', () => ({
@@ -30,6 +41,12 @@ const defaultProps = {
   id: 'offer-1',
 } as const;
 
+const mockDispatchSuccess = () => {
+  mockDispatch.mockReturnValue({
+    unwrap: () => Promise.resolve(undefined),
+  });
+};
+
 const renderBookmarkButton = (props: TBookmarkButtonTestProps = {}) => {
   const merged = { ...defaultProps, ...props };
 
@@ -44,7 +61,9 @@ const getButton = () => screen.getByRole('button', { name: 'To bookmarks' });
 describe('BookmarkButton', () => {
   beforeEach(() => {
     mockDispatch.mockReset();
-    mockDispatch.mockResolvedValue(undefined);
+    mockNavigate.mockReset();
+    mockUseEmail.mockReturnValue('user@mail.ru');
+    mockDispatchSuccess();
     vi.mocked(rqFavorite).mockClear();
   });
 
@@ -121,15 +140,30 @@ describe('BookmarkButton', () => {
     expect(rqFavorite).not.toHaveBeenCalled();
   });
 
+  // Гость → редирект на /login, без запроса избранного
+  it('navigates to login when user is not authorized', async () => {
+    const user = userEvent.setup();
+    mockUseEmail.mockReturnValue('');
+
+    renderBookmarkButton();
+
+    await user.click(getButton());
+
+    expect(mockNavigate).toHaveBeenCalledWith(Address.login);
+    expect(mockDispatch).not.toHaveBeenCalled();
+    expect(rqFavorite).not.toHaveBeenCalled();
+  });
+
   // Пока промис не резолвился, sending=true → повторный клик игнорируется
   it('ignores clicks while request is in flight', async () => {
     const user = userEvent.setup();
     let resolveDispatch!: (value?: unknown) => void;
-    mockDispatch.mockReturnValue(
-      new Promise((resolve) => {
-        resolveDispatch = resolve;
-      }),
-    );
+    mockDispatch.mockReturnValue({
+      unwrap: () =>
+        new Promise((resolve) => {
+          resolveDispatch = resolve;
+        }),
+    });
 
     renderBookmarkButton();
 
@@ -148,7 +182,9 @@ describe('BookmarkButton', () => {
   // Ошибка запроса: state не меняется, но sending сбрасывается → можно кликнуть снова
   it('does not toggle state on dispatch error and allows retry', async () => {
     const user = userEvent.setup();
-    mockDispatch.mockRejectedValueOnce(new Error('network'));
+    mockDispatch.mockReturnValueOnce({
+      unwrap: () => Promise.reject(new Error('network')),
+    });
 
     renderBookmarkButton({ defaultState: false });
 
@@ -157,7 +193,7 @@ describe('BookmarkButton', () => {
     expect(mockDispatch).toHaveBeenCalledTimes(1);
     expect(getButton()).not.toHaveClass('offer__bookmark-button--active');
 
-    mockDispatch.mockResolvedValueOnce(undefined);
+    mockDispatchSuccess();
     await user.click(getButton());
 
     await waitFor(() => {

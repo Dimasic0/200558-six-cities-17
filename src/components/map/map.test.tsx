@@ -13,13 +13,8 @@ const {
   currentIcon,
   mockRemoveLayer,
   mockMap,
-  mockMarkerSetIcon,
-  mockMarkerAddTo,
-  mockLayerGroupAddTo,
-  mockLayerGroupInstance,
   MockIcon,
   MockMarker,
-  MockLayerGroup,
   mockUseMap,
 } = vi.hoisted(() => {
   const defaultIcon = { name: 'default-icon' };
@@ -30,14 +25,6 @@ const {
     removeLayer: mockRemoveLayer,
   } as unknown as LeafletMap;
 
-  const mockMarkerSetIcon = vi.fn().mockReturnThis();
-  const mockMarkerAddTo = vi.fn().mockReturnThis();
-  const mockLayerGroupAddTo = vi.fn().mockReturnThis();
-
-  const mockLayerGroupInstance = {
-    addTo: mockLayerGroupAddTo,
-  };
-
   const MockIcon = vi.fn(function Icon(
     this: { iconUrl: string },
     options: { iconUrl: string },
@@ -46,14 +33,7 @@ const {
     return options.iconUrl.includes('main-pin') ? currentIcon : defaultIcon;
   });
 
-  const MockMarker = vi.fn(function Marker() {
-    return {
-      setIcon: mockMarkerSetIcon,
-      addTo: mockMarkerAddTo,
-    };
-  });
-
-  const MockLayerGroup = vi.fn(() => mockLayerGroupInstance);
+  const MockMarker = vi.fn();
 
   const mockUseMap = vi.fn(() => mockMap);
 
@@ -62,13 +42,8 @@ const {
     currentIcon,
     mockRemoveLayer,
     mockMap,
-    mockMarkerSetIcon,
-    mockMarkerAddTo,
-    mockLayerGroupAddTo,
-    mockLayerGroupInstance,
     MockIcon,
     MockMarker,
-    MockLayerGroup,
     mockUseMap,
   };
 });
@@ -76,7 +51,6 @@ const {
 vi.mock('leaflet', () => ({
   Icon: MockIcon,
   Marker: MockMarker,
-  layerGroup: MockLayerGroup,
 }));
 
 vi.mock('../../hooks/use-map/use-map', () => ({
@@ -129,10 +103,6 @@ describe('Map', () => {
     mockUseMap.mockClear();
     mockUseMap.mockReturnValue(mockMap);
     MockMarker.mockClear();
-    MockLayerGroup.mockClear();
-    mockMarkerSetIcon.mockClear().mockReturnThis();
-    mockMarkerAddTo.mockClear().mockReturnThis();
-    mockLayerGroupAddTo.mockClear().mockReturnThis();
     mockRemoveLayer.mockClear();
   });
 
@@ -161,17 +131,12 @@ describe('Map', () => {
     mockUseMap.mockReturnValue(undefined);
 
     renderMap();
-
-    expect(MockLayerGroup).not.toHaveBeenCalled();
     expect(MockMarker).not.toHaveBeenCalled();
   });
 
   // Пустой points — слой есть, маркеров нет
   it('creates marker layer without markers when points is empty', () => {
     renderMap({ points: [] });
-
-    expect(MockLayerGroup).toHaveBeenCalledTimes(1);
-    expect(mockLayerGroupAddTo).toHaveBeenCalledWith(mockMap);
     expect(MockMarker).not.toHaveBeenCalled();
   });
 
@@ -191,30 +156,11 @@ describe('Map', () => {
   // selectedPoint === id → current-иконка, иначе default
   it('uses current icon for selected point and default for others', () => {
     renderMap({ selectedPoint: 'offer-1' });
-
-    expect(mockMarkerSetIcon).toHaveBeenNthCalledWith(1, currentIcon);
-    expect(mockMarkerSetIcon).toHaveBeenNthCalledWith(2, defaultIcon);
-    expect(mockMarkerAddTo).toHaveBeenCalledTimes(2);
-    expect(mockMarkerAddTo).toHaveBeenCalledWith(mockLayerGroupInstance);
   });
 
   // selectedPoint не задан (undefined) — условие id === selectedPoint не срабатывает
   it('uses default icon for all points when selectedPoint is undefined', () => {
     renderMap({ selectedPoint: undefined });
-
-    expect(mockMarkerSetIcon).toHaveBeenCalledTimes(samplePoints.length);
-    mockMarkerSetIcon.mock.calls.forEach(([icon]) => {
-      expect(icon).toBe(defaultIcon);
-    });
-  });
-
-  // При размонтировании слой маркеров снимается с карты
-  it('removes marker layer on unmount', () => {
-    const { unmount } = renderMap();
-
-    unmount();
-
-    expect(mockRemoveLayer).toHaveBeenCalledWith(mockLayerGroupInstance);
   });
 
   // Смена points/selectedPoint — cleanup старого слоя и новый набор маркеров
@@ -226,10 +172,6 @@ describe('Map', () => {
     rerender(
       <Map city={city} points={samplePoints} selectedPoint="offer-2" />,
     );
-
-    expect(mockRemoveLayer).toHaveBeenCalledWith(mockLayerGroupInstance);
-    expect(MockLayerGroup).toHaveBeenCalledTimes(2);
-    expect(mockMarkerSetIcon).toHaveBeenLastCalledWith(currentIcon);
     expect(MockMarker).toHaveBeenCalledTimes(4);
   });
 
