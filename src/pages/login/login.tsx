@@ -34,11 +34,11 @@ export default function Login():JSX.Element {
             <form className="login__form form" method="post" onSubmit={onAuthorization}>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
-                <input className="login__input form__input" type="email" name="email" placeholder="Email" required defaultValue='dmitri@mail.ru' />
+                <input className="login__input form__input" type="email" name="email" placeholder="Email" required defaultValue='dmitri@mail.ru' data-testid="input-email"/>
               </div>
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">Password</label>
-                <input className="login__input form__input" type="password" name="password" placeholder="Password" required defaultValue='d1'/>
+                <input className="login__input form__input" type="password" name="password" placeholder="Password" required defaultValue='d1' data-testid="input-password"/>
               </div>
               <button className="login__submit form__submit button">Sign in</button>
             </form>
