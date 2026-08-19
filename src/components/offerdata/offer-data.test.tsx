@@ -23,14 +23,14 @@ vi.mock('../../api', () => ({
   },
 }));
 
-vi.mock('../bookmarkButton/bookmarkButton', async () => {
+vi.mock('../bookmarkButton/bookmark-button', async () => {
   const { createMockComponent } = await import('../../library/test/test');
   return {
     BookmarkButton: createMockComponent('BookmarkButton'),
   };
 });
 
-vi.mock('../offerInsideList/offerInsideList', async () => {
+vi.mock('../offerInsideList/offer-inside-list', async () => {
   const { createMockComponent } = await import('../../library/test/test');
   return {
     default: createMockComponent('OfferInsideList'),
@@ -59,7 +59,7 @@ type TCommentFormProps = {
 let commentFormProps: TCommentFormProps | null = null;
 
 // Интерактивный мок: нужен ref на textarea и доступ к onSubmit для проверки api.post
-vi.mock('../commentForm/commentForm', async () => {
+vi.mock('../commentForm/comment-form', async () => {
   const { createElement: el } = await import('react');
   return {
     CommentForm: (props: TCommentFormProps) => {

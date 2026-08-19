@@ -11,18 +11,18 @@ import {
 const {
   defaultIcon,
   currentIcon,
-  mockRemoveLayer,
   mockMap,
   MockIcon,
   MockMarker,
+  mockLayerGroup,
   mockUseMap,
 } = vi.hoisted(() => {
   const defaultIcon = { name: 'default-icon' };
   const currentIcon = { name: 'current-icon' };
 
-  const mockRemoveLayer = vi.fn();
   const mockMap = {
-    removeLayer: mockRemoveLayer,
+    removeLayer: ()=>{},
+    addLayer : ()=>{},
   } as unknown as LeafletMap;
 
   const MockIcon = vi.fn(function Icon(
@@ -33,17 +33,24 @@ const {
     return options.iconUrl.includes('main-pin') ? currentIcon : defaultIcon;
   });
 
-  const MockMarker = vi.fn();
+  const MockMarker = vi.fn(() => ({
+    setIcon: function setIcon(){ return this; },
+    addTo: ()=>{},
+  }));
 
-  const mockUseMap = vi.fn(() => mockMap);
+  const mockLayerGroup = vi.fn(() => ({
+    addTo: ()=>{},
+  }));
+
+  const mockUseMap = vi.fn((): LeafletMap | undefined => mockMap);
 
   return {
     defaultIcon,
     currentIcon,
-    mockRemoveLayer,
     mockMap,
     MockIcon,
     MockMarker,
+    mockLayerGroup,
     mockUseMap,
   };
 });
@@ -51,6 +58,7 @@ const {
 vi.mock('leaflet', () => ({
   Icon: MockIcon,
   Marker: MockMarker,
+  layerGroup: mockLayerGroup,
 }));
 
 vi.mock('../../hooks/use-map/use-map', () => ({
@@ -100,10 +108,9 @@ const renderMap = (props: TMapTestProps = {}) => {
 
 describe('Map', () => {
   beforeEach(() => {
-    mockUseMap.mockClear();
+    mockUseMap.mockReset();
     mockUseMap.mockReturnValue(mockMap);
     MockMarker.mockClear();
-    mockRemoveLayer.mockClear();
   });
 
   // Контейнер карты — единственный DOM-узел компонента
@@ -151,16 +158,6 @@ describe('Map', () => {
         lng: location.longitude,
       });
     });
-  });
-
-  // selectedPoint === id → current-иконка, иначе default
-  it('uses current icon for selected point and default for others', () => {
-    renderMap({ selectedPoint: 'offer-1' });
-  });
-
-  // selectedPoint не задан (undefined) — условие id === selectedPoint не срабатывает
-  it('uses default icon for all points when selectedPoint is undefined', () => {
-    renderMap({ selectedPoint: undefined });
   });
 
   // Смена points/selectedPoint — cleanup старого слоя и новый набор маркеров

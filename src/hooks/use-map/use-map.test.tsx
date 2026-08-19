@@ -11,12 +11,11 @@ const {
 } = vi.hoisted(() => {
   const mockSetView = vi.fn();
   const mockMapInstance = {
-    setView: mockSetView,
+    addLayer: ()=>{},
+    setView: mockSetView
   };
 
-  const MockMap = vi.fn(function Map() {
-    return mockMapInstance;
-  });
+  const MockMap = vi.fn(() => mockMapInstance);
 
   return {
     mockSetView,
@@ -25,7 +24,8 @@ const {
   };
 });
 
-vi.mock('leaflet', () => ({
+vi.mock('leaflet', async () => ({
+  ... await  vi.importActual<typeof import('leaflet')>('leaflet'),
   Map: MockMap,
 }));
 

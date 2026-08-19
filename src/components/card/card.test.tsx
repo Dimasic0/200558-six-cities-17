@@ -16,7 +16,7 @@ import {
 
 // Заглушка вместо реального BookmarkButton (без Redux).
 // async import — иначе createMockComponent будет undefined из‑за hoist vi.mock.
-vi.mock('../bookmarkButton/bookmarkButton', async () => {
+vi.mock('../bookmarkButton/bookmark-button', async () => {
   const { createMockComponent: mockComp } = await import(
     '../../library/test/test'
   );
