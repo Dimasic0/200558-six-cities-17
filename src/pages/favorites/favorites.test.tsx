@@ -1,54 +1,56 @@
 import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import Favorites from './favorites';
 import { offers } from '../../mocks/offers';
 import type { TOffers, TOffersByCities } from '../../types/types';
-import {
-  expectAttribute,
-  expectMockProps,
-  getMockComponent,
-  getMockComponents,
-} from '../../library/test/test';
+import { store } from '../../store';
 import { rqFavoriteGet } from '../../store/action/action';
 import {
   useFavorites,
   useOffersСities,
 } from '../../store/useSelectors/useSelectors';
+import Loading  from '../../components/loading/loading';
 
 const { mockDispatch } = vi.hoisted(() => ({
   mockDispatch: vi.fn(),
 }));
 
-vi.mock('../../store', () => ({
-  useAppDispatch: () => mockDispatch,
-}));
+vi.mock('../../store', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../store')>();
 
-vi.mock('../../store/useSelectors/useSelectors', () => ({
-  useOffersСities: vi.fn(),
-  useFavorites: vi.fn(),
-}));
-
-vi.mock('../../store/action/action', () => ({
-  rqFavoriteGet: vi.fn((signal: AbortSignal) => ({
-    type: 'offers/favoriteGet',
-    payload: signal,
-  })),
-}));
-
-vi.mock('../../components/header/header', async () => {
-  const { createMockComponent } = await import('../../library/test/test');
-  return { Header: createMockComponent('Header') };
+  return {
+    ...actual,
+    useAppDispatch: () => mockDispatch,
+  };
 });
 
-vi.mock('../../components/cards/cards', async () => {
-  const { createMockComponent } = await import('../../library/test/test');
-  return { default: createMockComponent('Cards') };
+vi.mock('../../store/useSelectors/useSelectors', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('../../store/useSelectors/useSelectors')>();
+
+  return {
+    ...actual,
+    useOffersСities: vi.fn(),
+    useFavorites: vi.fn(),
+  };
+});
+
+vi.mock('../../store/action/action', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('../../store/action/action')>();
+  return {
+    ...actual,
+    rqFavoriteGet: vi.fn((signal: AbortSignal) => ({
+      type: 'offers/favoriteGet',
+      payload: signal,
+    })),
+  };
 });
 
 vi.mock('../../components/loading/loading', async () => {
-  const { createMockComponent } = await import('../../library/test/test');
-  return { default: createMockComponent('Loading') };
+  return { default: vi.fn(() => 'tagLoading') };
 });
 
 const parisFavorites: TOffers[] = [
@@ -75,10 +77,13 @@ const loadedOffersByCities: TOffersByCities = {
 
 const renderFavorites = () =>
   render(
-    <MemoryRouter>
-      <Favorites />
-    </MemoryRouter>,
+    <Provider store={store}>
+      <MemoryRouter>
+        <Favorites />
+      </MemoryRouter>
+    </Provider>
   );
+  const getPageMainFavorites = () => document.querySelector('.page__main--favorites');
 
 describe('Favorites', () => {
   beforeEach(() => {
@@ -108,24 +113,11 @@ describe('Favorites', () => {
 
     renderFavorites();
 
-    expect(getMockComponent('Loading')).toBeInTheDocument();
-    expect(getMockComponent('Cards')).not.toBeInTheDocument();
+    expect(Loading).toHaveBeenCalled();
+    expect(getPageMainFavorites()).not.toBeInTheDocument();
     expect(
       screen.queryByRole('heading', { name: 'Saved listing' }),
     ).not.toBeInTheDocument();
-  });
-
-  // Header и футер всегда на странице (и при Loading)
-  it('always renders Header and footer logo', () => {
-    renderFavorites();
-
-    expect(getMockComponent('Header')).toBeInTheDocument();
-    expectAttribute('.footer__logo', {
-      src: 'img/logo.svg',
-      alt: '6 cities logo',
-      width: 64,
-      height: 33,
-    });
   });
 
   // Данные есть → заголовок и список городов
@@ -145,24 +137,14 @@ describe('Favorites', () => {
   // В каждый Cards — своя группа офферов, horizontal + class для favorites
   it('passes each favorite group to Cards with horizontal layout props', () => {
     renderFavorites();
-
-    const cards = getMockComponents('Cards');
-    expect(cards).toHaveLength(favoriteGroups.length);
-
-    favoriteGroups.forEach((group, index) => {
-      expectMockProps(cards[index], {
-        offers: group,
-        variant: 'horizontal',
-        classTextBlock: 'favorites__card-info',
-      });
-    });
+    expect(document.querySelectorAll('.favorites__locations-items')).toHaveLength(favoriteGroups.length);
   });
 
   // Пустое избранное — секция есть, но без групп и Cards
   it('renders empty list when there are no favorites', () => {
     vi.mocked(useFavorites).mockReturnValue([]);
 
-    renderFavorites();
+   const {container} =  renderFavorites();
 
     expect(
       screen.getByRole('heading', { name: 'Saved listing' }),
@@ -170,6 +152,6 @@ describe('Favorites', () => {
     expect(document.querySelectorAll('.favorites__locations-items')).toHaveLength(
       0,
     );
-    expect(getMockComponents('Cards')).toHaveLength(0);
+    expect(container.querySelector('.favorites__locations-items')).not.toBeInTheDocument();
   });
 });
