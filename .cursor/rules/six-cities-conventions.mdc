@@ -1,0 +1,40 @@
+---
+description: Конвенции кода six-cities — структура, типы, Redux, стиль
+globs: src/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Конвенции six-cities
+
+Учебный проект HTML Academy. ESLint: `eslint-config-htmlacademy/react-typescript` — не ослабляй правила без причины.
+
+## Структура
+
+- Компонент: папка `camelCase` → файл с тем же именем (`card/card.tsx`, `commentForm/commentForm.tsx`).
+- Страницы — `src/pages/`, store — `src/store/*Slice/`, типы — `src/types/`.
+- Константы — `src/data/constant.tsx`, HTTP-клиент — `src/api.ts`.
+
+## TypeScript и React
+
+- Типы с префиксом `T` (`TOffers`, `TComment`); props — `TComponentProps`.
+- Компоненты — функции с `export default`, возвращают `JSX.Element`.
+- Импорты типов — `import type { ... }` где возможно.
+- Расширяемость props — `{ ...props }` или явный spread общих полей (как `bemBlock` в `Comments`).
+
+## Redux
+
+- Slice через `@reduxjs/toolkit` (`createSlice`), экспорт `reducer` и actions.
+- Thunk — через `createAsyncThunk` в `action.ts`; side effects только там и в `api.ts`.
+- Селекторы — `store/useSelectors.ts`.
+
+## Разметка и UI
+
+- BEM-классы из макета (`reviews__list`, `place-card`); не выдумывай свои имена.
+- `classnames` — для условных классов.
+- `data-testId` — для элементов, которые проверяются в тестах.
+
+## Минимальный diff
+
+- Не рефакторить соседний код «заодно».
+- Не добавлять зависимости без необходимости.
+- Закомментированный код — удалять, а не копить (кроме явно временных черновиков в процессе задачи).

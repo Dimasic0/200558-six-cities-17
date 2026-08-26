@@ -1,0 +1,59 @@
+---
+description: Паттерны тестов six-cities — Vitest, Testing Library, моки, Redux
+globs: **/*.{test,spec}.{ts,tsx}
+alwaysApply: false
+---
+
+# Тесты six-cities
+
+Стек: **Vitest**, **@testing-library/react**, **user-event**. Перед новым тестом посмотри соседний `*.test.tsx` того же слоя (компонент / slice / thunk).
+
+## Какой подход выбрать
+
+| Что тестируем | Подход |
+|---------------|--------|
+| Контейнер со списком (`Cards`, `Comments`) | Мок дочернего компонента через `vi.hoisted` + `vi.mock`; проверка props через `mock.calls` |
+| Листовой компонент (`Comment`, `Card`) | `render` + `screen` / `container`; проверка видимого результата |
+| Интерактив (`Locations`, формы) | `userEvent.setup()`; проверка DOM и колбэков |
+| Redux slice | `testDescribe` из `store/library/test/test.ts` |
+| Async thunk | `createTestAsyncAction` из того же модуля |
+| `useSelector` | `testUseSelector` |
+
+## Контейнеры — эталон
+
+```tsx
+const { mockChild } = vi.hoisted(() => ({ mockChild: vi.fn() }));
+vi.mock('../child/child', () => ({ default: mockChild }));
+
+beforeEach(() => { mockChild.mockClear(); });
+
+it.each<[string, TItem[]]>([
+  ['one item', [items[0]]],
+  ['three items', items],
+])('passes props when data has %s', (_, list) => {
+  render(<Container data={list} sharedProp={value} />);
+  expect(mockChild).toHaveBeenCalledTimes(list.length);
+  list.forEach((item, i) => {
+    expect(mockChild.mock.calls[i][0]).toEqual(expect.objectContaining({ item, sharedProp: value }));
+  });
+});
+
+it('does not render child when data is empty', () => {
+  render(<Container data={[]} sharedProp={value} />);
+  expect(mockChild).not.toHaveBeenCalled();
+});
+```
+
+## Данные и именование
+
+- Общие моки — `src/mocks/` (например `offers`).
+- Локальная фабрика `makeX(overrides?)` — если нужна кастомная форма данных.
+- Имена тестов — **на английском**, описывают поведение: `passes matching props`, `does not render when empty`.
+- `Card` с роутингом/Redux — оборачивай в `MemoryRouter` + `Provider` (см. `card.test.tsx`).
+
+## Чего избегать
+
+- Тестов «рендерится без ошибок» без проверки поведения.
+- Снимков (snapshot) — в проекте не используются.
+- Дублирования логики моков между файлами — выноси в `mocks/` или фабрику.
+- `console.log` в финальном тесте.
