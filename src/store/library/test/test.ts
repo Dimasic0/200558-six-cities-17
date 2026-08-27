@@ -287,6 +287,18 @@ type TUseSelectorTestCase = [
   expected: { toEqual?: unknown; toBe?: unknown },
 ];
 
+/** Проверяет соответствие нескольких HTML/SVG-атрибутов: expectAttribute(svg, { width: 24, height: 45 }). */
+export const expectAttribute = (
+  element: Element | null,
+  attributes: Record<string, string | number | boolean>,
+): void => {
+  expect(element).toBeInTheDocument();
+
+  for (const [name, value] of Object.entries(attributes)) {
+    expect(element).toHaveAttribute(name, String(value));
+  }
+};
+
 /** Один тест хука: меняем состояние, вызываем useSelector, сравниваем с ожиданием. */
 export const testUseSelector = (
   ...params: Array<TUseSelectorTestCase>

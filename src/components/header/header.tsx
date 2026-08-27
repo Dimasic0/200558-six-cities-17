@@ -39,7 +39,7 @@ function HeaderFun() {
                       <span className="header__favorite-count">{offersFavorites.length}</span>
                     </>
                     :
-                    <span className="header__login">Sign in</span>}
+                    <span className="header__login" data-testId="login">Sign in</span>}
                 </Link>
               </li>
               {

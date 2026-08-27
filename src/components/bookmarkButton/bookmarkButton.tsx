@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useAppDispatch } from '../../store';
 import { rqFavorite } from '../../store/action';
 
-interface BookmarkButtonProps {
+export interface BookmarkButtonProps {
   width: number | string;
   height: number | string;
   defaultState: boolean | number;
