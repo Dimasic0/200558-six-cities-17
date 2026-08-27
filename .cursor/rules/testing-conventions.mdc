@@ -16,7 +16,8 @@ alwaysApply: false
 | Листовой компонент (`Comment`, `Card`) | `render` + `screen` / `container`; проверка видимого результата |
 | Интерактив (`Locations`, формы) | `userEvent.setup()`; проверка DOM и колбэков |
 | Redux slice | `testDescribe` из `store/library/test/test.ts` |
-| Async thunk | `createTestAsyncAction` из того же модуля |
+| Async thunk (без HTTP) | `createTestAsyncAction` из `store/library/test/test.ts` |
+| Async thunk с HTTP | `axios-mock-adapter` на `api` + `createTestAsyncAction` (см. `action.test.ts`) |
 | `useSelector` | `testUseSelector` |
 
 ## Контейнеры — эталон
@@ -42,6 +43,42 @@ it('does not render child when data is empty', () => {
   render(<Container data={[]} sharedProp={value} />);
   expect(mockChild).not.toHaveBeenCalled();
 });
+```
+
+## Thunk с HTTP — эталон
+
+```ts
+let api: AxiosInstance;
+let mock: MockAdapter;
+let dispatch: Mock;
+let getState: Mock;
+
+const testAsyncAction = createTestAsyncAction(() => ({
+  mock,
+  dispatch,
+  getState,
+  api,
+}));
+
+beforeEach(() => {
+  api = axios.create({ baseURL: API_BASE_URL });
+  mock = new MockAdapter(api);
+  dispatch = vi.fn();
+  getState = vi.fn();
+});
+
+afterEach(() => {
+  mock.restore();
+});
+
+testAsyncAction(
+  'dispatches setOffers with fetched data',
+  'get',
+  'offers',
+  [200, [parisOffer]],
+  getOffers(new AbortController().signal),
+  setOffers([parisOffer]),
+);
 ```
 
 ## Данные и именование
