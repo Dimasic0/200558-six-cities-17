@@ -11,7 +11,6 @@ import {
   useFavorites,
   useOffersСities,
 } from '../../store/useSelectors/useSelectors';
-import Loading  from '../../components/loading/loading';
 
 const { mockDispatch } = vi.hoisted(() => ({
   mockDispatch: vi.fn(),
@@ -47,10 +46,6 @@ vi.mock('../../store/action/action', async (importOriginal) => {
       payload: signal,
     })),
   };
-});
-
-vi.mock('../../components/loading/loading', async () => {
-  return { default: vi.fn(() => 'tagLoading') };
 });
 
 const parisFavorites: TOffers[] = [
@@ -113,7 +108,7 @@ describe('Favorites', () => {
 
     renderFavorites();
 
-    expect(Loading).toHaveBeenCalled();
+    expect(screen.getByTestId('loading')).toBeInTheDocument();
     expect(getPageMainFavorites()).not.toBeInTheDocument();
     expect(
       screen.queryByRole('heading', { name: 'Saved listing' }),
