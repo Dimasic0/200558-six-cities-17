@@ -47,13 +47,13 @@ export default function Main() {
   },[]);
 
   return (
-    <div className="page page--gray page--main">
+    <div className="page page--gray page--main" data-testid="main-page">
       {offersLength < 1 ?
         <Spinner />
         :
         <>
           <Header />
-          <main className="page__main page__main--index">
+          <main className="page__main page__main--index" data-testid="main-content">
             <h1 className="visually-hidden">Cities</h1>
             <div className="tabs">
               <section className="locations container">
@@ -105,4 +105,3 @@ export default function Main() {
     </div>
   );
 }
-

@@ -39,13 +39,13 @@ function HeaderFun() {
                       <span className="header__favorite-count">{offersFavorites.length}</span>
                     </>
                     :
-                    <span className="header__login" data-testId="login">Sign in</span>}
+                    <span className="header__login" data-testid="login">Sign in</span>}
                 </Link>
               </li>
               {
                 email &&
                 <li className="header__nav-item">
-                  <a className="header__nav-link" href="#" onClick={onExit}>
+                  <a className="header__nav-link" href="#" onClick={onExit} data-testid="link-signout">
                     <span className="header__signout">Sign out</span>
                   </a>
                 </li>

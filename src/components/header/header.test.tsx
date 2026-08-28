@@ -1,25 +1,34 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { Header } from './header';
-import { Address } from '../../data/constant';
+import { Address, NameReducer, Token } from '../../data/constant';
+import { offersSlice } from '../../store/offersSlice/offersSlice';
+import { userSlice } from '../../store/userSlice/userSlice';
 import type { TOffers } from '../../types/types';
 
 /**
  * Моки селекторов — через `vi.hoisted`, чтобы их можно было
  * переопределять в каждом тесте до импорта компонента.
  */
-const { mockUseUser, mockUseFavorites } = vi.hoisted(() => ({
+const { mockUseUser, mockUseFavorites, useRealSelectors } = vi.hoisted(() => ({
   mockUseUser: vi.fn(),
   mockUseFavorites: vi.fn(),
+  useRealSelectors: { user: false, favorites: false },
 }));
 
-vi.mock('../../store/useSelectors', () => ({
-  useUser: () => mockUseUser(),
-  useFavorites: () => mockUseFavorites(),
-}));
+vi.mock('../../store/useSelectors', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../store/useSelectors')>();
+
+  return {
+    useUser: () => (useRealSelectors.user ? actual.useUser() : mockUseUser()),
+    useFavorites: () => (useRealSelectors.favorites ? actual.useFavorites() : mockUseFavorites()),
+  };
+});
 
 /** Пустой store — Header использует только `dispatch` (Sign out). */
 const mockStore = configureMockStore();
@@ -52,8 +61,28 @@ const guestUser = {
   token: '',
 };
 
+function createAuthenticatedStore() {
+  return configureStore({
+    reducer: combineReducers({
+      [NameReducer.user]: userSlice.reducer,
+      [NameReducer.offers]: offersSlice.reducer,
+    }),
+    preloadedState: {
+      [NameReducer.user]: {
+        email: 'oliver@test.com',
+        avatarUrl: 'https://example.com/avatar.jpg',
+        name: 'Oliver',
+        isPro: true,
+        token: 'token',
+      },
+    },
+  });
+}
+
 describe('Header', () => {
   beforeEach(() => {
+    useRealSelectors.user = false;
+    useRealSelectors.favorites = false;
     mockUseUser.mockReset();
     mockUseFavorites.mockReset();
     mockUseFavorites.mockReturnValue([]);
@@ -164,6 +193,34 @@ describe('Header', () => {
       const { container } = renderHeader();
 
       expect(screen.queryByText('Sign in')).not.toBeInTheDocument();
+    });
+
+    it('shows Sign in after sign out click', async () => {
+      useRealSelectors.user = true;
+      useRealSelectors.favorites = true;
+
+      const store = createAuthenticatedStore();
+      const deleteTokenSpy = vi.spyOn(Token, 'delete');
+      const user = userEvent.setup();
+
+      render(
+        <Provider store={store}>
+          <MemoryRouter>
+            <Header />
+          </MemoryRouter>
+        </Provider>,
+      );
+
+      expect(screen.queryByTestId('login')).not.toBeInTheDocument();
+      expect(screen.getByTestId('link-signout')).toBeInTheDocument();
+
+      await user.click(screen.getByTestId('link-signout'));
+
+      expect(screen.getByTestId('login')).toBeInTheDocument();
+      expect(screen.queryByTestId('link-signout')).not.toBeInTheDocument();
+      expect(deleteTokenSpy).toHaveBeenCalledOnce();
+
+      deleteTokenSpy.mockRestore();
     });
   });
 });
