@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { memoize } from '../../data/constant';
 import { BookmarkButton } from '../bookmarkButton/bookmarkButton';
 
-type TCardProps = {
+export type TCardProps = {
   offer: TOffers & { point?: object };
   onHover?: (id: string | null) => void;
   variant: 'vertical' | 'horizontal';
@@ -47,7 +47,7 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
           />
         </Link>
       </div>
-      <div className={`${classTextBlock} place-card__info`}>
+      <div className={`${classTextBlock} place-card__info`} data-testId="info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
             <b className="place-card__price-value">{offer.price}</b>
@@ -62,7 +62,7 @@ function Card({ offer, variant, onHover = () => { }, classTextBlock = ''}: TCard
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: raringWidth }}></span>
+            <span style={{ width: raringWidth }} data-testId="rating"></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

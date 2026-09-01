@@ -22,7 +22,7 @@ describe('Comment', () => {
     expect(screen.getByText(commentProps.user.name)).toBeInTheDocument();
     expect(screen.getByText(commentProps.comment)).toBeInTheDocument();
 
-    const avatar = screen.getByAltText('Reviews avatar');
+    const avatar = document.querySelector('.reviews__avatar');
     expect(avatar).toHaveAttribute('src', commentProps.user.avatarUrl);
 
     const ratingBar = container.querySelector('.reviews__stars > span:first-child');
