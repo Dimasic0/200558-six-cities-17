@@ -1,18 +1,30 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { Locations } from './locations';
+import { Locations, type TLocationsProps } from './locations';
 import { cityDefault, СITIES } from '../../data/constant';
 import { TCity } from '../../types/types';
 
 const getActiveCity = (): string | null | undefined =>
   document.querySelector('.tabs__item--active span')?.textContent;
 
-describe('Locations', () => {
-  const onClick = vi.fn();
+type TRenderLocationsProps = Partial<TLocationsProps>;
 
+const renderLocations = ({
+  onClick = vi.fn(),
+  defaultActive = cityDefault,
+  cities = СITIES,
+  ...props
+}: TRenderLocationsProps = {}) => ({
+  onClick,
+  ...render(
+    <Locations cities={cities} onClick={onClick} defaultActive={defaultActive} {...props} />
+  ),
+});
+
+describe('Locations', () => {
   it('renders cities in the correct order', () => {
-    render(<Locations cities={СITIES} onClick={onClick} defaultActive={cityDefault} />);
+    renderLocations();
 
     const cityNames = screen.getAllByRole('listitem').map((item) => item.textContent);
 
@@ -20,7 +32,7 @@ describe('Locations', () => {
   });
 
   it('marks defaultActive as active when city is not provided', () => {
-    render(<Locations cities={СITIES} onClick={onClick} defaultActive={cityDefault} />);
+    renderLocations();
 
     expect(getActiveCity()).toBe(cityDefault);
   });
@@ -28,14 +40,7 @@ describe('Locations', () => {
   it('marks city as active when city prop is provided', () => {
     const city: TCity = 'Amsterdam';
 
-    render(
-      <Locations
-        cities={СITIES}
-        onClick={onClick}
-        defaultActive={cityDefault}
-        city={city}
-      />
-    );
+    renderLocations({ city });
 
     expect(getActiveCity()).toBe(city);
   });
@@ -43,9 +48,7 @@ describe('Locations', () => {
   it('updates active city when city prop is passed after mount', () => {
     const city: TCity = 'Brussels';
 
-    const { rerender } = render(
-      <Locations cities={СITIES} onClick={onClick} defaultActive={cityDefault} />
-    );
+    const { rerender, onClick } = renderLocations();
 
     expect(getActiveCity()).toBe(cityDefault);
 
@@ -64,8 +67,7 @@ describe('Locations', () => {
   it('changes active city and calls onClick when a city is clicked', async () => {
     const user = userEvent.setup();
     const city: TCity = 'Hamburg';
-
-    render(<Locations cities={СITIES} onClick={onClick} defaultActive={cityDefault} />);
+    const { onClick } = renderLocations();
 
     await user.click(screen.getByText(city));
 

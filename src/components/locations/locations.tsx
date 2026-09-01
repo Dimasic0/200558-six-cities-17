@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState, memo } from 'react';
 import { TCity, TCities } from '../../types/types';
 
-type TLocationsProps = {
+export type TLocationsProps = {
   cities: TCities;
   onClick: (el: TCity)=>void;
   defaultActive?:TCity;
