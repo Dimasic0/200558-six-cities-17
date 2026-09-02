@@ -1,7 +1,7 @@
 import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { CommentForm } from './commentForm';
 
 const REVIEW_TEXT = 'a'.repeat(50);
@@ -19,40 +19,41 @@ function renderCommentForm(textareaRef = createRef<HTMLTextAreaElement>()) {
   return { onSubmit, textareaRef };
 }
 
-describe('CommentForm', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+const getButtonSubmit = () => screen.getByRole('button', { name: 'Submit' });
+const getTextarea = () => screen.getByRole('textbox');
 
+describe('CommentForm', () => {
   it('checks the corresponding radio when a star is clicked', async () => {
     const user = userEvent.setup();
     renderCommentForm();
 
     expect(getRatingInput(2)).toBeChecked();
-
-    await user.click(document.querySelector('label[for="4-stars"]')!);
-
-    expect(getRatingInput(4)).toBeChecked();
-    expect(getRatingInput(2)).not.toBeChecked();
+    for (let i = 1; i <= 5; i++) {
+      await user.click(document.querySelector(`label[for="${i}-stars"]`)!);
+      expect(getRatingInput(i)).toBeChecked();
+      const previousRating = i>1 ? i-1 : 2;
+      expect(getRatingInput(previousRating)).not.toBeChecked();
+    }
   });
 
   it('disables submit button initially', () => {
     renderCommentForm();
 
-    expect(screen.getByRole('button', { name: 'Submit' })).toBeDisabled();
+    expect(getButtonSubmit()).toBeDisabled();
   });
 
   it('enables submit button when review text is at least 50 characters', async () => {
     const user = userEvent.setup();
     renderCommentForm();
 
-    const submitButton = screen.getByRole('button', { name: 'Submit' });
-    const textarea = screen.getByRole('textbox');
+    const submitButton = getButtonSubmit();
+    const textarea = getTextarea();
 
     expect(submitButton).toBeDisabled();
-
-    await user.type(textarea, REVIEW_TEXT);
-
+    const REVIEW_TEXT_THRESHOLD = 'a'.repeat(49);
+    await user.type(textarea, REVIEW_TEXT_THRESHOLD);
+    expect(submitButton).toBeDisabled();
+    await user.type(textarea, 'a');
     expect(submitButton).not.toBeDisabled();
   });
 
@@ -60,7 +61,7 @@ describe('CommentForm', () => {
     const textareaRef = createRef<HTMLTextAreaElement>();
     renderCommentForm(textareaRef);
 
-    expect(textareaRef.current).toBe(screen.getByRole('textbox'));
+    expect(textareaRef.current).toBe(getTextarea());
     expect(textareaRef.current).toHaveAttribute('id', 'review');
   });
 
@@ -69,24 +70,10 @@ describe('CommentForm', () => {
     const { onSubmit } = renderCommentForm();
 
     await user.click(document.querySelector('label[for="5-stars"]')!);
-    await user.type(screen.getByRole('textbox'), REVIEW_TEXT);
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await user.type(getTextarea(), REVIEW_TEXT);
+    await user.click(getButtonSubmit());
 
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith({ comment: REVIEW_TEXT, rating: 5 });
-  });
-
-  it('All form__rating-input defaultValue', () => {
-    renderCommentForm();
-    const ratingInputs = document.querySelectorAll('.form__rating-input');
-    ratingInputs.forEach((input, i) => {
-      expect(input).toHaveAttribute('defaultValue', 5 - i);
-    });
-  it('All form__rating-label defaultValue', () => {
-    renderCommentForm();
-    const ratingLabel = document.querySelectorAll('.form__rating-label');
-    ratingLabel.forEach((input, i) => {
-      expect(input).toHaveAttribute('htmlFor', 5 - i);
-    });
   });
 });
