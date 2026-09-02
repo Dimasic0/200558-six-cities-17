@@ -1,8 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { configureMockStore } from '@jedmao/redux-mock-store';
 import { beforeEach, vi } from 'vitest';
 import Card, { type TCardProps } from './card';
 import { offers } from '../../mocks/offers';
@@ -17,8 +15,6 @@ vi.mock('../bookmarkButton/bookmarkButton', () => ({
   BookmarkButton: mockBookmarkButton,
 }));
 
-const mockStore = configureMockStore();
-
 type RenderCardOptions = Partial<Omit<TCardProps, 'offer'>> & {
   offer?: Partial<TCardProps['offer']>;
 };
@@ -30,10 +26,7 @@ function renderCard({
   onHover,
   classTextBlock = '',
 }: RenderCardOptions = {}) {
-  const store = mockStore({});
-
   render(
-    <Provider store={store}>
       <MemoryRouter>
         <Card
           offer={{ ...defaultOffer, ...offer }}
@@ -42,7 +35,6 @@ function renderCard({
           classTextBlock={classTextBlock}
         />
       </MemoryRouter>
-    </Provider>
   );
 }
 
@@ -112,7 +104,7 @@ it.each<[number, string]>([
   [3, '60%'],
   [0, '0%'],
   [5, '100%'],
-])('renders rating stars with width %s when rating is %s', (rating, expectedWidth) => {
+])('renders rating bar with rating %s and width %s', (rating, expectedWidth) => {
   renderCardOffer({ rating });
 
   const ratingBar = screen.getByTestId('rating');
@@ -189,33 +181,15 @@ it('calls onHover with offer id on mouse enter and null on mouse leave', async (
   expect(onHover).toHaveBeenCalledWith(null);
 });
 
-it('renders matching type===default', () => {
-  renderCardOffer({});
-
-  const type = screen.getByText(defaultOffer.type);
-
-  expect(type).toBeInTheDocument();
-});
-
-it('renders matching type ==== apartment', () => {
-  renderCardOffer({ type: 'apartment' });
-
-  const type = screen.getByText('apartment');
-
-  expect(type).toBeInTheDocument();
-});
-
-it.each<[boolean]>([
-  ['apartment'],
-  ['room'],
+it.each<[string]>([
+  'apartment',
+  'room',
 ])('offer.type', (type) => {
   renderCardOffer({type });
-
   screen.getByText(type);
 });
 
 it('offer.title', ()=>{
   renderCardOffer({});
-
   screen.getByText(defaultOffer.title);
 });
