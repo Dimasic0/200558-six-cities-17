@@ -75,4 +75,18 @@ describe('CommentForm', () => {
     expect(onSubmit).toHaveBeenCalledTimes(1);
     expect(onSubmit).toHaveBeenCalledWith({ comment: REVIEW_TEXT, rating: 5 });
   });
+
+  it('All form__rating-input defaultValue', () => {
+    renderCommentForm();
+    const ratingInputs = document.querySelectorAll('.form__rating-input');
+    ratingInputs.forEach((input, i) => {
+      expect(input).toHaveAttribute('defaultValue', 5 - i);
+    });
+  it('All form__rating-label defaultValue', () => {
+    renderCommentForm();
+    const ratingLabel = document.querySelectorAll('.form__rating-label');
+    ratingLabel.forEach((input, i) => {
+      expect(input).toHaveAttribute('htmlFor', 5 - i);
+    });
+  });
 });
