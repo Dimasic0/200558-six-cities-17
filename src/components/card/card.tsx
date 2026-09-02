@@ -1,7 +1,7 @@
 import { TOffers } from '../../types/types';
 import { Link } from 'react-router-dom';
 import { memoize } from '../../data/constant';
-import { BookmarkButton } from '../bookmarkButton/bookmarkButton';
+import { BookmarkButton } from '../bookmark-button/bookmark-button';
 
 export type TCardProps = {
   offer: TOffers & { point?: object };

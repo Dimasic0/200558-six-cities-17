@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { configureMockStore } from '@jedmao/redux-mock-store';
 import { vi } from 'vitest';
-import { BookmarkButton, type BookmarkButtonProps } from './bookmarkButton';
+import { BookmarkButton, type BookmarkButtonProps } from './bookmark-button';
 import { expectAttribute } from '../../store/library/test/test';
 import { offers } from '../../mocks/offers';
 

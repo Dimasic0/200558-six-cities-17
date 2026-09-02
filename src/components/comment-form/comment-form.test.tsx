@@ -2,7 +2,7 @@ import { createRef } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
-import { CommentForm } from './commentForm';
+import { CommentForm } from './comment-form';
 
 const REVIEW_TEXT = 'a'.repeat(50);
 

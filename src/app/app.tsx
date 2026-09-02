@@ -3,7 +3,7 @@ import Login from '../pages/login/login';
 import Favorites from '../pages/favorites/favorites';
 import Offer from '../pages/offer/offer';
 import { PrivateStatus, Address} from '../data/constant';
-import ErrorAddressing from '../pages/errorAddressing/errorAddressing';
+import ErrorAddressing from '../pages/error-addressing/error-addressing';
 import PrivateRoute from '../privateRoute';
 import { useEffect } from 'react';
 import Main from '../pages/main/main';

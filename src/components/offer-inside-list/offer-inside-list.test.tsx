@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import OfferInsideList from './offerInsideList';
+import OfferInsideList from './offer-inside-list';
 
 describe('OfferInsideList', () => {
   const list = ['Wi-Fi', 'Heating', 'Kitchen', 'Washing machine'];

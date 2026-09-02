@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import HeaderLogo from '../../components/headerLogo/headerLogo';
+import HeaderLogo from '../../components/header-logo/header-logo';
 import { FormEvent } from 'react';
 import axios from 'axios';
 import { Token } from '../../data/constant';

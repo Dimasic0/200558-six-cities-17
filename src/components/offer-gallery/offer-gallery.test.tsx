@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import OfferGallery, { TOfferGalleryChildren } from './offerGallery';
+import OfferGallery, { TOfferGalleryChildren } from './offer-gallery';
 
 describe('OfferGallery', () => {
   const images: TOfferGalleryChildren[] = [
